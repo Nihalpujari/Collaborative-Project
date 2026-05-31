@@ -1,0 +1,15 @@
+**A Whimsical Snapshot**
+
+Imagine a plucky little squirrel, its fluffy tail flicking with enthusiasm, perched atop a sleek skateboard. On its head sits a perfectly tilted cowboy hat—soft felt, weather‑worn brown, with a modest creased brim that adds just the right amount of swagger. The hat’s tiny leather strap is snug around the squirrel’s head, keeping it securely in place as it zips across the pavement.
+
+The skateboard itself is a vibrant teal board, its grip tape scuffed from countless rides, the wheels humming a cheerful rattling rhythm. The squirrel’s tiny paws grip the board’s deck with surprising dexterity, its claws barely digging into the surface, while its tiny, bright eyes are fixed ahead, gleaming with adventurous spirit.
+
+Behind it, the cityscape blurs into a streak of pastel blues and pinks, hinting at a sunset hour. A faint trail of dust rises from the board’s wheels, curling up like a cartoon “whoosh” that captures the energy of the moment. The squirrel’s whiskers flutter in the breeze, and the cowboy hat flops slightly with each turn, as if nodding in approval.
+
+---
+
+### How to Bring This Scene to Life (AI‑Art Prompt)
+
+If you’d like to generate an illustration with an image model (Stable Diffusion, Midjourney, DALL‑E, etc.), you can copy‑paste the following prompt:
+
+> **Prompt:** “A cute squirrel wearing a tilted cowboy hat, riding a teal skateboard across an urban sunset background. The squirrel’s fluffy tail is fanned out, its bright eyes focused forward, and its tiny paws grip the skateboard deck. The cowboy hat is brown, weathered felt with a leather strap, slightly askew. The skateboard wheels create a subtle motion blur and a small puff of dust, giving a sense of speed. Vibrant, semi‑realistic style with gentle lighting, soft pastel sky, and a playful,

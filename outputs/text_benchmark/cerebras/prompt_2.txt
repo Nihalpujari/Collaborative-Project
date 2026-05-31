@@ -1,0 +1,13 @@
+Below is a ready‑to‑copy prompt you can paste into any AI‑image generator (Stable Diffusion, Midjourney, DALL·E 3, etc.).  
+It’s written so you can tweak just a few keywords if you’d like a different style or mood.
+
+---
+
+**Prompt**
+
+```
+A vivid, warm‑lit scene of a red fox sitting at a pottery wheel, shaping a smooth clay vase with its delicate paws. The fox’s orange‑red fur is glossy and slightly ruffled from concentration; its ears are perked, eyes narrowed in focus, and a tiny tuft of fur sticks out from its cheek. The pottery wheel is a classic wooden‑rim, turning slowly, with a thin layer of fresh, glossy clay spiraling outward. The vase in progress is a slender, hand‑thrown vessel with subtle, natural curves, still wet and slightly glistening under soft studio lighting.  
+
+Background: a cozy artisan studio – exposed brick wall, wooden shelves stacked with finished pots, a few green potted succulents, and a large window casting gentle afternoon sunlight that creates a warm amber glow across the scene. A faint dust of clay particles hangs in the air, catching the light like tiny stars.  
+
+Composition: the fox is centered, slightly turned to the right, so its paws are clearly visible shaping the clay. The wheel’s motion blur is minimal, emphasizing the tactile interaction between paw and clay. The camera angle is low‑to‑mid

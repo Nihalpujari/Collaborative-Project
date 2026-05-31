@@ -1,0 +1,17 @@
+Below is a detailed description you can feed straight into most AI‑image generators (Stable Diffusion, Midjourney, DALL‑E, etc.) to get the exact “fluffy kitten wearing heavy‑metal spiked armor” you have in mind. Feel free to tweak any of the parameters to match your personal style.
+
+---
+
+**Prompt (English, ready‑to‑copy)**  
+
+```
+A cute, fluffy kitten perched confidently, its fluffy fur a soft cream‑white with subtle gray tabby stripes. The kitten is dressed in an exaggerated, heavy‑metal armor set that looks like it was forged for a battle‑hardened warrior. The armor is dark gunmetal gray with a slightly worn, brushed‑metal texture, studded with large, sharp steel spikes on the shoulders, chest plate, gauntlets, and a tiny spiked helmet that barely fits over the kitten’s head. The helmet has a visor of smoky quartz glass that reflects a faint orange glow. The kitten’s big round eyes are bright green, giving a mischievous yet fierce expression. The background is a dimly lit, gritty underground tavern with stone walls, scattered broken bottles, and a faint haze of smoke swirling around. A single spotlight from above casts a dramatic rim‑light on the kitten’s fur and the spiked armor, highlighting the contrast between the soft fur and the harsh metal. Ultra‑realistic style, high detail, 8K resolution, shallow depth of field, cinematic lighting, slightly saturated colors for the fur, cool blue‑gray tones for the metal, and a subtle vignette around the edges.```
+
+---
+
+### Quick Breakdown of the Prompt Elements
+
+| Element | Why it matters | Suggested tweak |
+|--------|----------------|-----------------|
+| **Fluffy kitten** | Soft fur, cute contrast to metal | Change fur color (e.g., “silver‑gray” or “golden”) |
+| **

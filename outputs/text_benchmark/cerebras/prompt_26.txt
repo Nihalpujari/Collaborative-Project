@@ -1,0 +1,13 @@
+**Scene Overview**  
+A lone mummy—wrapped head‑to‑toe in ancient, moth‑eaten bandages—has waddled its way into a modern office lobby and become hopelessly entangled in the rotating glass panels of a revolving door. The juxtaposition of antiquity and contemporary architecture creates a comedic, slightly eerie tableau that’s perfect for prints, memes, or a short animated gag.
+
+---
+
+## 1. Visual Blueprint (for illustrators or AI‑image prompts)
+
+| Element | Description | Tips / Details |
+|--------|--------------|----------------|
+| **Setting** | High‑ceiling lobby of a sleek office building. Marble or polished concrete floor, recessed lighting, a few potted plants and a “Welcome” glass sign. | Use soft ambient light to give a clean, corporate feel. Add a faint reflection of the mummy on the glossy floor for depth. |
+| **Revolving Door** | Classic four‑panel glass cylinder (or a more modern six‑panel version). One panel is partially open, the others are mid‑rotation. The door’s glass is slightly frosted, catching reflections of the mummy’s bandages. | Show motion blur on the rotating panels to emphasize the door’s movement; a subtle streak can hint at the turn direction. |
+| **The Mummy** | Fully wrapped in tan‑to‑gray bandages, with a few tears revealing a faintly glowing skeletal skull underneath. One arm is outstretched, another draped over the door’s edge. The lower half is caught between two panels. | Emphasize the “stuck” position by looping a bandage around the door’s vertical axis—like a belt around the cylinder. The mummy’s eyes (if any) can be empty sockets or faintly glowing pits. |
+| **Facial Expression** | Since a mummy’s face is mostly hidden, convey frustration through body language: a twisted torso

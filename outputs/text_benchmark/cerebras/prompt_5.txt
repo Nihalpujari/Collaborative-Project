@@ -1,0 +1,10 @@
+**Prompt for an AI image generator**
+
+*A hyper‑realistic digital painting (or ultra‑detailed 3‑D render) of an astronaut in a classic white space suit with the visor reflecting distant stars. The astronaut is perched on a vintage, chrome‑finished bicycle, pedaling along the icy, particulate‑filled rings of Saturn. The bike’s wheels spin, kicking up fine specks of icy rock that sparkle in the faint sunlight. In one gloved hand, the astronaut clutches a slightly worn, cardboard pizza box—its logo visible (e.g., a simple red‑and‑white “PIZZA” emblem). The pizza box is angled forward as if being delivered, and a faint, whimsical plume of steam rises from the box, hinting at hot pizza inside.*
+
+*Key visual elements to include:*
+- **Saturn’s rings** stretching out in the background, showing layered bands of ice and rock with subtle color variations (pale gold, gray, and faint amber).  
+- **Saturn** itself looming large in the distance, its bands and iconic rings partially visible, with a soft atmospheric glow.  
+- **Lighting:** Soft, golden sunlight from the far side of the Sun (low angle), casting gentle highlights on the astronaut’s helmet and bike, while the rest of the scene is bathed in the deep, star‑filled darkness of space.  
+- **Perspective:** Slightly low angle looking up at the astronaut, emphasizing the enormity of the rings and giving a sense of motion. The viewer can see the curvature of the rings beneath the bike’s tires.  
+- **Details:** Visible stitching

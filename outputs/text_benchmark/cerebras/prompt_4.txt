@@ -1,0 +1,12 @@
+**Prompt for a Text‑to‑Image Model (Midjourney / Stable Diffusion / DALL·E 3)**  
+
+```
+A hyper‑realistic, full‑body illustration of a small, bushy‑tailed squirrel standing upright and dressed in a perfectly tailored, charcoal‑gray business suit (slim‑fit jacket, crisp white shirt, skinny black tie, and matching trousers). The suit’s lapels are sharply pointed, the buttons gleam faintly, and a subtle pin‑stripe pattern catches the light. The squirrel’s tiny paws clutch a miniature, polished gold smartphone—its surface reflecting the surrounding scene. The squirrel’s expressive eyes are narrowed, its mouth open wide in an aggressive, almost comical shouting pose, as if delivering an impromptu sales pitch. 
+
+Lighting: Soft, directional studio lighting from the upper left, creating a gentle rim light around the squirrel’s fur and a subtle reflection on the gold phone. A faint catch‑light glints in the squirrel’s eyes, emphasizing the intensity of the expression. 
+
+Background: A minimalist, out‑of‑focus corporate office environment—glass‑walled conference room with faint silhouettes of desks and chart graphs in the distance. The background is muted (soft grays and blues) to keep focus on the squirrel. 
+
+Style: Ultra‑detail, photorealistic with a touch of cartoonish exaggeration for the facial expression. Textures are crisp—fur, fabric weave, metallic phone. Depth of field is shallow, keeping the squirrel sharply in focus while the background softly blurs.
+
+Additional tags (optional, for AI platforms that accept them): #hyperrealistic #cinematic lighting #shallow depth of field #studio portrait #anthropomorphic #business satire #gold smartphone #aggressive

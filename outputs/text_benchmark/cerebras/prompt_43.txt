@@ -1,0 +1,13 @@
+**Prompt for an AI image generator (stable‑diffusion / Midjourney / DALL·E):**
+
+```
+A whimsical, hyper‑realistic scene of a classic red gasoline lawnmower (with a shiny metal blade) moving across a surreal lawn made entirely of thick, glossy green spaghetti strands that sprout from the ground like blades of grass. The spaghetti “grass” is vibrant emerald‑green, slightly wavy, and glistens with a faint sheen of olive oil. The mower’s wheels sink just a bit into the tangled noodles, sending a few strands flying upward in a soft, buttery‑white mist. Sunlight streams from a clear blue sky, casting gentle shadows that emphasize the texture of the spaghetti lawn. In the background, a few whimsical garden elements—like a stone garden gnome partially hidden behind a mound of spaghetti, and a tiny wooden fence made of crumbled breadsticks—add to the playful atmosphere. The overall mood is magical yet familiar, blending everyday suburban life with a fantastical culinary twist.
+```
+
+**Key visual cues to emphasize:**
+
+- **Lawnmower:** Classic red, polished metal, realistic details (handle, engine, blade). The blade should appear sharp, catching a glint of sunlight as it slices through the spaghetti.
+- **Spaghetti lawn:** Thick strands (about 2–3 cm in diameter), deep emerald green, slightly glossy, with subtle variations in hue to suggest natural “grass” clusters. The strands should be densely packed but still show individual noodles.
+- **Interaction:** Small ribbons of spaghetti being cut and flung upward, creating a delicate, airy plume. The mower’s wheels should show slight indentations where they pass over the noodles.
+- **Lighting & atmosphere:** Soft midday light, warm shadows, a faint breeze hinted by a slight sway in the spaghetti strands. A dreamy, slightly surreal ambience.
+- **Background details (optional but fun):**

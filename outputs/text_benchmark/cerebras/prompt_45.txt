@@ -1,0 +1,15 @@
+**Concept Overview**
+
+Imagine a sleek, slightly retro‑styled computer monitor that’s been given a pair of oversized, “reading‑glasses” style spectacles. The whole scene is whimsical and a little absurd, capturing the feeling of a device that’s trying (and failing) to make sense of what it’s seeing. Below is a thorough visual description that you can hand to an illustrator, feed into a generative‑AI image model, or use as a basis for a quick sketch.
+
+---
+
+## 1. The Monitor (the “head”)
+
+| Element | Details |
+|--------|---------|
+| **Shape** | A rectangular CRT‑style monitor (think early‑2000s) with thin black plastic bezels. The screen is slightly bulged outward, giving it a subtle “face‑like” curvature. |
+| **Color** | Matte charcoal gray for the casing, with a faint brushed‑metal texture on the front bezel. |
+| **Screen** | The LCD panel is turned on, displaying a simple, flat‑colored background (soft pastel teal) to keep the focus on the “face.” |
+| **Expression** | On the screen itself, draw two large, cartoonish eyes (white with black pupils) placed roughly midway up the display. Add tiny “eyebrows” just above the eyes—one raised, one lowered—to convey confusion. A small, straight‑line mouth sits below the eyes, slightly turned down at the corners. |
+| **Accessories** | A tiny, subtle “mouth” could be a faint pixel‑art smile that’s being

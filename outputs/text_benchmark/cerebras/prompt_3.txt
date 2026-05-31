@@ -1,0 +1,15 @@
+**Prompt for AI Image Generators (Midjourney / Stable Diffusion / DALL·E 3)**  
+
+```
+Majestic golden eagle wearing a sleek, vintage‑style pilot’s headset (leather straps, brass ear cups, small goggles) perched on the control column of a classic 1920s biplane, wings spread wide as it soars through fluffy white clouds. The biplane is a bright, polished wooden-and-canvas craft with a bright red fuselage, twin propellers turning lazily, and a brass “Wright” badge on the nose. Sunlight streams from a golden hour sky, casting warm, soft highlights on the eagle’s feathers and the plane’s varnished wood. Perspective: low‑angle, slightly from behind the cockpit, showing both the determined eyes of the eagle and the sweeping curvature of the biplane’s wings. Ultra‑realistic style, high detail, 8K resolution, cinematic lighting, shallow depth of field to emphasize the eagle, vibrant yet natural color palette. --ar 16:9 --v 5.2
+```
+
+### Why This Works
+| Element | Reason |
+|--------|--------|
+| **Majestic golden eagle** | Provides striking focal point; gold feathers catch the light. |
+| **Vintage pilot headset** | Instantly tells the “pilot” story; brass and leather adds nostalgic texture. |
+| **1920s biplane** | Classic silhouette that feels adventurous and timeless. |
+| **Sunset/golden‑hour lighting** | Warm tones highlight feathers and wood, creating a cinematic mood. |
+| **Low‑angle, slightly behind view** | Gives a heroic perspective, showing both the eagle’s face and the aircraft’s silhouette. |
+| **Ultra‑realistic, 8K** | Ensures crisp feather detail and fabric texture, making the scene believable. |
