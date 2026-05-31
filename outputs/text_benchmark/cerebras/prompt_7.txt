@@ -1,7 +1,12 @@
-**Scene Snapshot: “Feline Frequency”**
+**Scene Overview**  
+A sleek, neon‑lit nightclub throbs with pulsing beats. The crowd is a sea of silhouettes, shoulders bobbing in time, laser ribbons slicing through smoky air. At the center of the action sits an unlikely star: a charismatic cat behind the DJ console, ears perked and whiskers twitching to the rhythm.
 
-| Element | Visual Details | Mood / Lighting |
-|--------|----------------|-----------------|
-| **Cat DJ** | • Species: sleek, short‑haired tuxedo cat (black, white, and orange “butter‑cup” spots). <br>• Pose: perched on a raised DJ booth, one paw on the mixer, the other draped over a glossy vinyl record. <br>• Headgear: oversized, neon‑glow over‑ear headphones with a metallic finish—ear cups pulsing in sync with the beat. <br>• Attire: a black leather jacket with subtle cat‑ear patches, a thin gold chain around the neck, and a tiny LED‑lit name tag that reads “MEOW‑5”. | A cool blue‑purple wash that shimmers off the cat’s glossy fur, punctuated by strobe flashes that catch the glossy fur and ear‑cup reflections. |
-| **DJ Booth** | • Material: brushed steel with a matte black underside. <br>• Controls: a hybrid of classic vinyl turntables and futuristic holographic faders. <br>• Extras: a small cat‑sized “catnip spray” bottle humorously perched on the side, a tiny bowl of water for the cat’s paws. | Spotlights sweep across the booth, highlighting the cat’s silhouette and the neon edges of the headphones. |
-| **Crowd** | • A diverse mix of party‑goers: humans, stylized silhouettes of other cats (some with whisker‑styled wigs), and a few quirky “musical mice” in tuxedos. <br>• Energy: arms raised, heads bobbing, some wearing LED‑glasses that reflect the beat. | The crowd is bathed in a kaleidoscope of
+---
+
+### Visual Breakdown
+
+| Element | Details | Why It Works |
+|---|---|---|
+| **Cat** | • **Breed**: Siamese‑styled with striking blue‑gray points and a glossy, short‑haired coat.<br>• **Eyes**: Large, amber‑gold with a subtle glow, reflecting the strobe lights.<br>• **Posture**: Upright on a raised platform, front paws on the decks, tail swaying like a metronome. | The Siamese’s sleek look conveys confidence; bright eyes make the animal feel alive amidst the darkness. |
+| **Headphones** | • Over‑ear, matte‑black DJ headphones with neon‑blue LED rims that pulse in sync with the bass.<br>• Slightly oversized for the cat, giving a playful “too‑big‑for‑me” charm.<br>• A small logo (e.g., a paw print) on the side. | The headphones are the focal tech element; the LED accents tie the cat’s gear to the club’s lighting scheme. |
+| **DJ Booth** | • Modern, brushed‑aluminum console with

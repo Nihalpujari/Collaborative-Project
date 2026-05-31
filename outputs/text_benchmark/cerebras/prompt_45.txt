@@ -1,15 +1,9 @@
-**Concept Overview**
+**Prompt for an image‑generation model (or a vivid description you can use to visualize the scene):**
 
-Imagine a sleek, slightly retro‑styled computer monitor that’s been given a pair of oversized, “reading‑glasses” style spectacles. The whole scene is whimsical and a little absurd, capturing the feeling of a device that’s trying (and failing) to make sense of what it’s seeing. Below is a thorough visual description that you can hand to an illustrator, feed into a generative‑AI image model, or use as a basis for a quick sketch.
-
----
-
-## 1. The Monitor (the “head”)
-
-| Element | Details |
-|--------|---------|
-| **Shape** | A rectangular CRT‑style monitor (think early‑2000s) with thin black plastic bezels. The screen is slightly bulged outward, giving it a subtle “face‑like” curvature. |
-| **Color** | Matte charcoal gray for the casing, with a faint brushed‑metal texture on the front bezel. |
-| **Screen** | The LCD panel is turned on, displaying a simple, flat‑colored background (soft pastel teal) to keep the focus on the “face.” |
-| **Expression** | On the screen itself, draw two large, cartoonish eyes (white with black pupils) placed roughly midway up the display. Add tiny “eyebrows” just above the eyes—one raised, one lowered—to convey confusion. A small, straight‑line mouth sits below the eyes, slightly turned down at the corners. |
-| **Accessories** | A tiny, subtle “mouth” could be a faint pixel‑art smile that’s being
+> **Scene:** A sleek, modern computer monitor (about 24‑inch, thin bezel) is standing upright on a simple desk. The monitor’s “face” is the black screen, but it has a subtle, cartoon‑ish personality: faint, slightly raised eyebrows and a small, bewildered mouth rendered as a faint line on the glass.  
+> 
+> **Accessories:** Resting on the upper‑right corner of the screen are a pair of round, gold‑rimmed reading glasses. The glasses sit as if the monitor is actually wearing them—one arm loops around the monitor’s left side, the other around the right, with the lenses hovering just a millimeter above the display. Tiny, translucent reflections on the lenses hint at the monitor’s own “eyes” looking through them.  
+> 
+> **Expression:** The monitor’s “eyes” (the dark, blank display) are wide, giving the impression of surprise. A faint, comic‑style “confused” thought bubble hovers above the monitor, containing a swirl of question marks (e.g., “???”).  
+> 
+> **Lighting & Mood:** Soft, diffused office lighting casts gentle highlights on the monitor’s surface, emphasizing the glossy screen and the metallic frames

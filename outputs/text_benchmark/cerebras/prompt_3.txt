@@ -1,15 +1,14 @@
-**Prompt for AI Image Generators (Midjourney / Stable Diffusion / DALL·E 3)**  
+**Prompt (for Stable Diffusion / Midjourney / DALL‑E 3)**  
 
 ```
-Majestic golden eagle wearing a sleek, vintage‑style pilot’s headset (leather straps, brass ear cups, small goggles) perched on the control column of a classic 1920s biplane, wings spread wide as it soars through fluffy white clouds. The biplane is a bright, polished wooden-and-canvas craft with a bright red fuselage, twin propellers turning lazily, and a brass “Wright” badge on the nose. Sunlight streams from a golden hour sky, casting warm, soft highlights on the eagle’s feathers and the plane’s varnished wood. Perspective: low‑angle, slightly from behind the cockpit, showing both the determined eyes of the eagle and the sweeping curvature of the biplane’s wings. Ultra‑realistic style, high detail, 8K resolution, cinematic lighting, shallow depth of field to emphasize the eagle, vibrant yet natural color palette. --ar 16:9 --v 5.2
-```
+A majestic bald eagle, feathers ruffled by the wind, wearing a sleek, vintage‑style leather pilot’s headset with brass ear cups and a microphone, perched on the control stick of a bright‑red, open‑cowl 1920s biplane. The aircraft is mid‑flight, its twin propellers churning white foam as it soars through soft, sun‑lit cumulus clouds. The eagle’s sharp golden eyes stare forward with confident determination. Sunlight streams from behind, casting a warm golden‑hour glow on the metal ribs of the wings and highlighting the eagle’s glossy plumage. The background is a deep blue sky fading into pastel pink at the horizon. Ultra‑realistic, cinematic lighting, 8K resolution, shallow depth of field focusing on the eagle’s face and headset, with a slight motion blur on the propellers to convey speed. Shot on a full‑frame DSLR style, with a slightly warm color grade reminiscent of classic adventure posters.```
 
-### Why This Works
-| Element | Reason |
-|--------|--------|
-| **Majestic golden eagle** | Provides striking focal point; gold feathers catch the light. |
-| **Vintage pilot headset** | Instantly tells the “pilot” story; brass and leather adds nostalgic texture. |
-| **1920s biplane** | Classic silhouette that feels adventurous and timeless. |
-| **Sunset/golden‑hour lighting** | Warm tones highlight feathers and wood, creating a cinematic mood. |
-| **Low‑angle, slightly behind view** | Gives a heroic perspective, showing both the eagle’s face and the aircraft’s silhouette. |
-| **Ultra‑realistic, 8K** | Ensures crisp feather detail and fabric texture, making the scene believable. |
+---
+
+### Breakdown & Tips for Fine‑Tuning
+
+| Element | Details & Why It Helps |
+|---------|------------------------|
+| **Subject** | “Majestic bald eagle” + “wearing a vintage leather pilot’s headset” makes the focal point clear and distinct. |
+| **Vehicle** | “Bright‑red 1920s open‑cowl biplane” adds a nostalgic vintage vibe; the color contrast makes the eagle stand out. |
+| **Environment** | “Soft, sun

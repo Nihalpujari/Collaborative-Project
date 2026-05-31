@@ -1,28 +1,19 @@
-The image of a medieval knight fumbling with a modern smartphone is both hilarious and fascinating—a perfect blend of anachronistic humor and cultural contrast. Here’s how you might imagine the scene unfolding, along with some comedic and thematic twists:
+The image of a medieval knight fumbling with a modern smartphone is both hilarious and fascinating—a perfect blend of anachronistic humor and cultural contrast. Here’s how you might imagine the scene playing out:
 
 ---
 
-### **Scene: A Knight vs. the Smartphone**
-**Setting:** A dimly lit stone chamber in a castle. Sir Godfrey the Unyielding, a grizzled knight in full plate armor, stares in bewilderment at a glowing rectangle in his gauntleted hands. His squire, a tech-savvy teenager from the 21st century (time-traveling or magically summoned), watches in exasperation.
+### **Scene: A Knight vs. The Smartphone**
+**Setting:** A dimly lit stone chamber in a castle. Sir Aldric the Unyielding, clad in full plate armor, sits at a rough-hewn table, staring at a glowing rectangle in his gauntleted hands. His squire, a nervous teenager named Tom, watches from a safe distance.
 
-#### **Act 1: First Contact**
-- **The Knight’s Reaction:**
-  *"By the Holy Grail… is this a sorcerer’s mirror? A demon’s scrying glass? Why does it hum like a swarm of bees?"*
-  - He holds the phone at arm’s length, as if it might explode.
-  - Taps the screen with his mailed finger—nothing happens. *"Curses! The witchery resists my touch!"*
-  - Tries to pry it open with his dagger. *"Perhaps the magic lies within!"* (Squire screams: *"NO! THAT’S THE BATTERY!"*)
+**Sir Aldric:** *(grunting, tilting the phone at odd angles)* "By the bones of Saint George, what sorcery is this? The screen… it *moves* when I touch it! Is it possessed by a demon?"
+**Tom:** *(sweating)* "Uh, no, sir. It’s just… a touchscreen. You swipe up to unlock it."
+**Sir Aldric:** *(jabs the screen with his mailed finger, accidentally opening the camera)* "AIIEE! It has captured mine image! Is this a scrying mirror?!"
+**Tom:** *(panicking)* "No, no, that’s just the—*oh no*—"
+**Sir Aldric:** *(accidentally takes a selfie, then drops the phone in horror)* "WITCHCRAFT! The device has *stolen my soul*!"
+**Tom:** *(diving to catch the phone)* "It’s just a photo, sir! It’s not—*clang*—ow, your gauntlet is *heavy*."
 
-- **The Squire’s Explanation:**
-  *"It’s not magic, Sir Godfrey. It’s… uh… a ‘phone.’ You talk into it, and people far away can hear you."*
-  - Knight: *"Like a messenger raven, but without the feathers?"*
-  - Squire: *"Sure, but with memes."*
+---
 
-#### **Act 2: The Learning Curve**
-- **Texting:**
-  - Knight attempts to send a message: *"HARK! THE DRAGON APPROACHES. PREPARE THE BOILING OIL."*
-  - Autocorrect changes it to: *"HORK! THE DRAIN APPROACHES. PREPARE THE BOILING OIL."*
-  - Recipient (a confused peasant): *"…What?"*
-
-- **Social Media:**
-  - Knight posts a selfie with his sword: *"Behold, mine blade of Valyrian steel!"*
-  - Comments flood in: *"That’s a butter knife." / "10/10 would get yeeted."
+### **The Knight’s Struggles (A Medieval User Guide to Smartphones)**
+1. **The "Sword vs. Touchscreen" Dilemma**
+   - *Problem:* Gauntlets are terrible for touchscreens. Every tap registers as a *hard* press

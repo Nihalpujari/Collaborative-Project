@@ -1,15 +1,12 @@
-**A Whimsical Snapshot**
+**Scene Summary**
 
-Imagine a plucky little squirrel, its fluffy tail flicking with enthusiasm, perched atop a sleek skateboard. On its head sits a perfectly tilted cowboy hat—soft felt, weather‑worn brown, with a modest creased brim that adds just the right amount of swagger. The hat’s tiny leather strap is snug around the squirrel’s head, keeping it securely in place as it zips across the pavement.
-
-The skateboard itself is a vibrant teal board, its grip tape scuffed from countless rides, the wheels humming a cheerful rattling rhythm. The squirrel’s tiny paws grip the board’s deck with surprising dexterity, its claws barely digging into the surface, while its tiny, bright eyes are fixed ahead, gleaming with adventurous spirit.
-
-Behind it, the cityscape blurs into a streak of pastel blues and pinks, hinting at a sunset hour. A faint trail of dust rises from the board’s wheels, curling up like a cartoon “whoosh” that captures the energy of the moment. The squirrel’s whiskers flutter in the breeze, and the cowboy hat flops slightly with each turn, as if nodding in approval.
+A mischievous gray‑brown squirrel dashes across a sun‑dappled city park, its tiny paws gripping a sleek skateboard. Perched atop its head is a battered, straw‑woven cowboy hat—downturned brim, a faded red band, and a feather tucked into the side. The squirrel’s bushy tail wiggles for balance, and its beady eyes sparkle with adventurous confidence. Around it, park benches, a few scattered acorns, and a distant graffiti‑tagged wall add urban flavor, while a few startled pigeons flutter away in the background.
 
 ---
 
-### How to Bring This Scene to Life (AI‑Art Prompt)
+## Detailed Visual Description  
 
-If you’d like to generate an illustration with an image model (Stable Diffusion, Midjourney, DALL‑E, etc.), you can copy‑paste the following prompt:
-
-> **Prompt:** “A cute squirrel wearing a tilted cowboy hat, riding a teal skateboard across an urban sunset background. The squirrel’s fluffy tail is fanned out, its bright eyes focused forward, and its tiny paws grip the skateboard deck. The cowboy hat is brown, weathered felt with a leather strap, slightly askew. The skateboard wheels create a subtle motion blur and a small puff of dust, giving a sense of speed. Vibrant, semi‑realistic style with gentle lighting, soft pastel sky, and a playful,
+| Element | Visual Details |
+|--------|----------------|
+| **Squirrel** | • Body: sleek, mottled gray‑brown fur with a lighter belly. <br>• Eyes: dark, almond‑shaped, focused forward. <br>• Ears: perked, with a thin line of white fur along the tops. <br>• Tail: large, voluminous, slightly curled—acts as a counter‑balance. |
+| **Cowboy Hat** | • Material: straw, slightly weathered, with a few faint straw frays. <br>• Crown: low‑profile, slightly dented where the squirrel’s head sits. <br>• Brim: wide, tipped back a bit, casting a tiny shadow over the squirrel’s snout. <br>• Decoration: a thin, faded red ribbon encircles

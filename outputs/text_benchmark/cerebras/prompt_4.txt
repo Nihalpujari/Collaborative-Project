@@ -1,12 +1,3 @@
-**Prompt for a Text‑to‑Image Model (Midjourney / Stable Diffusion / DALL·E 3)**  
+**Prompt for AI Image Generation**
 
-```
-A hyper‑realistic, full‑body illustration of a small, bushy‑tailed squirrel standing upright and dressed in a perfectly tailored, charcoal‑gray business suit (slim‑fit jacket, crisp white shirt, skinny black tie, and matching trousers). The suit’s lapels are sharply pointed, the buttons gleam faintly, and a subtle pin‑stripe pattern catches the light. The squirrel’s tiny paws clutch a miniature, polished gold smartphone—its surface reflecting the surrounding scene. The squirrel’s expressive eyes are narrowed, its mouth open wide in an aggressive, almost comical shouting pose, as if delivering an impromptu sales pitch. 
-
-Lighting: Soft, directional studio lighting from the upper left, creating a gentle rim light around the squirrel’s fur and a subtle reflection on the gold phone. A faint catch‑light glints in the squirrel’s eyes, emphasizing the intensity of the expression. 
-
-Background: A minimalist, out‑of‑focus corporate office environment—glass‑walled conference room with faint silhouettes of desks and chart graphs in the distance. The background is muted (soft grays and blues) to keep focus on the squirrel. 
-
-Style: Ultra‑detail, photorealistic with a touch of cartoonish exaggeration for the facial expression. Textures are crisp—fur, fabric weave, metallic phone. Depth of field is shallow, keeping the squirrel sharply in focus while the background softly blurs.
-
-Additional tags (optional, for AI platforms that accept them): #hyperrealistic #cinematic lighting #shallow depth of field #studio portrait #anthropomorphic #business satire #gold smartphone #aggressive
+*A hyper‑realistic, high‑resolution illustration of a squirrel standing upright, dressed in a crisp, charcoal‑gray business suit with a matching waistcoat and a neatly tied silk tie (deep burgundy). The squirrel’s fur is glossy chestnut brown, its eyes bright and focused, and its tiny ears are slightly perked. It holds a miniature, sleek gold smartphone—shiny and reflective—pressed up to its mouth. The squirrel’s tiny paws clutch the phone with an aggressive, commanding posture, as if delivering a forceful speech. Its eyebrows (suggested by subtle fur creases) are furrowed, and its tail is flicked upward in a dynamic pose, adding to the intensity. The background is a muted, professional office setting: faint outlines of a glass conference table, a blurred city skyline through a window, and soft ambient lighting that highlights the metallic gleam of the phone and the subtle textures of the suit fabric. The overall mood is a humorous yet striking juxtaposition of animal cuteness and corporate seriousness, with vivid detail and crisp focus.*

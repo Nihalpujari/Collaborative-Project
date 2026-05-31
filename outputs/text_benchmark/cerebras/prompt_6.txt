@@ -1,17 +1,9 @@
-Below is a detailed description you can feed straight into most AI‑image generators (Stable Diffusion, Midjourney, DALL‑E, etc.) to get the exact “fluffy kitten wearing heavy‑metal spiked armor” you have in mind. Feel free to tweak any of the parameters to match your personal style.
+**A Fluffy Kitten in Heavy‑Metal Spiked Armor – Visual Description**
 
----
+- **Setting & Mood:** Picture a dimly lit, stone‑walled arena reminiscent of a medieval tournament ground. Flickering torchlight dances across the rough walls, casting dramatic shadows. The atmosphere is a blend of cuteness and brutal intensity—think “cutesy meets hard‑core metal.”
 
-**Prompt (English, ready‑to‑copy)**  
+- **The Kitten’s Fur:** The star of the scene is a tiny, wide‑eyed kitten with a coat as fluffy as freshly fallen snow. Its fur is a soft, silvery‑gray that almost shimmers, giving the impression of a fluffy cloud caught in a spotlight. The whiskers are long, delicate, and a contrasting deep charcoal, framing an innocent yet fierce expression.
 
-```
-A cute, fluffy kitten perched confidently, its fluffy fur a soft cream‑white with subtle gray tabby stripes. The kitten is dressed in an exaggerated, heavy‑metal armor set that looks like it was forged for a battle‑hardened warrior. The armor is dark gunmetal gray with a slightly worn, brushed‑metal texture, studded with large, sharp steel spikes on the shoulders, chest plate, gauntlets, and a tiny spiked helmet that barely fits over the kitten’s head. The helmet has a visor of smoky quartz glass that reflects a faint orange glow. The kitten’s big round eyes are bright green, giving a mischievous yet fierce expression. The background is a dimly lit, gritty underground tavern with stone walls, scattered broken bottles, and a faint haze of smoke swirling around. A single spotlight from above casts a dramatic rim‑light on the kitten’s fur and the spiked armor, highlighting the contrast between the soft fur and the harsh metal. Ultra‑realistic style, high detail, 8K resolution, shallow depth of field, cinematic lighting, slightly saturated colors for the fur, cool blue‑gray tones for the metal, and a subtle vignette around the edges.```
-
----
-
-### Quick Breakdown of the Prompt Elements
-
-| Element | Why it matters | Suggested tweak |
-|--------|----------------|-----------------|
-| **Fluffy kitten** | Soft fur, cute contrast to metal | Change fur color (e.g., “silver‑gray” or “golden”) |
-| **
+- **Helmet & Headgear:** 
+  - **Helmet Shape:** A miniature version of a classic full‑helm (like a knight’s helm) perfectly sized for the kitten’s head. The visor is slightly raised, allowing the kitten’s bright, curious eyes to peek out.
+  - **Spikes:** Jagged, hammered steel spikes jut out from the crown and the edges of the visor, glinting with a cold, metallic sheen. The spikes vary in length—some short and stubby, others long and wicked—adding an asymmetrical

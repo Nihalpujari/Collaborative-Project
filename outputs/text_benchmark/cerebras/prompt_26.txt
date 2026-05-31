@@ -1,13 +1,10 @@
-**Scene Overview**  
-A lone mummy—wrapped head‑to‑toe in ancient, moth‑eaten bandages—has waddled its way into a modern office lobby and become hopelessly entangled in the rotating glass panels of a revolving door. The juxtaposition of antiquity and contemporary architecture creates a comedic, slightly eerie tableau that’s perfect for prints, memes, or a short animated gag.
+**Scene Description – “Mummy in the Revolving Door”**
 
----
+*Setting*: A sleek, glass‑fronted shopping mall. Sunlight streams through the skylight, casting glittering reflections on the polished marble floor. A large, cylindrical revolving door—its glass panels gleaming like frozen waterfalls—whirs gently in the bustle of shoppers.
 
-## 1. Visual Blueprint (for illustrators or AI‑image prompts)
+*The Mummy*: A towering figure draped in ancient Egyptian bandages, each linen strip stained with centuries‑old dust and a faint, sepia‑tone patina. The bandages are meticulously wrapped, overlapping like the folds of a weathered map, with a faint outline of a once‑vibrant Ankh pendant peeking through the fabric near the chest. Its hollow eyes, empty of any modern technology, stare blankly forward, while a faded, regal headdress—once a golden cobra crest—now sits crookedly atop the head, its metal glint dulled by age.
 
-| Element | Description | Tips / Details |
-|--------|--------------|----------------|
-| **Setting** | High‑ceiling lobby of a sleek office building. Marble or polished concrete floor, recessed lighting, a few potted plants and a “Welcome” glass sign. | Use soft ambient light to give a clean, corporate feel. Add a faint reflection of the mummy on the glossy floor for depth. |
-| **Revolving Door** | Classic four‑panel glass cylinder (or a more modern six‑panel version). One panel is partially open, the others are mid‑rotation. The door’s glass is slightly frosted, catching reflections of the mummy’s bandages. | Show motion blur on the rotating panels to emphasize the door’s movement; a subtle streak can hint at the turn direction. |
-| **The Mummy** | Fully wrapped in tan‑to‑gray bandages, with a few tears revealing a faintly glowing skeletal skull underneath. One arm is outstretched, another draped over the door’s edge. The lower half is caught between two panels. | Emphasize the “stuck” position by looping a bandage around the door’s vertical axis—like a belt around the cylinder. The mummy’s eyes (if any) can be empty sockets or faintly glowing pits. |
-| **Facial Expression** | Since a mummy’s face is mostly hidden, convey frustration through body language: a twisted torso
+*The Incident*: The mummy steps—or rather, lumbers—into the revolving door, its sand‑filled feet making soft thuds against the floor. The door’s mechanism, designed for swift human traffic, catches on the thick layers of linen. As the panels turn, a few of the bandages snag on the rotating gear, causing a tense tug‑and‑pull. The door’s smooth motion slows to a creak, then halts altogether, trapping the ancient relic mid‑rotation.
+
+*Visual Details*:
+- **Bandage Tension**:

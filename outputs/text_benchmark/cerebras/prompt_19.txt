@@ -1,9 +1,9 @@
 **Scene Description**
 
-*Setting*: Deep inside the Batcave, a sleek, industrial‑style kitchen glints with chrome surfaces and faint blue‑green illumination from the cavern’s ambient lighting. A massive, glossy white onion sits on a cutting board that’s mounted on a steel work‑table. The onion is absurdly large—about the size of a basketball—its papery skin slightly flared, its layers hinted at beneath the surface.
+- **Setting:** A dimly‑lit, industrial‑style kitchen that feels like a secret Bat‑cave — concrete walls, exposed ducts, and a huge stainless‑steel work‑table. A lone, low‑hanging bulb casts a harsh, yellow‑white light over the countertop, creating dramatic shadows.
 
-*Batman*: The Dark Knight is in full armor, the iconic black cape draped over his shoulders, the cowl partially lifted to reveal his stern, chiseled jaw. His muscular forearms, gloved in matte black, grip a hefty chef’s knife that gleams with a faint, almost otherworldly edge. As he brings the blade down onto the onion, a cascade of aromatic juices splashes onto the cutting board.
+- **Batman:** The Dark Knight is in full armor, but the cape is draped over a rolling chair for convenience. His cowl is on, the white lenses of his mask reflecting the glint of the knife. You can see the faintest ripple of wetness on his forehead, hinting at a recent battle. His posture is tense, shoulders hunched as he leans over the massive onion.
 
-*Emotions*: Despite his stoic reputation, a sudden surge of grief is evident. A single tear—shimmering like a tiny black marble—traces a slow path down the right side of his cheek, catching the dim light before disappearing. A faint, almost imperceptible tremor ripples through his shoulders, betraying the emotional weight he carries. The tears are not just wetness; they are a visual metaphor for the layers of trauma he’s peeled away over the years.
+- **The Onion:** A gigantic, glossy white onion the size of a basketball sits on the cutting board. Its outer layers have been peeled back, exposing the papery skin underneath. The sheer size of the vegetable emphasizes the absurdity of the task.
 
-*Atmosphere*: A soft, dramatic rim light outlines Batman’s silhouette, emphasizing the contrast between the darkness of his suit and the
+- **The Action:** Batman wields a large, sleek kitchen cleaver (the kind you’d see in a professional chef’s kitchen) with the same precision he uses for a Batarang. The
