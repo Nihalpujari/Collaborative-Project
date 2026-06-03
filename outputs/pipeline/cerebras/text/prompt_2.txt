@@ -1,0 +1,8 @@
+Here’s a ready‑to‑use prompt you can feed into any AI‑image model (Stable Diffusion, Midjourney, DALL·E, etc.) to get a vivid illustration of a red fox at a pottery wheel:
+
+---
+
+**Prompt**
+
+```
+A charming red fox perched on a wooden stool in front of a classic pottery wheel, delicately shaping a smooth, semi‑finished clay vase with its front paws. The fox’s fur is bright orange‑red with white underbelly and a fluffy tail curled behind it. Its eyes

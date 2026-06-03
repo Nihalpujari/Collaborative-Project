@@ -1,9 +1,14 @@
-**Prompt for an AI Image Generator (e.g., Midjourney, DALL‑E, Stable Diffusion)**  
+**Title:** *Morning Elegance – A Fancy Owl Sipping Coffee*
 
-```
-A charismatic, elegantly‑dressed owl perched on a polished mahogany bar stool, delicately holding a porcelain coffee cup with both talons. The owl wears a tiny velvet waistcoat, a silk cravat, and a round monocle perched over one eye. Steam curls up from the hot coffee, catching the warm glow of a nearby brass chandelier. The background is a cozy, vintage café interior: dark wooden panels, soft amber lighting, a chalkboard menu, and a small potted fern on the windowsill. The owl’s feathers are a rich, iridescent russet with subtle gold flecks, and its eyes gleam with curiosity. The scene feels whimsical yet refined—styled in a blend of realistic illustration and soft painterly textures, with a shallow depth‑of‑field that makes the owl and cup the focal point. High resolution, 8K, vivid colors, cinematic lighting.
-```
+**Scene Overview**  
+The composition centers on a dignified, anthropomorphic owl perched on the arm of a vintage, mahogany armchair. The owl is impeccably dressed in a crisp, white dress shirt with a silk, midnight‑blue cravat tucked neatly at its throat. A gold pocket watch hangs from its left breast pocket, its chain catching a soft glint of morning light. Its feathers are a rich tapestry of chestnut and amber, ruffling slightly as it leans forward to take a delicate sip from a porcelain cup of steaming coffee.
 
-**If you’d like a written description instead:**
+**Key Visual Elements**
 
-> Perched on a polished mahogany bar stool, the owl is the picture of avian sophistication. Its plumage—deep russet with hints of amber—shimmers under the
+| Element | Details |
+|---------|---------|
+| **Owl’s Face** | Large, amber‑gold eyes rimmed with a subtle, iridescent ring of teal. A modest, beak‑shaped smile reveals a hint of a gold tooth. Tiny spectacles rest on the bridge of its beak, giving a scholarly air. |
+| **Attire** | Tailored charcoal‑gray waistcoat with subtle pin‑stripe pattern, gold buttons, and a pocket square in deep burgundy. A thin velvet bow tie in midnight blue adds a splash of color. |
+| **Coffee Cup** | Classic white bone china cup with a thin gold rim, sitting on a matching saucer. Wisps of steam curl upwards, forming faint, whimsical shapes (a tiny feather, a crescent moon). The coffee itself is a deep, velvety brown with a glossy crema surface. |
+| **Background** | A cozy library nook: floor‑to‑ceiling bookcases filled with leather‑bound volumes, a brass floor lamp casting a warm amber glow, and a small window revealing a sunrise over a misty forest. A Persian rug with muted reds and golds lies beneath the chair. |
+| **Lighting** | Soft, diffused morning light streams through the window, catching

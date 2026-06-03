@@ -1,13 +1,19 @@
-**Prompt for an AI image generator**
+**Illustration Prompt – “Angry Taco Lifts Iron”**
 
-**Scene:** A bustling, modern gym with polished wooden floors, wall‑mounted mirrors, and rows of metal weight racks. Bright overhead lights cast a clean, slightly cool glow over the space.
+---
 
-**Main Subject:**  
-- **Form:** A colossal, anthropomorphic taco that’s about three meters (10 ft) tall.  
-- **Shell:** A crisp, golden‑brown tortilla that’s slightly cracked around the edges, giving it a rugged, “battle‑worn” look.  
-- **Filling:** A chaotic swirl of shredded lettuce, diced tomatoes, melted cheddar cheese, seasoned ground beef, and a drizzle of spicy salsa that drips down the sides, adding vivid reds and greens.  
-- **Face:** The taco’s “head” is the upper end of the tortilla, where an angry expression is formed from its ingredients:  
-  - Two small, beady black olives for eyes, narrowed into a fierce glare.  
-  - A jagged strip of red pepper (or a faintly burned taco shell edge) serving as a furrowed brow.  
-  - A thin slice of jalapeño angled downwards for a scowl‑shaped mouth, with a few drops of salsa spilling out like a growl.  
-- **Arms:** Two sturdy, muscular arms made from thick, rolled‑up flour tortillas, each ending in oversized, gloved hands (think classic gym gloves
+**Scene Overview**  
+A colossal, anthropomorphic taco stands in the middle of a bright, modern gym, its tortilla shell slightly shredded at the edges from a recent “wrath‑inducing” battle. The taco’s expression is ferocious—eyebrows furrowed, eyes narrowed, a steam‑wisp of anger curling from its “mouth” (filled with spicy salsa and cheese). Muscles made of tightly rolled lettuce, beef, and beans bulge as it hoists a massive barbell. The gym’s equipment—rack, mirrors, and motivational posters—adds realistic context, while the taco’s vivid colors contrast sharply with the steel and concrete surroundings.
+
+---
+
+### 1️⃣ Composition & Perspective
+- **Camera Angle:** Low‑angle, slightly to the right of the taco, looking up. This emphasizes the taco’s towering size (≈12 ft tall) and gives the viewer a heroic‑yet comedic feel.  
+- **Framing:** The taco is centered, occupying roughly 60 % of the vertical space. The barbell arcs above it, with the weight plates visible in the foreground, creating a dynamic diagonal line that leads the eye from the taco’s fists to the gym ceiling.  
+- **Background:** A wall‑mounted mirror reflects the taco’s side profile, reinforcing the sense of scale and adding depth. A motivational banner reads “NO TORTILLA LEFT BEHIND!” in bold, distressed lettering.
+
+### 2️⃣ Character Design – The Taco
+| Feature | Details |
+|---|---|
+| **Shell** | Golden‑brown, slightly crisped tortilla with subtle char lines. One edge is torn, exposing the interior. |
+| **Filling (Muscles)** | Beef strips serve as “biceps” and “triceps”, lettuce leaves as “deltoids”,

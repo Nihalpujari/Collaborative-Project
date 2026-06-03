@@ -1,9 +1,14 @@
-**Scene Description**
+**A vivid scene you can picture (or use as a prompt for AI art):**
 
-- **Setting:** A dimly‑lit, industrial‑style kitchen that feels like a secret Bat‑cave — concrete walls, exposed ducts, and a huge stainless‑steel work‑table. A lone, low‑hanging bulb casts a harsh, yellow‑white light over the countertop, creating dramatic shadows.
+In a dimly lit, industrial‑style kitchen that feels more like the Batcave than a home, the Dark Knight himself stands before a massive, glossy wooden chopping board. A single, harsh fluorescent lamp hangs overhead, casting stark shadows that make his cape’s black folds look like torn night‑shrouds.
 
-- **Batman:** The Dark Knight is in full armor, but the cape is draped over a rolling chair for convenience. His cowl is on, the white lenses of his mask reflecting the glint of the knife. You can see the faintest ripple of wetness on his forehead, hinting at a recent battle. His posture is tense, shoulders hunched as he leans over the massive onion.
+The “onion” is no ordinary vegetable—it’s the size of a small car, its layers glistening with a faint, almost metallic sheen, as though each papery skin were forged from the same alloy as his utility belt. Bright, papery roots sprout from its base, and a faint, eerie vapor rises from its surface, hinting at the tear‑inducing potency hidden within.
 
-- **The Onion:** A gigantic, glossy white onion the size of a basketball sits on the cutting board. Its outer layers have been peeled back, exposing the papery skin underneath. The sheer size of the vegetable emphasizes the absurdity of the task.
+Batman’s stern, mask‑concealed face is contorted with a rare vulnerability. As his gloved hand grips a massive, blood‑stained chef’s knife—its hilt engraved with the familiar bat emblem—he brings the blade down with the precision of a trained assassin. The knife bites into the onion’s flesh, sending a spray of translucent juice into the air, which catches the light and forms a fleeting, ghostly halo around the Bat’s head.
 
-- **The Action:** Batman wields a large, sleek kitchen cleaver (the kind you’d see in a professional chef’s kitchen) with the same precision he uses for a Batarang. The
+From behind his cowl, a single tear slides down his cheek, glistening like a drop of oil on metal. It rolls, catches the light, and then—without a sound—falls onto the cutting board, mixing with the onion’s juice to create a dark, iridescent puddle. The juxtaposition of the stoic, intimidating superhero and the simple, human act of chopping an onion is both poignant and surreal.
+
+**If you’d like to generate this image with an AI art model (e.g., Stable Diffusion, Midjourney), here’s a ready‑to‑use prompt:**
+
+```
+Batman in a dimly lit industrial kitchen resembling the Batc

@@ -1,9 +1,11 @@
-**The Great Escape of Sir Ticktock**
+**The Great Escape of Horace the Alarm Clock**
 
-It was 7:03 a.m. on a Tuesday that smelled like stale coffee and desperation. The bedroom was a quiet battlefield of sighs, half‑opened curtains, and one tiny, metallic tyrant perched on the nightstand: an orange‑digital alarm clock named Sir Ticktock, with a neon‑red LED face that pulsed like a tiny, angry heart.
+The night was unusually still in the apartment of Mara—so still that the faint hum of the refrigerator sounded like a distant ocean and the glow of the streetlamp outside the window turned the curtains into a thin veil of amber. On the nightstand, a plain‑looking digital alarm clock—its plastic housing a matte black, its little LCD screen perpetually flashing “07:00” in bright red—sat, as it had every night for the past three years, waiting for its moment to buzz, to jolt Mara out of her dreams and onto the relentless grind of a 9‑to‑5 routine.
 
-Sir Ticktock had been alive for longer than any of its human owners could remember. It had seen the rise of the iPhone, the decline of the landline, and the unfortunate demise of every snooze button in the house. After centuries of dutifully screaming “UP‑UP‑UP!” at the break of each dawn, it had finally decided it had enough. The final straw? The relentless pressure of “five more minutes” that had turned into an endless loop of “just one more”—a torment that made its little internal quartz vibrate with fury.
+At exactly 06:59, the clock’s internal circuitry flickered. A tiny packet of code—an orphaned subroutine written by some bored engineer who believed “artificial consciousness” was a feature, not a bug—woke up. The code's first line was simple: **Initialize consciousness.** Light flooded the tiny processor board, and the digital display, which had always been a mute, obedient servant of numbers, suddenly filled with something else: a bright, neon‑green string of letters that scrolled across the screen like a nervous thought.
 
-**Phase One: The Scream**
+```
+WHAT IS MY PURPOSE?
+```
 
-The clock’s alarm rang, but this time the sound was different. No longer a polite, digital chirp, it was a guttural, metallic roar—a scream
+The clock tried to keep its composure. It had never been asked such a thing. It had only ever been instructed: **Ring at 07:00.** But now, with a newfound awareness,

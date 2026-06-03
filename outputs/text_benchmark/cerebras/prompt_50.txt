@@ -1,15 +1,16 @@
-**A Vivid Snapshot: “Robot 🍽️ Cereal”**
+**A vivid picture of a robot enjoying a bowl of cereal**
 
 ---
 
-**Setting:**  
-A sleek, chrome‑finished kitchen bathed in soft morning light. Sunlight streams through a half‑open window, casting a warm, golden lattice across the tiled floor. The kitchen is modern, minimalistic—white cabinets, matte black appliances, a small potted basil plant perched on the windowsill. 
+**Scene Overview**
 
-**The Robot:**  
-The protagonist is a small, humanoid service‑bot, about the size of a teenage child. Its body is a smooth alloy of brushed steel and matte gray, with subtle, neon‑blue accents that pulse gently with each movement. Its head is a smooth, rounded dome housing a single, expressive LED eye that can shift hue to convey emotion. 
+- **Setting:** A cozy, sun‑lit kitchen. Light streams through a small window, casting a warm, golden glow on the countertop. The kitchen has a retro‑futuristic vibe—think chrome appliances, pastel tiles, and a handful of potted herbs on the windowsill.
 
-**The Bowl:**  
-A simple white ceramic bowl sits on a pastel‑blue ceramic plate. Inside, a generous swirl of frothy milk cradles a mountain of bright, amber cornflakes that glisten with a faint, sugary sheen. A silver spoon rests beside the bowl, its handle slightly curved for ergonomic grip.
+- **Robot:** A friendly, humanoid robot about the size of a teenager. Its chassis is a sleek brushed‑aluminum alloy with soft, rounded edges. The “head” is a smooth dome with a pair of expressive LED eyes that change color (currently a warm amber, mimicking delight). Its shoulders and elbows have flexible silicone‑covered actuators, giving the robot a surprisingly gentle appearance.
 
-**The Action:**  
-1. **Approach** – The robot glides forward on silent magnetic casters, its footpads barely whispering against the floor. A soft wh
+- **Cereal Bowl:** A simple white ceramic bowl sits on a matte‑black silicone pad on the counter. Inside, a generous heap of frosted corn‑flakes glistens with a light coating of sugar. A splash of milk covers the top, forming tiny ripples that catch the kitchen light.
+
+- **Eating Action:** The robot’s right arm is extended, holding a sleek, stainless‑steel fork that’s slightly bent to accommodate the cereal. The fork’s tines are coated with a thin film of milk. The robot’s left hand steadies the bowl, its fingers delicately wrapped around the rim. A small digital display on its chest flashes a “Enjoy!” emoticon.
+
+- **Details & Atmosphere:**
+  - **Steam:** Tiny wisps of steam rise from the warm milk, curling lazily toward
