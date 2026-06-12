@@ -1,0 +1,24 @@
+requests>=2.31.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+pandas>=2.0.0
+
+# Text scoring
+torch>=2.0.0
+transformers>=4.30.0
+bert-score>=0.3.13
+rouge-score>=0.1.2
+textstat>=0.7.3
+
+# Image scoring
+Pillow>=9.5.0
+
+# Audio scoring
+librosa>=0.10.0
+jiwer>=3.0.0
+
+# For CLIP model
+opencv-python>=4.8.0
+
+# Optional GPU support (uncomment if using CUDA)
+# torch-cuda==11.8  # or torch-cuda==12.1 depending on your CUDA version

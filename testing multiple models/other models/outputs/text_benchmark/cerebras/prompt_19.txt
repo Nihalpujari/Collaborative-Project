@@ -1,0 +1,14 @@
+**A vivid scene you can picture (or use as a prompt for AI art):**
+
+In a dimly lit, industrial‑style kitchen that feels more like the Batcave than a home, the Dark Knight himself stands before a massive, glossy wooden chopping board. A single, harsh fluorescent lamp hangs overhead, casting stark shadows that make his cape’s black folds look like torn night‑shrouds.
+
+The “onion” is no ordinary vegetable—it’s the size of a small car, its layers glistening with a faint, almost metallic sheen, as though each papery skin were forged from the same alloy as his utility belt. Bright, papery roots sprout from its base, and a faint, eerie vapor rises from its surface, hinting at the tear‑inducing potency hidden within.
+
+Batman’s stern, mask‑concealed face is contorted with a rare vulnerability. As his gloved hand grips a massive, blood‑stained chef’s knife—its hilt engraved with the familiar bat emblem—he brings the blade down with the precision of a trained assassin. The knife bites into the onion’s flesh, sending a spray of translucent juice into the air, which catches the light and forms a fleeting, ghostly halo around the Bat’s head.
+
+From behind his cowl, a single tear slides down his cheek, glistening like a drop of oil on metal. It rolls, catches the light, and then—without a sound—falls onto the cutting board, mixing with the onion’s juice to create a dark, iridescent puddle. The juxtaposition of the stoic, intimidating superhero and the simple, human act of chopping an onion is both poignant and surreal.
+
+**If you’d like to generate this image with an AI art model (e.g., Stable Diffusion, Midjourney), here’s a ready‑to‑use prompt:**
+
+```
+Batman in a dimly lit industrial kitchen resembling the Batc

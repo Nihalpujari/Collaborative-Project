@@ -1,0 +1,26 @@
+# Environment variables
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Secret files
+config.json
+secrets.json
+credentials.json
+config.py
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

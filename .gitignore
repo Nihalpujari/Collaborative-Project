@@ -1,0 +1,37 @@
+# Local secrets override — never commit (put your real keys here)
+testing multiple models/secrets.py
+testing multiple models/my_keys.py
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+.venv
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model weights & large files
+*.pth
+*.pt
+*.bin
+*.onnx
+
+# Generated outputs (large files)
+testing multiple models/cloudflare/outputs/audio/
+testing multiple models/cloudflare/outputs/images/
+testing multiple models/cloudflare/outputs/text/
+testing multiple models/other models/outputs/audio/
+testing multiple models/other models/outputs/images/
+testing multiple models/other models/outputs/text/
+
+# OS
+.DS_Store
+Thumbs.db
