@@ -430,6 +430,8 @@ Cloud deployment is supported on AWS, Google Cloud Platform, and Azure. The cont
 | Pramod | * |
 | Anuj | * |
 | Gourav | * |
+
+
 **Institution:** SRH University of Applied Sciences, Heidelberg
 **Course:** Case Studies 1
 **Program:** M.Sc. Applied Data Science and Artificial Intelligence
