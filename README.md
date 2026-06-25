@@ -425,11 +425,11 @@ Cloud deployment is supported on AWS, Google Cloud Platform, and Azure. The cont
 
 | Name | Role |
 |------|------|
-| Faezeh Khosravi | Developer |
-| Madhumitha Ramakrishnan | Developer |
-| Saravanakumar Andamuthuvallal | Developer |
-| Shreya Shetty | Developer |
-
+| Namrata | * |
+| Nihal | * |
+| Pramod | * |
+| Anuj | * |
+| Gourav | * |
 **Institution:** SRH University of Applied Sciences, Heidelberg
 **Course:** Case Studies 1
 **Program:** M.Sc. Applied Data Science and Artificial Intelligence
