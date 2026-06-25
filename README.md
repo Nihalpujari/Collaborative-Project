@@ -119,7 +119,7 @@ User Input
 [2] Supervisor initializes the shared state object
     │
     ▼
-[3] Router selects the appropriate agent (text / image / audio / video)
+[3] Router selects the appropriate agent (text / image / audio)
     │
     ▼
 [4] Analyzer extracts intent, attributes, and constraints
