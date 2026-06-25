@@ -84,13 +84,9 @@ The system follows a layered architecture in which each layer encapsulates a spe
         ▼                     ▼                     ▼
 ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
 │ Text Agent   │      │ Image Agent  │      │ Audio Agent  │
-│              │      │              │      │  (Planned)   │
+│              │      │              │      │              │
 └──────────────┘      └──────────────┘      └──────────────┘
-                                                    │
-                                            ┌──────────────┐
-                                            │ Video Agent  │
-                                            │  (Planned)   │
-                                            └──────────────┘
+                                                    
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
