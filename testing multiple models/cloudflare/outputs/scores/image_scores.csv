@@ -37,7 +37,7 @@ prompt_id,model,clip,aesthetic
 38,cloudflare,0.3065,5.2709
 39,cloudflare,0.2789,5.204
 40,cloudflare,0.2122,4.9776
-41,cloudflare,0.2286,5.7149
+41,cloudflare,0.2286,5.715
 42,cloudflare,0.3244,5.5747
 43,cloudflare,0.3164,5.7189
 44,cloudflare,0.3187,6.0277
@@ -51,4 +51,4 @@ prompt_id,model,clip,aesthetic
 52,cloudflare,0.3003,5.8334
 53,cloudflare,0.3137,5.6812
 54,cloudflare,0.3481,5.8709
-55,cloudflare,0.2722,5.7771
+55,cloudflare,0.2722,5.777
