@@ -37,13 +37,30 @@ from speechmos import dnsmos as dnsmos_module
 
 print("All models ready. Scoring 56 audio files...\n")
 
+
+def _extract_embedding(output):
+    """Some transformers versions return a raw tensor from get_audio_features /
+    get_text_features; others wrap it in a model-output object. Handle both so
+    this script keeps working across versions."""
+    if torch.is_tensor(output):
+        return output
+    for attr in ("audio_embeds", "text_embeds", "pooler_output", "last_hidden_state"):
+        val = getattr(output, attr, None)
+        if val is not None:
+            return val
+    raise TypeError(f"Unexpected CLAP output type: {type(output)}")
+
 # ── Score each file ───────────────────────────────────────────────────────────
 results = []
 audios  = sorted(OUTPUT_AUDIO.glob("prompt_*.wav"),
                  key=lambda p: int(p.stem.split("_")[1]))
 
+
 for audio_path in audios:
-    pid    = int(audio_path.stem.split("_")[1])
+    pid = int(audio_path.stem.split("_")[1])
+    if pid > len(prompts):
+        print(f"  Skipping prompt_{pid}: no matching prompt text (only {len(prompts)} prompts defined)")
+        continue
     prompt = prompts[pid - 1]
 
     audio, sr = sf.read(str(audio_path), dtype="float32")
@@ -60,12 +77,21 @@ for audio_path in audios:
     clap_score = 0.0
     try:
         a48 = to_sr(audio, 48000)
-        inp = clap_proc(text=[prompt], audios=[a48], return_tensors="pt",
-                        padding=True, sampling_rate=48000)
+        inp = clap_proc(text=[prompt], audio=[a48], return_tensors="pt",
+                padding=True, sampling_rate=48000)
+    
+        
         with torch.no_grad():
-            af = clap_model.get_audio_features(input_features=inp["input_features"])
-            tf = clap_model.get_text_features(
+            af_raw = clap_model.get_audio_features(input_features=inp["input_features"])
+            tf_raw = clap_model.get_text_features(
                 input_ids=inp["input_ids"], attention_mask=inp["attention_mask"])
+        af = _extract_embedding(af_raw)
+        tf = _extract_embedding(tf_raw)
+        # if we fell back to last_hidden_state (3D), mean-pool over the sequence dim
+        if af.dim() > 2:
+            af = af.mean(dim=1)
+        if tf.dim() > 2:
+            tf = tf.mean(dim=1)
         af = af / af.norm(dim=-1, keepdim=True)
         tf = tf / tf.norm(dim=-1, keepdim=True)
         clap_score = round(max(0.0, (af * tf).sum().item()), 4)
@@ -87,6 +113,7 @@ for audio_path in audios:
     try:
         a16 = to_sr(audio, 16000)
         hyp       = wmodel.transcribe(a16)["text"].strip().lower()
+        
         wer_score = round(min(1.0, max(0.0, jiwer_wer(prompt.lower(), hyp))), 4)
     except Exception as e:
         print(f"  WER error prompt_{pid}: {e}")
