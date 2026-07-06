@@ -100,37 +100,44 @@ def generate_image(prompt, prompt_id):
         return False
 
 
-def generate_audio(text, prompt_id):
+def generate_audio(text, prompt_id, max_retries=3):
+    # melotts intermittently returns 500 (~25% of calls, unrelated to
+    # payload) — retry a few times before giving up on a prompt.
     global QUOTA_EXHAUSTED
     if QUOTA_EXHAUSTED:
         return False
     if not text:
         return False
-    try:
-        r = requests.post(
-            f"{BASE_URL}/@cf/myshell-ai/melotts",
-            headers=HEADERS,
-            json={"prompt": text},
-            timeout=60
-        )
-        if r.status_code == 200:
-            audio_b64 = r.json().get("result", {}).get("audio", "")
-            if audio_b64:
-                audio_data = base64.b64decode(audio_b64)
-                path = OUTPUT_AUDIO / f"prompt_{prompt_id}.wav"
-                with open(path, "wb") as f:
-                    f.write(audio_data)
-                return True
-        elif r.status_code == 429:
-            QUOTA_EXHAUSTED = True
-            print(f"\n  [!] Daily quota exhausted.")
+    for attempt in range(max_retries):
+        try:
+            r = requests.post(
+                f"{BASE_URL}/@cf/myshell-ai/melotts",
+                headers=HEADERS,
+                json={"prompt": text},
+                timeout=60
+            )
+            if r.status_code == 200:
+                audio_b64 = r.json().get("result", {}).get("audio", "")
+                if audio_b64:
+                    audio_data = base64.b64decode(audio_b64)
+                    path = OUTPUT_AUDIO / f"prompt_{prompt_id}.wav"
+                    with open(path, "wb") as f:
+                        f.write(audio_data)
+                    return True
+            elif r.status_code == 429:
+                QUOTA_EXHAUSTED = True
+                print(f"\n  [!] Daily quota exhausted.")
+                return False
+            elif r.status_code == 500 and attempt < max_retries - 1:
+                time.sleep(2 * (attempt + 1))
+                continue
+            else:
+                print(f"      Audio error {r.status_code}: {r.text[:100]}")
+                return False
+        except Exception as e:
+            print(f"      Audio exception: {str(e)[:80]}")
             return False
-        else:
-            print(f"      Audio error {r.status_code}: {r.text[:100]}")
-            return False
-    except Exception as e:
-        print(f"      Audio exception: {str(e)[:80]}")
-        return False
+    return False
 
 
 # ============================================================================
