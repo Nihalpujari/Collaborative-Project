@@ -5,12 +5,17 @@ Test Cloudflare Workers AI - Single API key for all 3 tasks:
 3. Audio Generation (@cf/myshell-ai/melotts)
 """
 
+import sys
 import requests
 import base64
 from pathlib import Path
 
-ACCOUNT_ID = "YOUR_CLOUDFLARE_ACCOUNT_ID"
-API_TOKEN = "YOUR_CLOUDFLARE_API_TOKEN"
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config import CLOUDFLARE
+
+ACCOUNT_ID = CLOUDFLARE["account_id"]
+API_TOKEN  = CLOUDFLARE["api_token"]
+
 BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/run"
 HEADERS = {"Authorization": f"Bearer {API_TOKEN}", "Content-Type": "application/json"}
 
