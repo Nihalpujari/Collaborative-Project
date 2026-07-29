@@ -1,0 +1,69 @@
+ONE PROMPT
+"An owl librarian wearing glasses"
+         │
+         ├── Text Generator  ── "The owl sat behind a grand desk..."
+         │
+         ├── Image Generator ──  [owl image]
+         │
+         └── Audio Generator ──  [owl speech audio]
+
+
+COHERENCE (do the 3 outputs match each other?)
+  ImageBind encodes all 3 → same vector space
+  s1 = sim(text  ↔ image)
+  s2 = sim(text  ↔ audio)
+  s3 = sim(image ↔ audio)
+  TSAS      = (s1 + s2 + s3) / 3
+  Coherence = TSAS - λ × variance(s1, s2, s3)
+
+Score = TSAS - penalty
+
+If everything is consistent → variance = 0 → Score = TSAS (no change)
+If one modality is off → variance high → Score drops below TSAS
+
+----------------------------------------------------------------------
+
+
+Image → Vector
+
+An image is just a grid of pixels. Each pixel has 3 numbers (R, G, B).
+
+224×224 image = 224 × 224 × 3 = 150,528 numbers
+But that's too raw. ImageBind uses Vision Transformer (ViT):
+
+Step 1 — Cut image into patches
+  224×224 → 196 patches of 16×16 pixels each
+  (like cutting a photo into a 14×14 grid of small squares)
+Step 2 — Each patch → small vector
+  16×16×3 pixels → linear layer → 768 numbers
+Step 3 — Patches talk to each other (attention)
+  patch of eye influences patch of glasses
+  context across the whole image
+Step 4 — Linear projection head
+  → single vector of 1024 numbers
+
+
+Audio → Vector
+
+Audio is a waveform — just a list of pressure values over time. Too raw to compare directly.
+
+Step 1 — Convert waveform to Spectrogram
+  Raw waveform → 2D heatmap
+  x-axis = time
+  y-axis = frequency (128 mel bins)
+  color  = loudness
+  Now audio LOOKS like an image
+Step 2 — Treat spectrogram exactly like an image
+  Apply ViT with patch size 16, stride 10
+  Same transformer logic as image encoder
+Step 3 — Linear projection head
+  → single vector of 1024 numbers
+  
+The key insight:
+
+ImageBind converts audio into a spectrogram first — turning a sound into a 2D picture. Then it processes it exactly like an image. That's why the same ViT architecture works for both.
+
+image   → ViT → 1024-dim vector
+audio   → spectrogram → ViT → 1024-dim vector
+text    → transformer → 1024-dim vector
+All same size → cosine similarity works

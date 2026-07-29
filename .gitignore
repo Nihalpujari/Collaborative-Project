@@ -2,6 +2,10 @@
 testing multiple models/secrets.py
 testing multiple models/my_keys.py
 
+# Gemini API exploration — contains real keys, kept local only
+testing multiple models/test_gemini_all.py
+testing multiple models/outputs/gemini_test/
+
 # Python
 __pycache__/
 *.pyc
