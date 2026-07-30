@@ -24,6 +24,30 @@ If one modality is off → variance high → Score drops below TSAS
 ----------------------------------------------------------------------
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Image → Vector
 
 An image is just a grid of pixels. Each pixel has 3 numbers (R, G, B).
