@@ -25,17 +25,55 @@ If one modality is off → variance high → Score drops below TSAS
 
 
 
+Step 1 — convert each metric to a 0–1 grade using FIXED external goalposts
+         MOS 1–5 (ITU standard) , Aesthetic 1–10 (LAION scale)
+         WER 0–1 , BERTScore 0–1
+         CLIP floor = mismatched-pair baseline 
+
+Step 2 — combine WITHIN each modality
+         Text  = BERTScore
+         Image = √(CLIP × Aesthetic)
+         Audio = √(MOS × WER_grade)
+
+Step 3 — combine ACROSS modalities, equal weight each
+         Final = (Text × Image × Audio)^(1/3)
+
+
+-----------------------------------------------------------------------
+13 Aug
+
+
+1 Prompt → 3 Generated Outputs
+           ├── Text  (generated paragraph)
+           ├── Image (generated picture)
+           └── Audio (generated speech)
+
+
+Q_text  = BERTScore(generated_text, prompt)
+
+Q_image = avg(CLIP_score, Aesthetic_score)
+          - λ × variance(CLIP_score, Aesthetic_score)
+
+Q_audio = avg(CLAP_score, 1 - WER)
+          - λ × variance(CLAP_score, 1 - WER)
 
 
 
+LLM Judge rates all 56 prompt outputs → overall score per prompt
+          ↓
+Linear Regression on [Q_text, Q_image, Q_audio] → overall                                           X (features) = [Q_text, Q_image, Q_audio]   ← 3 columns
+          ↓                                                                                         y (target)   = LLM overall score             ← 1 column
+Learned weights: w1, w2, w3
 
 
+s1_weighted = s1 × (w1×Q_text  + w2×Q_image) / (w1 + w2)
+s2_weighted = s2 × (w1×Q_text  + w3×Q_audio) / (w1 + w3)
+s3_weighted = s3 × (w2×Q_image + w3×Q_audio) / (w2 + w3)
 
 
+WTSAS = (s1_weighted + s2_weighted + s3_weighted) / 3
 
-
-
-
+Final Score = WTSAS - λ × variance(s1_weighted, s2_weighted, s3_weighted)
 
 
 
