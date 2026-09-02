@@ -120,9 +120,40 @@ WTSAS = (s1_weighted + s2_weighted + s3_weighted) / 3
 
 Final Score = WTSAS - λ × variance(s1_weighted, s2_weighted, s3_weighted)
 
+--------------------------------------------------------------------------------
 
+NAIVE BAYES  (replace the hand-tuned score with a probability)
+ 
+P(good | Q_text, Q_image, Q_audio)
 
+    ∝ P(good) × P(Q_text|good) × P(Q_image|good) × P(Q_audio|good)
+    P(good)            = prior      → base rate in the 56 prompts
+    P(Q_x | good)      = likelihood → Gaussian fit per feature per class                 (using zero shot classifer to rate good, medium, best )
+    P(good | evidence) = posterior  → THE NEW SCORE
+ 
+Pipeline:
 
+    1. bin LLM judge score into classes (Good / Medium / Bad)
+    2. GaussianNB on X = [Q_text, Q_image, Q_audio]
+    3. predict_proba()  NOT predict()   ← keep continuous posterior
+    4. validate: leave-one-out CV (n = 56)
+
+-------------------------------------------------------------------------------
+
+LIKELIHOOD RATIO  (what a similarity score actually means)
+
+    matched     = real prompt → its own 3 outputs
+    mismatched  = shuffled prompts across outputs   (= your CLIP floor)
+
+    for each feature f in (s1, s2, s3, Q_text, Q_image, Q_audio):
+        fit  P(f | matched)     ~ Gaussian
+        fit  P(f | mismatched)  ~ Gaussian
+
+        LR(f) = P(f | matched) / P(f | mismatched)
+
+    Score = Σ log LR(f)
+
+    Note: summing log LR over independent features = Naive Bayes
 
 
 
