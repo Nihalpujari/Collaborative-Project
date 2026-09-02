@@ -1,5 +1,8 @@
+﻿import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 """
-Multimedia Coherence Score — test on 5 Cloudflare outputs
+Multimedia Coherence Score â€” test on 5 Cloudflare outputs
 
 Formulas:
   s1 = sim(text  <-> image)   via CLIP
@@ -22,20 +25,20 @@ from transformers import (
     ClapProcessor, ClapModel,
 )
 
-# ── paths ────────────────────────────────────────────────────────────────────
+# â”€â”€ paths â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 BASE = Path(__file__).parent
 TEXT_DIR  = BASE / "outputs/text"
 IMAGE_DIR = BASE / "outputs/images"
 AUDIO_DIR = BASE / "outputs/audio"
 
-# ── prompts (first 5) ────────────────────────────────────────────────────────
+# â”€â”€ prompts (first 5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 from prompts import PROMPTS
 PROMPTS_5 = PROMPTS[:5]
 
-# ── lambda (penalty weight) ──────────────────────────────────────────────────
+# â”€â”€ lambda (penalty weight) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 LAMBDA = 0.5
 
-# ── load models (once) ──────────────────────────────────────────────────────
+# â”€â”€ load models (once) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print("Loading models...")
 
 clip_model     = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
@@ -49,7 +52,7 @@ whisper_model  = whisper.load_model("base")
 print("Models loaded.\n")
 
 
-# ── helpers ──────────────────────────────────────────────────────────────────
+# â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def cosine(a, b):
     a = a / np.linalg.norm(a)
@@ -105,7 +108,7 @@ def transcribe(audio_path):
     return result["text"].strip()
 
 
-# ── scoring ──────────────────────────────────────────────────────────────────
+# â”€â”€ scoring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def score_prompt(idx, prompt):
     print(f"  Prompt {idx}: \"{prompt[:60]}...\"" if len(prompt) > 60 else f"  Prompt {idx}: \"{prompt}\"")
@@ -148,7 +151,7 @@ def score_prompt(idx, prompt):
     print(f"    s3 (image <-> audio): {s3:.4f}")
     print(f"    TSAS:                 {tsas:.4f}")
     print(f"    Variance:             {variance:.4f}")
-    print(f"    Final Score (λ=0.5):  {score:.4f}")
+    print(f"    Final Score (Î»=0.5):  {score:.4f}")
     print()
 
     return {
@@ -163,12 +166,12 @@ def score_prompt(idx, prompt):
     }
 
 
-# ── main ─────────────────────────────────────────────────────────────────────
+# â”€â”€ main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def main():
     print("=" * 60)
-    print("  MULTIMEDIA COHERENCE SCORE — 5 PROMPT TEST")
-    print(f"  λ (lambda) = {LAMBDA}")
+    print("  MULTIMEDIA COHERENCE SCORE â€” 5 PROMPT TEST")
+    print(f"  Î» (lambda) = {LAMBDA}")
     print("=" * 60 + "\n")
 
     results = []
@@ -195,3 +198,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

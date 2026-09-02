@@ -1,12 +1,15 @@
+﻿import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 """
-Stage 1 — Per-Modality Quality Scores
+Stage 1 â€” Per-Modality Quality Scores
 
 Computes Q_text, Q_image, Q_audio for all available prompts.
 
 Formulas:
   Q_text  = BERTScore(generated_text, prompt)
-  Q_image = avg(CLIP_score, Aesthetic_score) - λ × variance(CLIP_score, Aesthetic_score)
-  Q_audio = avg(CLAP_score, 1 - WER)         - λ × variance(CLAP_score, 1 - WER)
+  Q_image = avg(CLIP_score, Aesthetic_score) - Î» Ã— variance(CLIP_score, Aesthetic_score)
+  Q_audio = avg(CLAP_score, 1 - WER)         - Î» Ã— variance(CLAP_score, 1 - WER)
 
 Saves results to outputs/scores/quality_scores.csv
 
@@ -33,7 +36,7 @@ from bert_score import score as bert_score_fn
 
 from prompts import PROMPTS
 
-# ── paths ──────────────────────────────────────────────────────────────────────
+# â”€â”€ paths â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 BASE      = Path(__file__).parent
 TEXT_DIR  = BASE / "outputs/text"
 IMAGE_DIR = BASE / "outputs/images"
@@ -41,14 +44,14 @@ AUDIO_DIR = BASE / "outputs/audio"
 OUT_DIR   = BASE / "outputs/scores"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── lambda ─────────────────────────────────────────────────────────────────────
+# â”€â”€ lambda â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 LAMBDA = 0.5
 
-# ── device ─────────────────────────────────────────────────────────────────────
+# â”€â”€ device â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
-# ── load models ────────────────────────────────────────────────────────────────
+# â”€â”€ load models â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print("Loading CLIP...")
 clip_model     = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
@@ -72,7 +75,7 @@ aesthetic_pipe = hf_pipeline(
 print("All models loaded.\n")
 
 
-# ── helpers ────────────────────────────────────────────────────────────────────
+# â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def cosine(a, b):
     a = a / np.linalg.norm(a)
@@ -88,13 +91,13 @@ def resample_audio(audio, orig_sr, target_sr):
 
 
 def quality_pair(a, b, lam=LAMBDA):
-    """avg(a, b) - λ × variance(a, b)  — penalises imbalance between two scores."""
+    """avg(a, b) - Î» Ã— variance(a, b)  â€” penalises imbalance between two scores."""
     avg = (a + b) / 2
     var = float(np.var([a, b]))
     return float(np.clip(avg - lam * var, 0, 1))
 
 
-# ── 3A — Text Quality ──────────────────────────────────────────────────────────
+# â”€â”€ 3A â€” Text Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def get_q_text(generated_text, prompt):
     """BERTScore F1 between generated text and prompt."""
@@ -105,7 +108,7 @@ def get_q_text(generated_text, prompt):
     return float(F1.mean())
 
 
-# ── 3B — Image Quality ─────────────────────────────────────────────────────────
+# â”€â”€ 3B â€” Image Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def get_clip_score(prompt, image_path):
     """Cosine similarity between CLIP text embedding of prompt and image embedding."""
@@ -119,7 +122,7 @@ def get_clip_score(prompt, image_path):
 
 
 def get_aesthetic_score(image_path):
-    """LAION aesthetic score — probability the image is 'aesthetic'."""
+    """LAION aesthetic score â€” probability the image is 'aesthetic'."""
     result = aesthetic_pipe(str(image_path))
     for r in result:
         if r["label"] == "aesthetic":
@@ -133,7 +136,7 @@ def get_q_image(prompt, image_path):
     return clip_s, aes_s, quality_pair(clip_s, aes_s)
 
 
-# ── 3C — Audio Quality ─────────────────────────────────────────────────────────
+# â”€â”€ 3C â€” Audio Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def get_clap_score(prompt, audio_path):
     """Cosine similarity between CLAP text embedding of prompt and audio embedding."""
@@ -173,7 +176,7 @@ def get_q_audio(prompt, audio_path, generated_text):
     return clap_s, wer_inv, quality_pair(clap_s, wer_inv)
 
 
-# ── score one prompt ───────────────────────────────────────────────────────────
+# â”€â”€ score one prompt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def score_prompt(idx, prompt):
     image_path = IMAGE_DIR / f"prompt_{idx}.png"
@@ -207,12 +210,12 @@ def score_prompt(idx, prompt):
         return None
 
 
-# ── main ──────────────────────────────────────────────────────────────────────
+# â”€â”€ main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def main():
     print("=" * 70)
-    print("  STAGE 1 — Per-Modality Quality Scores")
-    print(f"  λ = {LAMBDA}")
+    print("  STAGE 1 â€” Per-Modality Quality Scores")
+    print(f"  Î» = {LAMBDA}")
     print("=" * 70 + "\n")
 
     results = []
@@ -225,7 +228,7 @@ def main():
                   f"Q_image={r['q_image']} (CLIP={r['clip_score']} Aes={r['aesthetic']})  "
                   f"Q_audio={r['q_audio']} (CLAP={r['clap_score']} WER_inv={r['wer_inv']})")
         else:
-            print(f"         [SKIPPED — no image]")
+            print(f"         [SKIPPED â€” no image]")
 
     df = pd.DataFrame(results)
     out_path = OUT_DIR / "quality_scores.csv"
@@ -257,3 +260,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
