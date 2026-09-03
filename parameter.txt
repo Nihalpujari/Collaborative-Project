@@ -97,10 +97,16 @@ Step 3 — combine ACROSS modalities, equal weight each
 Q_text  = BERTScore(generated_text, prompt)
 
 Q_image = avg(CLIP_score, Aesthetic_score)
-          - λ × variance(CLIP_score, Aesthetic_score)
+          - λ(0.5) × variance(CLIP_score, Aesthetic_score)                                                
 
-Q_audio = avg(CLAP_score, 1 - WER)
-          - λ × variance(CLAP_score, 1 - WER)
+                                                                 
+Q_audio = avg(semantic_score, wer_inv) - 0.5 × variance(semantic_score, wer_inv)                                           CLAP returns 0.0 for 25/53 prompts (47%)
+                                                                                                                             
+
+                                                                                                                          semantic score - 1. Whisper — converts audio to text
+                                                                                                                          WAV file → Whisper → "The owl sat behind a grand desk..."
+                                                                                                                          2. BERTScore — compares that text to the prompt
+                                                                                                                          transcript + prompt → BERTScore → 0.8537
 
 
 
@@ -128,7 +134,7 @@ P(good | Q_text, Q_image, Q_audio)
 
     ∝ P(good) × P(Q_text|good) × P(Q_image|good) × P(Q_audio|good)
     P(good)            = prior      → base rate in the 56 prompts
-    P(Q_x | good)      = likelihood → Gaussian fit per feature per class                 (using zero shot classifer to rate good, medium, best )
+    P(Q_x | good)      = likelihood → Gaussian fit per feature per class                 
     P(good | evidence) = posterior  → THE NEW SCORE
  
 Pipeline:

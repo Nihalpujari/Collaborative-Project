@@ -1,20 +1,20 @@
-﻿import sys
+import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 """
-Stage 1 â€” Per-Modality Quality Scores
+Stage 1 - Per-Modality Quality Scores
 
 Computes Q_text, Q_image, Q_audio for all available prompts.
 
 Formulas:
   Q_text  = BERTScore(generated_text, prompt)
-  Q_image = avg(CLIP_score, Aesthetic_score) - Î» Ã— variance(CLIP_score, Aesthetic_score)
-  Q_audio = avg(CLAP_score, 1 - WER)         - Î» Ã— variance(CLAP_score, 1 - WER)
+  Q_image = avg(CLIP_score, Aesthetic_score) - lambda x variance(CLIP_score, Aesthetic_score)
+  Q_audio = avg(semantic_score, 1 - WER)     - lambda x variance(semantic_score, 1 - WER)
+
+  semantic_score = BERTScore(Whisper_transcript, prompt)
+  -- measures whether the spoken content aligns with the prompt
 
 Saves results to outputs/scores/quality_scores.csv
-
-Install before running:
-  pip install bert-score jiwer
 """
 
 import numpy as np
@@ -29,38 +29,32 @@ from jiwer import wer as compute_wer
 
 from transformers import (
     CLIPProcessor, CLIPModel,
-    ClapProcessor, ClapModel,
     pipeline as hf_pipeline,
 )
 from bert_score import score as bert_score_fn
 
 from prompts import PROMPTS
 
-# â”€â”€ paths â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-BASE      = Path(__file__).parent
+# -- paths -------------------------------------------------------------------
+BASE      = Path(__file__).parent.parent   # cloudflare/ folder where outputs/ lives
 TEXT_DIR  = BASE / "outputs/text"
 IMAGE_DIR = BASE / "outputs/images"
 AUDIO_DIR = BASE / "outputs/audio"
 OUT_DIR   = BASE / "outputs/scores"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# â”€â”€ lambda â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- lambda ------------------------------------------------------------------
 LAMBDA = 0.5
 
-# â”€â”€ device â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- device ------------------------------------------------------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
-# â”€â”€ load models â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- load models -------------------------------------------------------------
 print("Loading CLIP...")
 clip_model     = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 clip_model.eval()
-
-print("Loading CLAP...")
-clap_model     = ClapModel.from_pretrained("laion/clap-htsat-unfused")
-clap_processor = ClapProcessor.from_pretrained("laion/clap-htsat-unfused")
-clap_model.eval()
 
 print("Loading Whisper...")
 whisper_model = whisper.load_model("base")
@@ -75,7 +69,7 @@ aesthetic_pipe = hf_pipeline(
 print("All models loaded.\n")
 
 
-# â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- helpers -----------------------------------------------------------------
 
 def cosine(a, b):
     a = a / np.linalg.norm(a)
@@ -91,13 +85,13 @@ def resample_audio(audio, orig_sr, target_sr):
 
 
 def quality_pair(a, b, lam=LAMBDA):
-    """avg(a, b) - Î» Ã— variance(a, b)  â€” penalises imbalance between two scores."""
+    """avg(a, b) - lambda x variance(a, b)  -- penalises imbalance between two scores."""
     avg = (a + b) / 2
     var = float(np.var([a, b]))
     return float(np.clip(avg - lam * var, 0, 1))
 
 
-# â”€â”€ 3A â€” Text Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- 3A - Text Quality -------------------------------------------------------
 
 def get_q_text(generated_text, prompt):
     """BERTScore F1 between generated text and prompt."""
@@ -108,7 +102,7 @@ def get_q_text(generated_text, prompt):
     return float(F1.mean())
 
 
-# â”€â”€ 3B â€” Image Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- 3B - Image Quality ------------------------------------------------------
 
 def get_clip_score(prompt, image_path):
     """Cosine similarity between CLIP text embedding of prompt and image embedding."""
@@ -122,7 +116,7 @@ def get_clip_score(prompt, image_path):
 
 
 def get_aesthetic_score(image_path):
-    """LAION aesthetic score â€” probability the image is 'aesthetic'."""
+    """LAION aesthetic score - probability the image is 'aesthetic'."""
     result = aesthetic_pipe(str(image_path))
     for r in result:
         if r["label"] == "aesthetic":
@@ -136,47 +130,41 @@ def get_q_image(prompt, image_path):
     return clip_s, aes_s, quality_pair(clip_s, aes_s)
 
 
-# â”€â”€ 3C â€” Audio Quality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- 3C - Audio Quality ------------------------------------------------------
 
-def get_clap_score(prompt, audio_path):
-    """Cosine similarity between CLAP text embedding of prompt and audio embedding."""
-    audio, sr = sf.read(str(audio_path), dtype="float32")
-    if audio.ndim > 1:
-        audio = audio.mean(axis=1)
-    audio = resample_audio(audio, sr, 48000)
-    inputs = clap_processor(
-        text=[prompt], audios=[audio],
-        return_tensors="pt", padding=True, sampling_rate=48000,
-    )
-    with torch.no_grad():
-        t_emb = clap_model.get_text_features(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"],
-        ).squeeze().numpy()
-        a_emb = clap_model.get_audio_features(
-            input_features=inputs["input_features"],
-        ).squeeze().numpy()
-    return float(np.clip(cosine(t_emb, a_emb), 0, 1))
-
-
-def get_wer_score(generated_text, audio_path):
-    """WER between Whisper transcript and generated text. Returns 1 - WER (higher = better)."""
+def transcribe_audio(audio_path):
+    """Transcribe audio file using Whisper. Returns transcript string."""
     audio, sr = sf.read(str(audio_path), dtype="float32")
     if audio.ndim > 1:
         audio = audio.mean(axis=1)
     audio = resample_audio(audio, sr, 16000)
-    transcript = whisper_model.transcribe(audio)["text"].strip()
+    return whisper_model.transcribe(audio)["text"].strip()
+
+
+def get_semantic_score(prompt, transcript):
+    """BERTScore F1 between Whisper transcript and original prompt.
+    Measures whether the spoken content is semantically aligned with the prompt."""
+    _, _, F1 = bert_score_fn(
+        [transcript], [prompt],
+        lang="en", verbose=False,
+    )
+    return float(F1.mean())
+
+
+def get_wer_inv(generated_text, transcript):
+    """1 - WER between generated text and Whisper transcript. Higher = better TTS accuracy."""
     error = float(np.clip(compute_wer(generated_text.lower(), transcript.lower()), 0, 1))
-    return 1 - error   # flip so higher = better
+    return 1 - error
 
 
 def get_q_audio(prompt, audio_path, generated_text):
-    clap_s   = get_clap_score(prompt, audio_path)
-    wer_inv  = get_wer_score(generated_text, audio_path)
-    return clap_s, wer_inv, quality_pair(clap_s, wer_inv)
+    transcript   = transcribe_audio(audio_path)
+    semantic_s   = get_semantic_score(prompt, transcript)
+    wer_inv      = get_wer_inv(generated_text, transcript)
+    return semantic_s, wer_inv, quality_pair(semantic_s, wer_inv), transcript
 
 
-# â”€â”€ score one prompt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- score one prompt --------------------------------------------------------
 
 def score_prompt(idx, prompt):
     image_path = IMAGE_DIR / f"prompt_{idx}.png"
@@ -189,20 +177,21 @@ def score_prompt(idx, prompt):
     generated_text = text_path.read_text(encoding="utf-8").strip()
 
     try:
-        q_text                       = get_q_text(generated_text, prompt)
-        clip_s, aes_s, q_image       = get_q_image(prompt, image_path)
-        clap_s, wer_inv, q_audio     = get_q_audio(prompt, audio_path, generated_text)
+        q_text                                  = get_q_text(generated_text, prompt)
+        clip_s, aes_s, q_image                  = get_q_image(prompt, image_path)
+        semantic_s, wer_inv, q_audio, transcript = get_q_audio(prompt, audio_path, generated_text)
 
         return {
-            "prompt_id":   idx,
-            "prompt":      prompt[:80],
-            "q_text":      round(q_text,   4),
-            "clip_score":  round(clip_s,   4),
-            "aesthetic":   round(aes_s,    4),
-            "q_image":     round(q_image,  4),
-            "clap_score":  round(clap_s,   4),
-            "wer_inv":     round(wer_inv,  4),
-            "q_audio":     round(q_audio,  4),
+            "prompt_id":      idx,
+            "prompt":         prompt[:80],
+            "q_text":         round(q_text,      4),
+            "clip_score":     round(clip_s,      4),
+            "aesthetic":      round(aes_s,       4),
+            "q_image":        round(q_image,     4),
+            "semantic_score": round(semantic_s,  4),
+            "wer_inv":        round(wer_inv,     4),
+            "q_audio":        round(q_audio,     4),
+            "transcript":     transcript[:120],
         }
 
     except Exception as e:
@@ -210,12 +199,12 @@ def score_prompt(idx, prompt):
         return None
 
 
-# â”€â”€ main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# -- main --------------------------------------------------------------------
 
 def main():
     print("=" * 70)
-    print("  STAGE 1 â€” Per-Modality Quality Scores")
-    print(f"  Î» = {LAMBDA}")
+    print("  STAGE 1 - Per-Modality Quality Scores")
+    print(f"  lambda = {LAMBDA}")
     print("=" * 70 + "\n")
 
     results = []
@@ -226,9 +215,9 @@ def main():
             results.append(r)
             print(f"         Q_text={r['q_text']}  "
                   f"Q_image={r['q_image']} (CLIP={r['clip_score']} Aes={r['aesthetic']})  "
-                  f"Q_audio={r['q_audio']} (CLAP={r['clap_score']} WER_inv={r['wer_inv']})")
+                  f"Q_audio={r['q_audio']} (Sem={r['semantic_score']} WER_inv={r['wer_inv']})")
         else:
-            print(f"         [SKIPPED â€” no image]")
+            print(f"         [SKIPPED - no image]")
 
     df = pd.DataFrame(results)
     out_path = OUT_DIR / "quality_scores.csv"
@@ -260,4 +249,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

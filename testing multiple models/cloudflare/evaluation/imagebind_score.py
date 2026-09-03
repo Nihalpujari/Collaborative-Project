@@ -30,8 +30,8 @@ from imagebind.models.imagebind_model import ModalityType
 
 from prompts import PROMPTS
 
-# â”€â”€ paths â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-BASE      = Path(__file__).parent
+
+BASE      = Path(__file__).parent.parent   # cloudflare/ folder
 TEXT_DIR  = BASE / "outputs/text"
 IMAGE_DIR = BASE / "outputs/images"
 AUDIO_DIR = BASE / "outputs/audio"
@@ -149,7 +149,7 @@ def score_prompt(idx, prompt):
     }
 
     for lam in LAMBDAS:
-        result[f"score_Î»{lam}"] = round(tsas - lam * variance, 4)
+        result[f"score_lam{lam}"] = round(tsas - lam * variance, 4)
 
     return result
 
@@ -192,26 +192,26 @@ def main():
     print(f"  {'Variance':<20} {df['variance'].mean():.4f}")
     print()
     for lam in LAMBDAS:
-        col = f"score_Î»{lam}"
+        col = f"score_lam{lam}"
         diff = df['tsas'].mean() - df[col].mean()
-        print(f"  Score (Î»={lam:<4}) avg = {df[col].mean():.4f}  "
+        print(f"  Score (lam={lam:<4}) avg = {df[col].mean():.4f}  "
               f"(penalty effect: -{diff:.4f})")
 
     # â”€â”€ best and worst prompts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     print("\n" + "=" * 70)
-    print("  TOP 3 most coherent prompts (Î»=0.5)")
+    print("  TOP 3 most coherent prompts (lam=0.5)")
     print("=" * 70)
-    top3 = df.nlargest(3, "score_Î»0.5")[["prompt_id", "prompt", "tsas", "score_Î»0.5"]]
+    top3 = df.nlargest(3, "score_lam0.5")[["prompt_id", "prompt", "tsas", "score_lam0.5"]]
     for _, row in top3.iterrows():
         print(f"  [{int(row['prompt_id'])}] {row['prompt'][:60]}")
-        print(f"       TSAS={row['tsas']}  Score={row['score_Î»0.5']}\n")
+        print(f"       TSAS={row['tsas']}  Score={row['score_lam0.5']}\n")
 
-    print("  BOTTOM 3 least coherent prompts (Î»=0.5)")
+    print("  BOTTOM 3 least coherent prompts (lam=0.5)")
     print("=" * 70)
-    bot3 = df.nsmallest(3, "score_Î»0.5")[["prompt_id", "prompt", "tsas", "score_Î»0.5"]]
+    bot3 = df.nsmallest(3, "score_lam0.5")[["prompt_id", "prompt", "tsas", "score_lam0.5"]]
     for _, row in bot3.iterrows():
         print(f"  [{int(row['prompt_id'])}] {row['prompt'][:60]}")
-        print(f"       TSAS={row['tsas']}  Score={row['score_Î»0.5']}\n")
+        print(f"       TSAS={row['tsas']}  Score={row['score_lam0.5']}\n")
 
 
 if __name__ == "__main__":

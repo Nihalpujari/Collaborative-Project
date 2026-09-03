@@ -1,4 +1,4 @@
-prompt_id,prompt,s1_text_image,s2_text_audio,s3_image_audio,tsas,variance,score_λ0.1,score_λ0.5,score_λ1.0,score_λ2.0
+prompt_id,prompt,s1_text_image,s2_text_audio,s3_image_audio,tsas,variance,score_lam0.1,score_lam0.5,score_lam1.0,score_lam2.0
 1,An elegant owl librarian wearing reading glasses.,0.3226,0.1338,0.1484,0.2016,0.0074,0.2009,0.1979,0.1942,0.1869
 2,"A red fox sitting at a pottery wheel, shaping a clay vase with its paws.",0.4123,0.1165,0.1298,0.2195,0.0186,0.2177,0.2102,0.2009,0.1823
 3,"A majestic eagle wearing a pilot's headset, flying a vintage biplane through the",0.3489,0.0954,0.1136,0.186,0.0133,0.1846,0.1793,0.1727,0.1593
