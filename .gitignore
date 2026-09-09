@@ -39,3 +39,8 @@ testing multiple models/other models/outputs/text/
 # OS
 .DS_Store
 Thumbs.db
+
+# API keys — never commit
+testing multiple models/cloudflare/api_keys.py
+api_keys.py
+**/api_keys.py
