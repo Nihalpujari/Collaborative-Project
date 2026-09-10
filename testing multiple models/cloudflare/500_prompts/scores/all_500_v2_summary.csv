@@ -1,0 +1,13 @@
+metric,pearson_r,notes
+Q_text  (BERTScore),0.1774,quality feature
+Q_image (CLIP+aesthetic),0.1329,quality feature
+Q_audio (semantic+wer_inv),0.082,quality feature
+s1  raw (text↔image),0.2009,coherence feature
+s2  raw (text↔audio),0.0177,coherence feature
+s3  raw (image↔audio),0.021,coherence feature
+s1_weighted,0.2129,quality × coherence
+s2_weighted,0.0214,quality × coherence
+s3_weighted,0.0299,quality × coherence
+WTSAS final  [Approach 1],0.0763,coherence metric
+"NB on [s1_w,s2_w,s3_w] LOO  [Approach 2]",0.1931,← NEW
+"LR on [s1_w,s2_w,s3_w] LOO  [Approach 3]",0.2047,← NEW

@@ -144,6 +144,9 @@ Pipeline:
     3. predict_proba()  NOT predict()   ← keep continuous posterior
     4. validate: leave-one-out CV (n = 56)
 
+    reasrh paper(what is realted to us)
+    
+
 -------------------------------------------------------------------------------
 
 LIKELIHOOD RATIO  (what a similarity score actually means)

@@ -1,0 +1,7 @@
+metric,pearson_r,notes
+Q_text (BERTScore),0.1774,single feature
+Q_image (CLIP+aesthetic),0.1329,single feature
+Q_audio (semantic+wer_inv),0.082,single feature
+Q_combined (Linear Reg LOO),0.184,Approach 1 - honest
+Naive Bayes P(Good) - LOO,0.162,Approach 2 - honest
+LR Good-vs-Rest - LOO,0.1604,Approach 3 - honest
