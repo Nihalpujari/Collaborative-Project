@@ -1,7 +1,7 @@
 ﻿# API keys and secrets — never commit
 secrets.py
-pipeline/.env
-evaluation/.env
+*.env
+.env
 
 # Python
 __pycache__/
@@ -40,9 +40,6 @@ benchmarking/other_models/outputs/audio/
 benchmarking/other_models/outputs/images/
 benchmarking/other_models/outputs/text/
 benchmarking/other_models/outputs/pipeline/
-
-# Old structure (kept as proof of work — not committed)
-"testing multiple models/"
 
 # OS
 .DS_Store
