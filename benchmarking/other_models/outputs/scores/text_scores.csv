@@ -1,0 +1,4 @@
+model,bertscore,rouge,readability
+mistral,0.4578,0.0377,1.42
+groq,0.7659,0.0603,2.32
+cerebras,0.4894,0.0532,1.01

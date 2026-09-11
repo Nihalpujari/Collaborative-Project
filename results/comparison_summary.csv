@@ -1,0 +1,9 @@
+metric,pearson_r_vs_llm_53,notes
+Q_text (BERTScore),0.2401,single feature
+Q_image (CLIP+aesthetic),0.3249,single feature — best
+Q_audio (semantic+wer_inv),0.0667,single feature
+Q_combined (w-avg quality),0.3447,quality composite
+TSAS (ImageBind coherence),-0.0852,coherence baseline
+WTSAS (quality-weighted),-0.099,main metric
+Naive Bayes P(Good) — LOO,0.1924,probabilistic (honest)
+LR Good-vs-Rest — LOO,0.1911,probabilistic (honest)

@@ -1,0 +1,54 @@
+prompt_id,prompt,q_text,q_image,q_audio,llm_overall,predicted_score,error
+1,An elegant owl librarian wearing reading glasses.,0.8461,0.522,0.4568,7.0,6.775,-0.225
+2,"A red fox sitting at a pottery wheel, shaping a clay vase with its paws.",0.8619,0.5346,0.4743,8.0,7.422,-0.578
+3,"A majestic eagle wearing a pilot's headset, flying a vintage biplane through the",0.856,0.4902,0.4836,8.0,7.15,-0.85
+4,"A squirrel wearing a business suit, aggressively speaking into a tiny gold smart",0.8591,0.4533,0.4622,7.0,6.818,-0.182
+5,"An astronaut riding a bicycle on a ring of Saturn, delivering a cardboard pizza ",0.8576,0.5384,0.4528,8.0,7.105,-0.895
+6,A fluffy kitten wearing heavy metal spiked armor.,0.8529,0.6157,0.4962,8.0,7.832,-0.168
+7,A cat wearing headphones DJing at a packed nightclub.,0.8479,0.4778,0.4473,6.0,6.499,0.499
+8,A golden retriever in a tuxedo swimming.,0.8395,0.4911,0.479,6.0,6.689,0.689
+9,A hamster lifting a tiny barbell in a gym.,0.8486,0.4949,0.4748,7.0,6.894,-0.106
+10,A squirrel wearing a cowboy hat riding a skateboard.,0.8479,0.556,0.461,8.0,7.034,-0.966
+11,A penguin wearing a grass skirt doing the hula dance.,0.8467,0.6139,0.4702,8.0,7.391,-0.609
+12,A pug wearing sunglasses sunbathing on a pool float.,0.8503,0.5164,0.4697,7.0,6.99,-0.01
+14,A frog playing a miniature electric guitar on a lilypad.,0.8503,0.5756,0.4568,8.0,7.148,-0.852
+15,A fancy owl drinking a cup of hot coffee.,0.8458,0.5646,0.4485,6.0,6.892,0.892
+16,A baby monkey wearing a diaper and riding a tricycle.,0.8583,0.5144,0.4755,8.0,7.243,-0.757
+18,Darth Vader aggressively vacuuming a living room rug.,0.8482,0.5318,0.4654,8.0,6.968,-1.032
+19,Batman crying while chopping a massive onion.,0.849,0.5462,0.464,7.0,7.045,0.045
+20,Shrek doing a delicate ballet dance on a stage.,0.8628,0.5912,0.4523,7.0,7.494,0.494
+21,An astronaut playing the bagpipes on the moon.,0.8565,0.5013,0.4657,7.0,7.029,0.029
+22,A medieval knight trying to use a modern smartphone.,0.8554,0.5685,0.4763,7.0,7.448,0.448
+23,A scary T-Rex wearing a pink frilly apron baking cookies.,0.8569,0.5894,0.4712,6.0,7.537,1.537
+24,Superman getting a painful leg wax at a salon.,0.8507,0.5494,0.4612,7.0,7.074,0.074
+25,Iron Man attempting to knit a colorful winter scarf.,0.8512,0.5599,0.4394,6.0,6.908,0.908
+26,A mummy covered in bandages getting stuck in a revolving door.,0.8552,0.5029,0.4649,6.0,6.995,0.995
+27,A slice of pepperoni pizza skateboarding down a handrail.,0.8452,0.492,0.4667,6.0,6.707,0.707
+28,A giant angry taco lifting weights in a gym.,0.845,0.5167,0.4699,7.0,6.859,-0.141
+29,An avocado playing a tiny set of drums.,0.8459,0.5316,0.4583,7.0,6.834,-0.166
+30,A banana slipping and falling on a human banana peel.,0.8463,0.3493,0.4657,5.0,6.012,1.012
+31,A marshmallow lifting weights over a campfire.,0.8481,0.4661,0.4728,6.0,6.716,0.716
+32,A sad hotdog sitting alone at a fancy restaurant table.,0.8582,0.521,0.4618,8.0,7.128,-0.872
+33,A box of french fries taking a selfie together.,0.8424,0.4303,0.4628,8.0,6.287,-1.713
+34,A sentient alarm clock screaming and running away.,0.8481,0.3512,0.4827,7.0,6.248,-0.752
+35,A walking toaster throwing slices of burnt toast like boomerangs.,0.8472,0.4599,0.4475,6.0,6.394,0.394
+36,A group of broccoli pieces having a loud rock concert.,0.8366,0.5621,0.4661,8.0,6.834,-1.166
+37,A business suit made entirely out of bubble wrap popping.,0.8461,0.4631,0.4785,6.0,6.711,0.711
+38,A toilet paper roll escaping down a busy city street.,0.8506,0.4634,0.46,7.0,6.63,-0.37
+39,A giant rubber ducky driving a red convertible car.,0.8445,0.5907,0.4551,7.0,7.059,0.059
+40,A cloud in the sky blowing bubble gum.,0.8495,0.4159,0.4682,4.0,6.452,2.452
+41,A couch sitting on a human living room floor.,0.8483,0.5475,0.4577,8.0,6.967,-1.033
+42,A professional office meeting run entirely by plush teddy bears.,0.851,0.515,0.4472,8.0,6.762,-1.238
+43,A lawnmower cutting a lawn made entirely of green spaghetti.,0.8518,0.4218,0.4647,8.0,6.503,-1.497
+44,A grandfather clock walking on two robotic legs.,0.85,0.4155,0.4675,7.0,6.455,-0.545
+45,A computer monitor wearing reading glasses and looking confused.,0.8462,0.519,0.4724,4.0,6.928,2.928
+46,A baby rattle shaking itself to heavy metal music.,0.8526,0.4554,0.4592,5.0,6.632,1.632
+47,Cat riding a vacuum cleaner.,0.838,0.4355,0.477,7.0,6.353,-0.647
+48,Banana playing the saxophone.,0.8433,0.3589,0.4686,6.0,6.015,0.015
+49,Dinosaur on a pogo stick.,0.8314,0.5483,0.4434,7.0,6.393,-0.607
+50,Robot eating a bowl of cereal.,0.8353,0.603,0.4331,6.0,6.655,0.655
+51,Pig flying a helicopter.,0.8354,0.4539,0.4622,7.0,6.222,-0.778
+52,Shark wearing a party hat.,0.8357,0.3842,0.4638,6.0,5.899,-0.101
+53,Chicken lifting heavy weights.,0.8379,0.4234,0.481,6.0,6.332,0.332
+54,Potato singing opera on stage.,0.8399,0.5254,0.4668,7.0,6.741,-0.259
+55,Alien doing the chicken dance.,0.8331,0.594,0.4649,6.0,6.892,0.892
