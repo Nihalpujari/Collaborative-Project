@@ -1,437 +1,177 @@
-# AI Content Generator System
+﻿# Tri-Modal Alignment Score (TSAS / WTSAS)
 
-### A Multi-Agent Framework for Generic Text, Image, Audio, and Video Generation
+**SRH University of Applied Sciences, Heidelberg**
+M.Sc. Applied Data Science and Artificial Intelligence — Case Studies 1
 
-**Institution:** SRH University of Applied Sciences, Heidelberg
-**Program:** M.Sc. Applied Data Science and Artificial Intelligence
-**Course:** Case Studies 1
-**Status:** Text and Image modules complete; Audio and Video modules under active development
+**Team:** Namrata · Nihal · Pramod · Anuj · Gourav
 
 ---
 
-## Table of Contents
+## What This Project Does
 
-1. [Introduction](#1-introduction)
-2. [System Architecture](#2-system-architecture)
-3. [Data Flow](#3-data-flow)
-4. [Technology Stack](#4-technology-stack)
-5. [AI Pipeline](#5-ai-pipeline)
-6. [Project Structure](#6-project-structure)
-7. [Installation and Setup](#7-installation-and-setup)
-8. [Usage](#8-usage)
-9. [Evaluation and Benchmarking](#9-evaluation-and-benchmarking)
-10. [Deployment](#10-deployment)
-11. [Current Limitations and Future Work](#11-current-limitations-and-future-work)
-12. [References](#12-references)
+We evaluate how well Cloudflare Workers AI generates coherent tri-modal content (text + image + audio) from a single text prompt. Given a prompt like *"A fox exploring a cave in a snowy village"*, the system generates a text description, an image, and audio narration — then scores how well the three outputs match each other and how good the overall quality is.
 
----
+We compare three automated scoring approaches against ratings from an LLM judge (Gemini):
 
-## 1. Introduction
+| Approach | Method | Pearson r with LLM Judge |
+|----------|--------|--------------------------|
+| 1 — WTSAS | Quality-weighted tri-modal coherence (ImageBind) | 0.0763 |
+| 2 — Naive Bayes | P(Good) on weighted coherence features, LOO CV | 0.1931 |
+| 3 — Likelihood Ratio | log P(Good) - log P(Rest), LOO CV | **0.2047** |
 
-The rapid evolution of generative artificial intelligence has created a strong demand for systems that can produce high-quality content across multiple modalities. Most existing solutions operate as single-step black-box generators, producing outputs without any internal mechanism for validation, refinement, or quality control. This often results in inconsistencies, hallucinations, and outputs misaligned with user intent.
-
-The AI Content Generator System addresses these limitations through a structured multi-agent framework that decomposes the generation process into five distinct stages: analysis, retrieval, generation, optimization, and evaluation. Each stage is implemented as a dedicated agent, allowing modular development, independent testing, and stage-specific improvements.
-
-The first phase of the project delivered fully functional text and image generation modules with comprehensive benchmarking. The current phase extends the framework to include audio and video generation, applying the same architectural principles while introducing modality-specific evaluation strategies such as CLAP-based audio scoring and temporal CLIP-based video coherence analysis.
-
-### 1.1 Objectives
-
-- Design a unified, extensible architecture capable of supporting multiple content modalities.
-- Implement iterative quality refinement loops with threshold-based retry logic.
-- Provide transparent, auditable evaluation through structured metadata tracking.
-- Extend the current text and image system with audio and video generation pipelines.
-- Maintain consistency in workflow orchestration across all modalities.
-
-### 1.2 Key Contributions
-
-- A LangGraph-based stateful workflow that orchestrates multi-agent pipelines.
-- A retrieval-augmented generation (RAG) component for contextual grounding of text outputs.
-- A dual-metric evaluation framework combining semantic alignment and aesthetic quality for images.
-- A planned extension to audio and video with CLAP and temporal coherence metrics respectively.
-- A containerized deployment supporting reproducibility across environments.
+**Key finding:** Tri-modal coherence is only weakly predictive of perceived quality (r ≈ 0.20, pairwise accuracy ≈ 57%). Coherence and quality are distinct dimensions of multimodal generation.
 
 ---
 
-## 2. System Architecture
-
-The system follows a layered architecture in which each layer encapsulates a specific concern. Communication between layers occurs through well-defined interfaces, ensuring separation of responsibilities and maintainability.
-
-### 2.1 Architectural Layers
-
-| Layer | Responsibility |
-|-------|----------------|
-| User Interaction Layer | Provides the Streamlit-based web interface for prompt input, parameter configuration, and output review. |
-| Application Layer | Hosts the Supervisor and Router components that coordinate workflow execution and direct requests to the appropriate generation agent. |
-| Content Generation Layer | Contains the modality-specific agents (Text, Image, Audio, Video), each implementing its own pipeline of analyzer, generator, optimizer, reviewer, and exporter nodes. |
-| Shared Services Layer | Provides cross-cutting functionality including API configuration, execution logging, monitoring, and quality evaluation services. |
-| Data and Persistence Layer | Manages the retrieval knowledge base, generated outputs, prompt history, calibration datasets, and benchmark results. |
-
-### 2.2 Component Interaction
+## Project Structure
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  User Interaction Layer                     │
-│              (Streamlit Web Interface)                      │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Application Layer                         │
-│        Supervisor (Workflow Coordinator)  →  Router         │
-└─────────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        ▼                     ▼                     ▼
-┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-│ Text Agent   │      │ Image Agent  │      │ Audio Agent  │
-│              │      │              │      │              │
-└──────────────┘      └──────────────┘      └──────────────┘
-                                                    
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                Shared Services Layer                        │
-│   API Config  │  Logging  │  Evaluation (CLIP, CLAP)        │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Data and Persistence Layer                     │
-│  Knowledge Base │ Outputs │ Metadata │ Calibration Data     │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 3. Data Flow
-
-The data flow describes how a user request is transformed into a validated output through the system's pipeline. Each agent receives a shared state object containing the prompt, intermediate results, evaluation scores, and metadata, which is progressively enriched at each stage.
-
-### 3.1 End-to-End Flow
-
-```
-User Input
-    │
-    ▼
-[1] Web Interface captures prompt, mode, and parameters
-    │
-    ▼
-[2] Supervisor initializes the shared state object
-    │
-    ▼
-[3] Router selects the appropriate agent (text / image / audio)
-    │
-    ▼
-[4] Analyzer extracts intent, attributes, and constraints
-    │
-    ▼
-[5] Retriever or Prompt Enhancer enriches the input
-    │
-    ▼
-[6] Generator produces the initial output
-    │
-    ▼
-[7] Optimizer refines the output based on evaluation feedback
-    │
-    ▼
-[8] Reviewer scores the output against quality thresholds
-    │
-    ├── Score below threshold ──► Return to Optimizer (retry loop)
-    │
-    └── Score meets threshold ──► Exporter saves output and metadata
-                                                │
-                                                ▼
-                                       Output returned to user
-```
-
-### 3.2 State Object
-
-The shared state object carries the following fields across the pipeline:
-
-| Field | Description |
-|-------|-------------|
-| `prompt` | Original user input |
-| `enhanced_prompt` | Refined prompt after analysis and enhancement |
-| `retrieved_context` | Optional context fetched from the knowledge base |
-| `generated_output` | Raw output produced by the generator |
-| `optimized_output` | Refined output after the optimization stage |
-| `evaluation_scores` | Quantitative scores from the reviewer |
-| `metadata` | Model configuration, timestamps, retry counts, and decisions |
-| `status` | Current pipeline stage and pass/fail state |
-
----
-
-## 4. Technology Stack
-
-| Category | Technology | Purpose |
-|----------|-----------|---------|
-| Workflow Orchestration | LangGraph | Stateful directed-graph workflow execution |
-| Web Interface | Streamlit | Interactive user interface |
-| Language Models | GPT-4o, LLaMA 3.3-70B, Kimi K2, Qwen3-32B | Text generation backends |
-| Image Models | OpenAI Image-1 Mini, Stability SDXL, Freepik Mystic | Image generation backends |
-| Audio Models (Planned) | ElevenLabs, Google Cloud TTS, Tortoise TTS | Text-to-speech generation |
-| Video Models (Planned) | Runway Gen-3, Pika 2.0, Stable Video Diffusion | Text-to-video generation |
-| Retrieval | TF-IDF + cosine similarity | Contextual document retrieval |
-| Image Evaluation | OpenCLIP | Semantic alignment between prompt and image |
-| Image Evaluation | Aesthetic Scorer (regression on CLIP embeddings) | Visual quality assessment |
-| Audio Evaluation (Planned) | CLAP | Semantic alignment between prompt and audio |
-| Video Evaluation (Planned) | Temporal CLIP, optical flow | Frame coherence and motion smoothness |
-| Containerization | Docker, Docker Compose | Portable deployment |
-| Container Management | Portainer | Institutional Data Lab deployment |
-| Programming Language | Python 3.10+ | Primary implementation language |
-| Configuration | YAML, .env | Model selection and credentials |
-| Logging | Structured JSON logs | Auditability and benchmarking |
-
----
-
-## 5. AI Pipeline
-
-The AI pipeline is the conceptual backbone of the system. Every modality implements the same five-stage pattern, with stage-specific logic tailored to the content type. This uniformity is what allows the system to remain extensible as new modalities are added.
-
-### 5.1 Common Pipeline Pattern
-
-```
-   ┌───────────┐      ┌───────────┐      ┌───────────┐
-   │ Analyzer  │ ───► │ Retriever │ ───► │ Generator │
-   └───────────┘      └───────────┘      └───────────┘
-                                                │
-                                                ▼
-   ┌───────────┐      ┌───────────┐      ┌───────────┐
-   │ Exporter  │ ◄─── │ Reviewer  │ ◄─── │ Optimizer │
-   └───────────┘      └───────────┘      └───────────┘
-                            │                   ▲
-                            └───────────────────┘
-                            (retry loop on failure)
-```
-
-### 5.2 Text Generation Pipeline
-
-The text pipeline begins with prompt analysis to extract intent, tone, keywords, and content type. The retriever then queries a TF-IDF indexed knowledge base, returning the top-k relevant documents which are combined with the original prompt. The generator produces text via a configured LLM. The optimizer applies rule-based refinement focused on readability, sentiment alignment, and repetition reduction. The reviewer computes a composite quality score; if it falls below the threshold, the workflow returns to the optimizer for further iteration.
-
-### 5.3 Image Generation Pipeline
-
-The image pipeline analyzes the prompt for visual attributes and composition requirements. A prompt enhancer enriches the input with stylistic and artistic directives. The generator produces images via a diffusion-based model. The reviewer evaluates outputs using two metrics: CLIP-based semantic similarity for prompt-image alignment, and an aesthetic regression model for visual quality. Failed evaluations trigger regeneration with adjusted prompts.
-
-### 5.4 Audio Generation Pipeline (In Development)
-
-The audio pipeline mirrors the text and image pattern. The analyzer extracts speech characteristics such as tone, pace, and emotional register. A prompt enhancer adds voice directives and pronunciation hints. The generator invokes a text-to-speech model. The optimizer adjusts prosodic features such as pitch, speed, and emphasis. The reviewer evaluates outputs using CLAP for semantic alignment, spectral analysis for clarity, and prosodic consistency metrics for naturalness.
-
-### 5.5 Video Generation Pipeline (In Development)
-
-The video pipeline introduces a scene analyzer that extracts narrative flow, pacing, and visual style. A prompt builder combines textual content with visual directives. The generator invokes a text-to-video model. A frame optimizer ensures coherence across frames. The reviewer computes temporal CLIP scores frame by frame, analyzes optical flow for motion smoothness, and detects flicker artifacts. An optional compositor synchronizes generated audio with video if both modalities are used together.
-
-### 5.6 Threshold-Based Retry Logic
-
-All pipelines share a uniform retry mechanism. If the reviewer's score falls below the configured threshold, the workflow returns to the optimizer up to a maximum number of attempts. This ensures consistent quality while preventing infinite loops on inherently difficult prompts.
-
----
-
-## 6. Project Structure
-
-```
-ai-content-generator/
+Collaborative-Project/
 │
-├── app.py                          Streamlit application entry point
-├── config.yaml                     Model selection and threshold configuration
-├── requirements.txt                Python dependencies
-├── Dockerfile                      Container image definition
-├── docker-compose.yml              Multi-container orchestration
-├── .env.example                    Template for environment variables
+├── pipeline/                  ← main 500-prompt pipeline (run these in order)
+│   ├── step1_generate.py      step 1: generate text/image/audio via Cloudflare AI
+│   ├── step2_quality.py       step 2: compute Q_text, Q_image, Q_audio + LLM judge
+│   ├── step3_nb_lr.py         step 3: Naive Bayes + Likelihood Ratio on Q features (V1)
+│   ├── imagebind.py           compute ImageBind coherence scores (s1, s2, s3) + WTSAS
+│   ├── run_v1.py              V1 pipeline: NB + LR on raw quality features
+│   ├── run_v2.py              V2 pipeline: NB + LR on quality-weighted coherence features
+│   ├── compare.py             compare all 3 approaches with Pearson r + pairwise accuracy
+│   ├── process_raw.py         merge and clean raw score CSVs
+│   ├── prompts_500.csv        the 500 input prompts
+│   └── .env                   Cloudflare API keys (gitignored — not committed)
 │
-├── src/
-│   ├── generator.py                Top-level ContentGenerator class
-│   │
-│   ├── agents/
-│   │   ├── text_agent.py           Text generation workflow
-│   │   ├── image_agent.py          Image generation workflow
-│   │   ├── audio_agent.py          Audio generation workflow (planned)
-│   │   └── video_agent.py          Video generation workflow (planned)
-│   │
-│   ├── evaluators/
-│   │   ├── text_evaluator.py       Readability, sentiment, repetition metrics
-│   │   ├── image_evaluator.py      CLIP and aesthetic scoring
-│   │   ├── audio_evaluator.py      CLAP and prosody metrics (planned)
-│   │   └── video_evaluator.py      Temporal CLIP and optical flow (planned)
-│   │
-│   ├── retrievers/
-│   │   ├── base_retriever.py       Abstract retriever interface
-│   │   └── tfidf_retriever.py      TF-IDF based retrieval
-│   │
-│   ├── optimizers/
-│   │   ├── text_optimizer.py       Rule-based text refinement
-│   │   ├── audio_optimizer.py      Prosody adjustment (planned)
-│   │   └── video_optimizer.py      Frame coherence (planned)
-│   │
-│   ├── orchestration/
-│   │   ├── supervisor.py           Workflow coordinator
-│   │   └── router.py               Modality routing logic
-│   │
-│   └── utils/
-│       ├── logging.py              Structured logging
-│       └── helpers.py              Common utilities
+├── results/                   ← all output score CSVs
+│   ├── final_3approaches.csv      KEY RESULT: WTSAS + NB + LR for all 500 prompts
+│   ├── all_500_v2_results.csv     V2 NB (r=0.1931) and LR (r=0.2047) scores
+│   ├── all_500_v2_summary.csv     V2 Pearson r comparison table
+│   ├── imagebind_500.csv          raw s1/s2/s3/TSAS scores, 500 prompts
+│   ├── wtsas_500.csv              WTSAS final scores, 500 prompts
+│   ├── all_500_results.csv        V1 NB + LR scores
+│   └── all_500_summary.csv        V1 Pearson r comparison table
 │
-├── tests/                          Unit and integration tests
-├── benchmarks/                     Benchmark scripts and results
-├── notebooks/                      Exploratory analysis
-├── docs/                           Extended documentation
-└── examples/                       Usage examples per modality
+├── evaluation/                ← 53-prompt evaluation pipeline (earlier work, reference)
+│   ├── imagebind_score.py     original ImageBind scoring (working reference)
+│   ├── full_pipeline.py       end-to-end 53-prompt pipeline
+│   ├── quality_scores.py      CLIP, aesthetic, BERTScore, WER scoring
+│   ├── learn_weights.py       linear regression to learn w1, w2, w3
+│   ├── wtsas.py               WTSAS formula implementation
+│   ├── naive_bayes_score.py   Naive Bayes V1 (raw Q features)
+│   ├── naive_bayes_score_v2.py Naive Bayes V2 (weighted coherence features)
+│   ├── likelihood_ratio_score.py  LR V1
+│   ├── likelihood_ratio_score_v2.py LR V2
+│   ├── llm_judge.py           Gemini judge scoring
+│   ├── aesthetic_weights.pth  pretrained aesthetic scorer weights (gitignored)
+│   └── .env                   Gemini API key (gitignored)
+│
+├── benchmarking/              ← early exploration: Cloudflare vs GPT-4 / Mistral / Groq
+│   ├── cloudflare_benchmark.py
+│   ├── cf_vs_bigplayers.py
+│   ├── cloudflare_visualizations.ipynb
+│   ├── outputs/               56-prompt test outputs (graphs + scores)
+│   └── other_models/          Groq / Mistral / Cerebras benchmarks
+│
+├── research_papers/           ← reference PDFs (ImageBind, TSAS, LR fusion, etc.)
+│
+├── config.py                  Cloudflare model IDs and endpoint config
+├── config.example.py          template (safe to commit, no keys)
+├── requirements.txt           Python dependencies
+└── parameter.txt              hyperparameter notes
 ```
 
 ---
 
-## 7. Installation and Setup
+## How to Run
 
-### 7.1 Prerequisites
-
-| Requirement | Specification |
-|-------------|---------------|
-| Python | 3.10 or higher |
-| CUDA | 12.0 or higher (for GPU-accelerated generation) |
-| GPU | NVIDIA RTX 3090 or higher; A100/H100 recommended for video |
-| RAM | 32 GB minimum; 64 GB recommended for video |
-| Docker | Latest stable version (for containerized deployment) |
-
-### 7.2 Local Installation
+### Prerequisites
 
 ```bash
-git clone <repository-url>
-cd ai-content-generator
-python -m venv venv
-source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env
 ```
 
-The `.env` file must contain valid API keys for the model providers being used.
+You also need:
+- A Cloudflare Workers AI account — add keys to `pipeline/.env`
+- A Gemini API key — add to `evaluation/.env`
+- The [ImageBind model](https://github.com/facebookresearch/ImageBind) installed in the repo root
 
-### 7.3 Docker Installation
+### Step-by-step
 
 ```bash
-docker-compose up -d
-```
+# 1. Generate text, image, audio for all 500 prompts
+python pipeline/step1_generate.py
 
-The application becomes available at `http://localhost:8501`.
+# 2. Compute quality scores + LLM judge ratings
+python pipeline/step2_quality.py
 
----
+# 3. Run V2 pipeline (best results: NB r=0.193, LR r=0.205)
+python pipeline/run_v2.py
 
-## 8. Usage
+# 4. Compute ImageBind coherence + WTSAS
+python pipeline/imagebind.py
 
-### 8.1 Web Interface
-
-Launch the Streamlit application:
-
-```bash
-streamlit run app.py
-```
-
-The interface allows users to select the generation mode, configure parameters such as tone, style, and language, submit prompts, and view generated outputs along with their associated metadata.
-
-### 8.2 Programmatic Interface
-
-```python
-from ai_content_generator import ContentGenerator, GenerationMode
-
-generator = ContentGenerator(model_config="gpt-4o")
-
-result = generator.generate(
-    prompt="Write a blog post about AI trends",
-    mode=GenerationMode.TEXT,
-    tone="professional",
-    language="English"
-)
+# 5. See the final comparison
+python pipeline/compare.py
 ```
 
 ---
 
-## 9. Evaluation and Benchmarking
+## Scoring Formulas
 
-### 9.1 Evaluation Metrics by Modality
+### Quality scores (per modality)
+```
+Q_text  = BERTScore(generated_text, prompt)
+Q_image = quality_pair(CLIP_score, aesthetic_score)
+Q_audio = quality_pair(semantic_score, WER_inv)
 
-| Modality | Primary Metrics | Secondary Metrics |
-|----------|-----------------|-------------------|
-| Text | Composite quality score, readability, sentiment alignment | Repetition penalty, keyword coverage |
-| Image | CLIP similarity, aesthetic score | Color balance, composition |
-| Audio (Planned) | CLAP similarity, clarity, prosody consistency | Loudness, frequency balance |
-| Video (Planned) | Temporal CLIP, optical flow smoothness, aesthetic | Scene consistency, flicker |
+quality_pair(a, b) = avg(a, b) - 0.5 * variance(a, b)
+```
 
-### 9.2 Text Generation Benchmark Results
+### ImageBind coherence scores
+```
+s1 = cosine_sim(text_embedding,  image_embedding)   # text <-> image
+s2 = cosine_sim(text_embedding,  audio_embedding)   # text <-> audio
+s3 = cosine_sim(image_embedding, audio_embedding)   # image <-> audio
+TSAS = (s1 + s2 + s3) / 3
+```
 
-| Model | Optimized Score | Time (sec) | Improvement | Revision Rate |
-|-------|-----------------|------------|-------------|---------------|
-| Qwen3-32B | 71.0 | 6.2 | +26.2 | 50% |
-| GPT-4o | 74.9 | 22.1 | +27.6 | 80% |
-| LLaMA 3.3-70B | 76.2 | 8.1 | +31.8 | 70% |
-| Kimi K2 | 76.4 | 6.8 | +33.6 | 85% |
+### Weighted coherence scores (V2)
+Weights w1, w2, w3 are learned by regressing Q features on judge_mean:
+```
+s1_w = s1 * (w1*Q_text + w2*Q_image) / (w1 + w2)
+s2_w = s2 * (w1*Q_text + w3*Q_audio) / (w1 + w3)
+s3_w = s3 * (w2*Q_image + w3*Q_audio) / (w2 + w3)
 
-### 9.3 Image Generation Benchmark Results
+Learned: w1=7.87 (text), w2=2.28 (image), w3=0.78 (audio)
+```
 
-| Model | Pass Rate | CLIP Score | Aesthetic Score | Retry Rate |
-|-------|-----------|------------|-----------------|------------|
-| OpenAI Image-1 Mini | 100% | 0.330 | 6.86 | 0% |
-| Stability SDXL | 80% | 0.342 | 6.49 | 20% |
-| Freepik Mystic | 80% | 0.326 | 6.77 | 30% |
-
-### 9.4 Key Findings
-
-The benchmarking experiments confirmed that the optimization stage consistently improves output quality across all evaluated text models, with average improvements between 26 and 34 points. The results also demonstrated a quality-latency trade-off: larger models produce higher-quality outputs at the cost of significantly increased computation time. For image generation, the combination of CLIP and aesthetic scoring proved effective for filtering low-quality outputs, with pass rates ranging from 80% to 100% depending on the model.
-
----
-
-## 10. Deployment
-
-The system was containerized using Docker and deployed on an institutional Data Lab server through Portainer. This deployment strategy provides portability across environments, reproducibility of behavior, scalability through container replication, and simplified maintenance through container replacement.
-
-Cloud deployment is supported on AWS, Google Cloud Platform, and Azure. The container image can be pushed to the respective container registry and deployed using each platform's managed container services.
+### WTSAS (Approach 1)
+```
+WTSAS = avg(s1_w, s2_w, s3_w) - lambda * variance(s1_w, s2_w, s3_w)
+lambda = 1.8  (optimal from 53-prompt sweep)
+```
 
 ---
 
-## 11. Current Limitations and Future Work
+## Results Summary
 
-### 11.1 Current Limitations
+```
+Approach                            Pearson r   Pairwise Accuracy
+───────────────────────────────────────────────────────────────────
+WTSAS (coherence only)                0.0763         52.4%
+Naive Bayes on [s1_w, s2_w, s3_w]    0.1931         56.2%
+Likelihood Ratio on [s1_w,s2_w,s3_w] 0.2047         56.6%  <- BEST
+───────────────────────────────────────────────────────────────────
+Random baseline                       0.0000         50.0%
+```
 
-- Audio and video generation pipelines are under development and not yet production-ready.
-- The TF-IDF retriever does not capture semantic similarity beyond lexical overlap.
-- Optimization is currently rule-based and does not adapt based on past outcomes.
-- The system does not yet support cross-modal generation (for example, generating video from text and audio together).
-
-### 11.2 Future Work
-
-| Phase | Focus Area |
-|-------|------------|
-| Phase 1 | Complete audio generation with CLAP-based evaluation and prosody refinement |
-| Phase 2 | Complete video generation with temporal CLIP and optical flow analysis |
-| Phase 3 | Implement multimodal synchronization between text, audio, and video |
-| Phase 4 | Replace TF-IDF with semantic retrieval using FAISS or Pinecone |
-| Phase 5 | Introduce learning-based optimization to replace rule-based refinement |
-| Phase 6 | Add personalization based on user preferences and history |
-| Phase 7 | Enable real-time interactive feedback loops for output refinement |
+LR wins on both Pearson r and Spearman r. LOO cross-validation was used throughout for honest generalization estimates.
 
 ---
 
-## 12. References
+## References
 
-1. Vaswani, A., et al. "Attention Is All You Need." *Advances in Neural Information Processing Systems*, 2017.
-2. Radford, A., et al. "Learning Transferable Visual Models From Natural Language Supervision." *Proceedings of ICML*, 2021.
-3. Lewis, P., et al. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." *NeurIPS*, 2020.
-4. Ho, J., et al. "Denoising Diffusion Probabilistic Models." *NeurIPS*, 2020.
-5. Salton, G., and Buckley, C. "Term-weighting Approaches in Automatic Text Retrieval." *Information Processing & Management*, vol. 24, no. 5, 1988.
-6. Hutto, C., and Gilbert, E. "VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text." *ICWSM*, 2014.
-7. LangChain. "LangGraph Documentation," 2025.
-8. OpenCLIP. "OpenCLIP: Open Source CLIP Implementation," 2023.
+See `research_papers/` for the full PDFs.
 
----
-
-## Project Team
-
-| Name | Role |
-|------|------|
-| Namrata | * |
-| Nihal | * |
-| Pramod | * |
-| Anuj | * |
-| Gourav | * |
-
-
-**Institution:** SRH University of Applied Sciences, Heidelberg
-**Course:** Case Studies 1
-**Program:** M.Sc. Applied Data Science and Artificial Intelligence
+- Girdhar et al. — *ImageBind: One Embedding Space to Bind Them All* (Meta AI, 2023)
+- Nandakumar et al. — *Likelihood Ratio Fusion*
+- `cosine_sim_tsas.pdf` — TSAS methodology
+- `multimodal_consistency_coherence.pdf` — coherence evaluation background

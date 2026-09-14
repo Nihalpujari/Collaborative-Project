@@ -1,0 +1,2 @@
+w1_q_text,w2_q_image,w3_q_audio,r2_train,rmse_train,loo_r2,loo_rmse,optimal_lambda
+0.287,0.5205,0.1926,0.1593,0.9265,0.0397,0.9902,1.8

@@ -1,0 +1,9 @@
+**Prompt for an image‑generation model (or a vivid description you can use to visualize the scene):**
+
+> **Scene:** A sleek, modern computer monitor (about 24‑inch, thin bezel) is standing upright on a simple desk. The monitor’s “face” is the black screen, but it has a subtle, cartoon‑ish personality: faint, slightly raised eyebrows and a small, bewildered mouth rendered as a faint line on the glass.  
+> 
+> **Accessories:** Resting on the upper‑right corner of the screen are a pair of round, gold‑rimmed reading glasses. The glasses sit as if the monitor is actually wearing them—one arm loops around the monitor’s left side, the other around the right, with the lenses hovering just a millimeter above the display. Tiny, translucent reflections on the lenses hint at the monitor’s own “eyes” looking through them.  
+> 
+> **Expression:** The monitor’s “eyes” (the dark, blank display) are wide, giving the impression of surprise. A faint, comic‑style “confused” thought bubble hovers above the monitor, containing a swirl of question marks (e.g., “???”).  
+> 
+> **Lighting & Mood:** Soft, diffused office lighting casts gentle highlights on the monitor’s surface, emphasizing the glossy screen and the metallic frames

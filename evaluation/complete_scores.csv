@@ -1,0 +1,770 @@
+prompt_id,prompt,generated_text,image_path,audio_path,q_text,clip_score,aesthetic,q_image,semantic_score,wer_inv,q_audio,transcript,llm_overall,llm_text,llm_image,llm_audio,llm_reasoning,w1,w2,w3,opt_lambda,s1_text_image,s2_text_audio,s3_image_audio,tsas,s1_weighted,s2_weighted,s3_weighted,wtsas,wtsas_final
+1,A fox exploring a cave in a snowy village,"ORIGINAL PROMPT:
+An elegant owl librarian wearing reading glasses.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a serene and mystical atmosphere, as if the very essence of knowledge has taken flight. In the heart of a grand, dimly lit library, an elegant owl librarian perches atop a high wooden desk, surrounded by towering shelves of ancient tomes and leather-bound volumes. The soft glow of lanterns casts a warm, golden light upon the owl's stately form, illuminating the delicate features of its face.
+
+The owl's plumage is a soft, silky gray, with intricate patterns of darker gray and white feathers that resemble the pages of an old book. Its eyes, however, are a piercing shade of yellow, shining bright with intelligence and wisdom. Behind a pair of reading glasses perched on the end of its beak, the owl's eyes seem to gleam with a knowing light, as if it has spent countless hours poring over the pages of the very books that surround it.
+
+The reading glasses themselves are a charming, antique pair, with intricate engravings on the frames and delicate, wire arms that hold them securely in place. They add a touch of whimsy to the owl's dignified appearance, and seem to be a nod to the owl's love of reading and learning.
+
+The owl's posture is one of quiet contemplation, its head tilted slightly to one side as it gazes out at the shelves of books. Its talons are curled gently around the edge of the desk, as if it is holding onto the very fabric of knowledge",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_1.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_1.wav,0.8118,0.1635,0.7516,0.4143,0.8358,0.1751,0.4509,"The scene unfolds in a serene and mystical atmosphere, as if the very essence of knowledge has taken flight. In the heart of a grand dimly lit library, an elegant howl librarian perches a top-of-high wooden desk, surrounded by towering shelves of ancient tomes and leather-bound volumes. The soft glow.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2621,0.1262,0.1484,0.1789,0.1607,0.0797,0.0642,0.1015,0.1006
+2,A flamingo blacksmith exploring a cave,"ORIGINAL PROMPT:
+A red fox sitting at a pottery wheel, shaping a clay vase with its paws.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a serene, sunlit studio, filled with the gentle scent of clay and the soft hum of a wheel spinning in the background. A red fox, its fur a vibrant, fiery hue, sits at the pottery wheel, its paws deftly shaping a lump of clay into a beautiful, delicate vase.
+
+The fox's paws, with their sharp claws and agile fingers, move with a precision that belies its wild nature. It begins by centering the clay, its paws gently coaxing the material into a symmetrical shape. As the wheel spins, the fox's paws dance across the surface of the clay, shaping and molding it into a slender, elegant form.
+
+The fox's tail, long and bushy, twitches back and forth as it works, its tip tapping out a rhythmic beat on the floor. Its ears, perked up and alert, listen intently to the sound of the wheel, as if it's a symphony of sound that guides its creative process.
+
+As the fox works, its whiskers twitch and its nose wrinkles in concentration. Its eyes, bright and inquisitive, shine with a creative spark, as if it's lost in a world of its own making. The studio around it is a blur, the only thing that exists is the clay, the wheel, and the fox's own imagination.
+
+The vase begins to take shape, its curves and lines emerging from the clay like a living, breathing thing.",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_2.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_2.wav,0.7958,0.1722,0.7474,0.4185,0.8252,0.1858,0.4544,"The scene unfolds in a serene, sunlit studio, filled with the gentle scent of clay and the soft hum of a wheel spinning in the background. A red fox, it's for a vibrant fiery hue, sits at the pottery wheel. It's paws definitely shaping a lump of clay into a beautiful, delicate vase the foxes paws with.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4056,0.0475,0.1298,0.1943,0.2463,0.0297,0.0567,0.1109,0.1062
+3,A mantis sailing a paper boat on a wooden bridge,"ORIGINAL PROMPT:
+A majestic eagle wearing a pilot's headset, flying a vintage biplane through the clouds.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds like a breathtaking work of art, a symphony of light, sound, and movement. The majestic eagle, its feathers a rich, burnished gold, soars through the clouds in a vintage biplane that seems to have been plucked straight from the golden age of aviation.
+
+The eagle's wings, strong and sure, beat the air with a slow, deliberate rhythm, propelling the biplane forward with a smooth, effortless motion. The wind rushes past the bird's face, whipping its feathers back and forth, but the eagle's eyes remain fixed intently on the horizon, its gaze unwavering.
+
+Perched proudly in the cockpit, the eagle wears a vintage pilot's headset, its leather straps cinched tightly around the bird's head. The headset's earphones are pushed back, revealing the eagle's sharp, piercing eyes, which seem to gleam with a fierce, unyielding determination.
+
+The biplane's wooden frame glows with a warm, honey-colored patina, its fabric-covered wings and fuselage a deep, rich brown. The aircraft's propeller, a spinning blur of wood and wire, whisks through the air with a soft, whooshing sound, creating a miniature whirlwind that sends wisps of cloud swirling around the biplane.
+
+As the eagle banks and turns, the biplane's wings tilt and dip, creating a dramatic, swooping motion that sends the bird's shadow dancing across the clouds. The sun catches the bi",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_3.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_3.wav,0.7974,0.1862,0.6658,0.3973,0.829,0.1992,0.4645,"The scene unfolds like a breathtaking work of art, a symphony of light, sound and movement. The majestic eagle, its feathers a rich, burnished gold, sourced through the clouds in a vintage biplane that seems to have been plucked straight from the golden age of aviation. The eagle's wings strong in.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3197,0.0281,0.1136,0.1538,0.191,0.0177,0.049,0.0859,0.083
+4,"A panda brewing coffee at dawn in a neon nightclub, photorealistic","ORIGINAL PROMPT:
+A squirrel wearing a business suit, aggressively speaking into a tiny gold smartphone.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a bustling city square, surrounded by towering skyscrapers and the constant hum of urban activity. Amidst the chaos, a peculiar figure stands out - a squirrel, dressed in a tailored business suit, complete with a crisp white shirt, a patterned tie, and a fedora hat. The squirrel's eyes are fixed intently on a tiny gold smartphone, which it holds in its paws as if it's a precious gem.
+
+The squirrel's suit is a deep navy blue, perfectly fitted to its slender body, and the fabric seems to gleam in the sunlight. A silver pin on the lapel reads ""Nutty Inc."" in bold, cursive letters. The squirrel's tail, usually a fluffy and expressive feature, is tucked neatly into the back of its pants, giving it a sleek and professional appearance.
+
+As the squirrel speaks into the phone, its voice rises to a shrill pitch, filled with urgency and annoyance. The words ""I don't care about the acorn shortage!"" and ""Get me the CEO on the line now!"" are hurled at the phone, accompanied by rapid-fire gestures of the squirrel's paws. The tiny phone seems to be vibrating in its paws, as if it's receiving a barrage of messages.
+
+Passersby can't help but stare at the squirrel, mesmerized by its intensity and the absurdity of the situation. Some people giggle, while others look on in confusion, unsure how to react to this",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_4.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_4.wav,0.8018,0.1868,0.5638,0.3576,0.8334,0.18,0.4533,"The scene unfolds in a bustling city square, surrounded by towering skyscrapers in the constant hum of urban activity. Amidst the chaos, a peculiar figure stands out, a squirrel, dressed in a tailored business suit, complete with a crisp white shirt, a patterned tie, and a fedora hat, the squirrel.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3727,0.1119,0.1673,0.2173,0.2161,0.0702,0.0678,0.118,0.1156
+5,A chameleon archer brewing coffee at dawn,"ORIGINAL PROMPT:
+An astronaut riding a bicycle on a ring of Saturn, delivering a cardboard pizza box.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a breathtaking, otherworldly setting. The astronaut, clad in a sleek white spacesuit adorned with the insignia of a fictional space agency, pedals a sturdy, high-tech bicycle across the gossamer-thin ring of Saturn. The ring, a majestic halo of ice and rock particles, stretches out before the astronaut like an ethereal highway.
+
+As the astronaut rides, the bicycle's wheels hum a gentle tune, their titanium alloy rims glinting in the faint, diffuse light that filters through the rings. The astronaut's suit is equipped with a state-of-the-art life support system, ensuring a stable supply of oxygen and temperature control, despite the harsh, sub-zero environment.
+
+The cardboard pizza box, emblazoned with a bold, red logo and a hastily scrawled label reading ""URGENT DELIVERY,"" is secured to the bicycle's rear rack via a sturdy elastic strap. The box itself appears slightly battered, as if it had been handled with care, but its contents remain a mystery.
+
+As the astronaut navigates the ring, the bicycle's advanced stabilizers adjust to compensate for the subtle gravitational pulls of nearby ring particles. The astronaut's gaze is fixed on the horizon, where the ring's curvature meets the darkness of space. The silence is almost palpable, broken only by the soft whir of the bicycle's engines and the faint hiss of the astronaut's suit's life support system.
+
+The astronaut's face, obscured by the helmet's tint",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_5.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_5.wav,0.7851,0.2188,0.7113,0.4347,0.8111,0.1619,0.4338,"The scene unfolds in a breathtaking otherworldly setting. The astronaut, clad in a sleek white spacesuit, adorned with the insignia of a fictional space agency, pedals a sturdy high-tech bicycle across the gossamer-thin ring of Saturn, the ring a majestic halo of ice and rock particles. Stretches.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4011,0.1653,0.1353,0.2339,0.2446,0.1007,0.0588,0.1347,0.1315
+6,A mantis carpenter chasing fireflies,"ORIGINAL PROMPT:
+A fluffy kitten wearing heavy metal spiked armor.
+
+======================================================================
+
+GENERATED TEXT:
+In this peculiar scene, a small, adorable kitten is dressed in a set of heavy metal spiked armor that seems to be at least three times its size. The kitten, likely a ball of fluff with a soft, downy coat, is now encased in a bulky suit of armor that appears to be crafted from a mix of shining steel and sharp, pointed spikes.
+
+The armor itself is a deep, dark grey color, with intricate engravings and etchings that seem to dance across its surface. The spikes, which range in length from a few inches to over a foot, are a gleaming silver color and are spaced at irregular intervals across the armor's surface. They appear to be razor-sharp, and seem to be angled in such a way that they would Bakanly hinder any potential attacker.
+
+Despite the kitten's diminutive size, the armor seems to be proportioned to fit its tiny body. The armor's chest plate is slightly concave, allowing the kitten to breathe easily, and the armor's sleeves are long enough to cover the kitten's paws. The armor's helmet, which is shaped like a miniature knight's helmet, is perched atop the kitten's head, casting a shadow over its face.
+
+The kitten itself appears to be completely unaware of its surroundings, and is instead focused on trying to lick its own paws through the armor's small openings. Its tiny pink tongue darts in and out of the openings, and its ears are perked up",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_6.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_6.wav,0.7779,0.151,0.8981,0.4548,0.8027,0.2196,0.4686,"In this peculiar scene, a small adorable kitten is dressed in a set of heavy metal spiked armor that seems to be at least three times its size. The kitten, likely a ball of fluff with a soft downy coat, is now encased in a bulky suit of armor that appears to be crafted from a mix of shining steel.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4282,0.0311,0.1087,0.1893,0.2639,0.0194,0.0502,0.1112,0.1053
+7,A cheerful butterfly professor with a paper lantern,"ORIGINAL PROMPT:
+A cat wearing headphones DJing at a packed nightclub.
+
+======================================================================
+
+GENERATED TEXT:
+The dimly lit nightclub pulsed with an electric energy, the air thick with anticipation as the crowd waited for the main event to begin. The DJ booth, a sleek and modern structure, sat elevated above the dance floor, its LED lights flashing in time with the thumping beat. And perched atop this throne, seemingly in control of the entire operation, was a cat.
+
+The cat, a sleek black feline with piercing green eyes, wore a pair of sleek, silver headphones that seemed to be molded to its ears. Its whiskers twitched in time with the music, and its tail swished back and forth with an air of confidence. A miniature DJ controller sat in front of it, its buttons and knobs a blur as the cat's paws danced across the surface.
+
+The crowd, a sea of dancing bodies, was completely entranced by the feline DJ. They cheered and chanted its name, ""DJ Whiskers!"" as the cat expertly mixed and matched tracks, creating a seamless flow of music that had the crowd moving in perfect sync. The cat's ears perked up as it listened to the music, its eyes scanning the crowd as it searched for the perfect moment to drop the next track.
+
+As the music reached a fever pitch, the cat stood up, its paws raised in triumph as it surveyed the crowd. The room erupted in cheers and applause, with the cat taking a triumphant bow as it accepted the adoration of the crowd. For",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_7.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_7.wav,0.8069,0.1396,0.5941,0.341,0.8242,0.166,0.441,"The dimly lit night club pulsed with an electric energy, the air thick with anticipation, as the crowd waited for the main event to begin. The GD booth, a sleek and modern structure, set elevated above the dance floor, its lead lights flashing in time with the thumping beat, and perched to top this thrawn.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3643,0.0356,0.1396,0.1798,0.2091,0.0222,0.0546,0.0953,0.092
+8,"A hippo skateboarding down a hill, in warm golden light","ORIGINAL PROMPT:
+A golden retriever in a tuxedo swimming.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds on a warm summer day, with the sun shining brightly overhead. The air is filled with the sweet scent of blooming flowers and the sound of gentle lapping of water against the shore. A golden retriever, resplendent in a miniature tuxedo, stands at the water's edge, its fur fluffed up against the gentle breeze.
+
+The dog's tuxedo is a perfect miniature replica of a human tuxedo, complete with a tiny bow tie and a cummerbund. The bow tie is a deep red color, and the cummerbund is a rich black velvet. The tuxedo itself is a sleek black, with a subtle sheen that catches the sunlight.
+
+As the dog prepares to enter the water, it gives a little shake of its head, sending droplets of water flying in all directions. The tuxedo-clad retriever then turns to face the water, its tail wagging excitedly as it takes a deep breath and plunges into the waves.
+
+The dog's body glides effortlessly through the water, its fur slick and shiny as it paddles with its front paws. The tuxedo-clad retriever swims with a confident, almost regal air, as if it's accustomed to wearing such finery while swimming.
+
+As the dog swims further out into the water, its tuxedo becomes increasingly waterlogged, the fabric clinging to its body in soggy folds. But the retriever doesn't",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_8.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_8.wav,0.8069,0.1814,0.6527,0.3893,0.8344,0.2051,0.4703,"The scene unfolds on a warm summer day, with the sun shining brightly overhead. The air is filled with the sweet scent of blooming flowers and the sound of gentle lapping of water against the shore. A golden retriever, resplendent in a miniature tuxedo, stands at the water's edge. It's for fluffed up.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3296,0.0216,0.1052,0.1521,0.1971,0.0138,0.0452,0.0854,0.0822
+9,"A toucan reading under an umbrella, in a dreamy haze","ORIGINAL PROMPT:
+A hamster lifting a tiny barbell in a gym.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a miniature gym, complete with tiny weights, exercise equipment, and a miniature mirror. The walls are adorned with motivational posters, each bearing an inspirational message in bold, childlike font. The air is thick with the scent of fresh wood and a hint of hamster food.
+
+In the center of the gym, a tiny hamster, no larger than a thumb, stands on its hind legs, its front paws grasping a miniature barbell. The barbell itself is a marvel of miniature engineering, with two tiny weights attached to either end. Each weight is roughly the size of a grain of rice, and they seem to be made of a shiny metal that reflects the light.
+
+The hamster, whose name is Whiskers, is a determined creature. Its bright, inquisitive eyes are fixed intently on the barbell, and its tiny paws are clenched around it with a fierce grip. Whiskers' fur is a soft, fluffy gray, and its whiskers twitch with excitement as it prepares to lift the barbell.
+
+As Whiskers begins to lift the barbell, its tiny muscles strain with effort. The barbell rises slowly, inch by inch, until it is hovering above the hamster's head. For a moment, the barbell teeters precariously, and Whiskers' paws flex with the strain. Then, with a triumphant squeak, Whiskers manages to lift the barbell all the",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_9.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_9.wav,0.8071,0.1093,0.6278,0.335,0.8375,0.1949,0.4646,"The scene unfolds in a miniature gym, complete with tiny weights, exercise equipment, and a miniature mirror. The walls are adorned with motivational posters, each bearing an inspirational message in bold childlike font, the air is thick with the scent of fresh wood and a hint of hamster food. In.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3658,0.1174,0.1072,0.1968,0.2089,0.0746,0.0429,0.1088,0.1062
+10,A sloth solving a crossword at a mountain lake at sunrise,"ORIGINAL PROMPT:
+A squirrel wearing a cowboy hat riding a skateboard.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds like a whimsical dream, a fusion of the wild and the west. In the center of this vibrant tableau, a squirrel stands atop a sleek, black skateboard, its wooden deck glistening in the sunlight. The squirrel, dressed in a miniature cowboy hat, complete with a tiny band and a delicate silver buckle, sits confidently on the board.
+
+The squirrel's fur is a rich, chestnut brown, with a subtle sheen that hints at its health and vitality. Its bright, inquisitive eyes, a piercing brown, sparkle with mischief as it surveys its surroundings. A tiny, white tuft of fur on the end of its nose twitches with excitement, as if sensing the thrill of the ride to come.
+
+The skateboard itself is a marvel of miniature engineering, its deck and trucks precision-crafted to accommodate the squirrel's tiny frame. The wheels, a deep, glossy black, rotate smoothly as the squirrel shifts its weight, its paws deftly adjusting to the board's subtle movements.
+
+As the squirrel prepares to launch into action, its tail twitches with anticipation, a fluffy, brown plume that waves back and forth like a banner. The cowboy hat, a perfect miniature replica of its human counterpart, sits atop the squirrel's head, its brim pulled low over its eyes to shield them from the sun.
+
+With a burst of energy, the squirrel pushes off with one paw, and the skateboard begins to glide smoothly across the ground. The squirrel's tail",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_10.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_10.wav,0.804,0.1748,0.7453,0.4194,0.8267,0.1739,0.447,"The scene unfolds like a whimsical dream, a fusion of the wild and the west. In the center of this vibrant to-blow, a squirrel stands atop a sleek black skateboard. It's what in deck, glistening in the sunlight. The squirrel, dressed in a miniature cowboy hat, complete with a tiny band and a delicate.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3536,-0.0182,0.0788,0.1381,0.2163,-0.0114,0.0341,0.0797,0.0748
+11,A lamb and a ant dancing in the rain,"ORIGINAL PROMPT:
+A penguin wearing a grass skirt doing the hula dance.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds on a sun-kissed beach, with the warm golden sand stretching out as far as the eye can see. The air is filled with the sweet scent of blooming flowers and the sound of gentle waves crashing against the shore. The sky above is a brilliant blue, with a few wispy clouds drifting lazily across it.
+
+In the center of this idyllic setting, a penguin stands out, its tuxedo-like feathers a stark contrast to the vibrant colors of the beach. But this penguin is not content to blend in with its surroundings. Instead, it's proudly wearing a bright green grass skirt, complete with intricate patterns of hibiscus flowers and palm fronds.
+
+The penguin, whose name is Percy, is in the midst of performing the hula dance. Its flippers move in perfect time, swaying back and forth as it twirls and spins across the sand. The grass skirt flows behind it, a colorful river of fabric that catches the breeze and ripples with each movement.
+
+As Percy dances, its eyes shine with excitement and joy. Its beak opens and closes in time with the music, which is a lively ukulele tune that seems to match the rhythm of the waves. The penguin's little feet tap out the beat on the sand, creating a tiny drumbeat that adds to the overall energy of the scene.
+
+The beach around Percy is empty, except for a few seagulls watching from a distance,",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_11.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_11.wav,0.8082,0.1572,0.9637,0.4791,0.8214,0.2134,0.4712,"The scene unfolds on a sun-kissed beach, with the warm golden sand stretching out as far as the eye can see, the air is filled with the sweet scent of blooming flowers and the sound of gentle waves crashing against the shore. The sky above is a brilliant blue, with a few wispy clouds drifting",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.345,-0.0006,0.1659,0.1701,0.2221,-0.0004,0.0788,0.1002,0.0959
+12,A kangaroo dj at a mountain lake at sunrise,"ORIGINAL PROMPT:
+A pug wearing sunglasses sunbathing on a pool float.
+
+======================================================================
+
+GENERATED TEXT:
+The scene is a picturesque depiction of a carefree summer day. A pug, with its characteristic wrinkled face and adorable underbite, is reclining on a vibrant, inflatable pool float. The float is shaped like a flamingo, adding a touch of whimsy to the scene.
+
+The pug, donning a pair of trendy, oversized sunglasses, looks like it's the epitome of cool. The sunglasses are a sleek, black frame with bright, neon green lenses that seem to glow in the sunlight. They're perched atop the pug's snout, giving it a distinctly hip and laid-back vibe.
+
+As the pug sunbathes, its wrinkled skin glistens with a fine layer of moisture, hinting at the warmth of the sun on its fur. The pug's fur itself is a rich, fawn color, with a subtle sheen that catches the light. Its ears, which are typically floppy, are slightly perked up, as if the pug is listening to the sounds of the surrounding environment.
+
+The pool float, which is a brilliant shade of pink, provides a comfortable surface for the pug to lounge on. The float is adorned with colorful, inflatable flowers and leaves, adding to the festive atmosphere of the scene. A few wispy strands of pool water cling to the float's surface, creating a subtle sense of movement and energy.
+
+In the background, the sun shines brightly, casting a warm glow over the entire scene",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_12.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_12.wav,0.792,0.1488,0.6978,0.3856,0.8207,0.186,0.453,"The scene is a picturesque depiction of a carefree summer day, a pug, with its characteristic wrinkled face and adorable under bite, is reclining on a vibrant, inflatable pool float. The float is shaped like a flamingo, adding a touch of whimsy to the scene. The pug donning a pair of trendy oversea.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3394,0.1018,0.1625,0.2012,0.1998,0.0634,0.0681,0.1104,0.1084
+14,A firefly and a goose building a birdhouse,"ORIGINAL PROMPT:
+A frog playing a miniature electric guitar on a lilypad.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds on a serene and tranquil pond, surrounded by lush greenery and vibrant flowers. The warm sunlight casts a gentle glow over the water, creating a soft, shimmering effect on the ripples. A lilypad, its delicate white blooms swaying gently in the breeze, serves as the stage for a most unlikely musician.
+
+Perched on the lilypad, a small, energetic frog strums the strings of a miniature electric guitar. The guitar itself is a marvel of tiny craftsmanship, with intricate details and a body that fits perfectly in the frog's tiny hands. The frog's fingers move deftly over the fretboard, plucking out a lively melody that echoes across the pond.
+
+The frog's eyes are closed in concentration, its brow furrowed in a look of intense focus. Its bright green skin glistens with dew, and its long, sticky tongue occasionally darts out to lick its lips. A tiny hat, a miniature version of a classic rock star's top hat, sits atop the frog's head, adding a touch of whimsy to the scene.
+
+As the frog plays, the lilypad beneath it begins to vibrate, causing the delicate white blooms to sway in time with the music. The water around the lilypad ripples and shimmers, creating a mesmerizing display of light and sound. A small school of fish darts through the water, their scales catching the sunlight and flashing like tiny jewels.
+
+The air is filled with the sweet scent of",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_14.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_14.wav,0.7973,0.2032,0.8296,0.4673,0.8224,0.1786,0.4487,"The scene unfolds on a serene and tranquil pond, surrounded by lush greenery and vibrant flowers. The warm sunlight casts a gentle glow over the water, creating a soft shimmering effect on the ripples, a lillipad, its delicate white bloom swaying gently in the breeze. Serves as the stage for a most.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3446,-0.0137,-0.0136,0.1058,0.2179,-0.0085,-0.0062,0.0677,0.0621
+15,A otter rowing across a misty lake under a starry sky,"ORIGINAL PROMPT:
+A fancy owl drinking a cup of hot coffee.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a cozy, upscale atmosphere, reminiscent of a luxurious parlor or a high-end café. The walls are adorned with rich, dark wood paneling, and the floor is covered with plush, cream-colored carpeting. Soft, golden lighting emanates from a series of crystal chandeliers, casting a warm glow over the entire space.
+
+In the center of the room, a majestic owl perches on a delicate, antique chair, its feathers a mesmerizing array of browns, grays, and whites. The owl's piercing yellow eyes seem to gleam with intelligence as it surveys its surroundings, its head cocked to one side in a gesture of refined elegance.
+
+On a nearby side table, a delicate, fine china cup sits, filled to the brim with a rich, dark liquid. The aroma of freshly brewed coffee wafts up from the cup, enticing the owl's sensitive nostrils and drawing its attention to the steaming beverage.
+
+As the owl reaches out with its talons to grasp the cup, its feathers rustle softly against the chair's upholstery. The owl's sharp, hooked beak closes around the cup's rim, and it takes a delicate sip of the hot coffee. The liquid seems to dance on the owl's tongue, and its eyes widen in appreciation as it savors the complex flavors.
+
+For a moment, the owl sits perfectly still, lost in the pleasure of the coffee. Then, with a delicate flick of its head, it sets",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_15.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_15.wav,0.7943,0.1372,0.871,0.4368,0.8155,0.17,0.4407,"The scene unfolds in a cozy, upscale atmosphere, reminiscent of a luxurious parlor or a high-end cafe. The walls are adorned with rich, dark wood paneling, and the floor is covered with plush, cream-colored carpeting, soft golden lighting emanates from a series of crystal chandeliers. Casting a war?",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2929,0.1807,0.1007,0.1914,0.1803,0.1116,0.0442,0.112,0.1105
+16,A tiny llama holding a wooden music box in a cherry blossom park,"ORIGINAL PROMPT:
+A baby monkey wearing a diaper and riding a tricycle.
+
+======================================================================
+
+GENERATED TEXT:
+The scene is a whimsical and humorous one, filled with a sense of childlike wonder and playfulness. In the center of the scene, a baby monkey is perched on a miniature tricycle, its tiny hands grasping the handlebars as it pedals with all its might.
+
+The baby monkey itself is a bundle of energy and curiosity, its bright, inquisitive eyes scanning the surroundings as it explores its new mode of transportation. Its soft, fluffy fur is a warm, golden brown color, and its tiny ears perk up with excitement as it takes in the sights and sounds of its environment.
+
+The monkey's diaper is a bright, poppy pink color, and it's secured with a tiny, colorful bow at the back. The diaper itself is a bit too big for the monkey, but it's adorable nonetheless, adding to the overall charm of the scene.
+
+The tricycle itself is a miniature version of a standard tricycle, with a sturdy metal frame and a set of three bright, shiny wheels. The handlebars are designed for the monkey's tiny hands, and the seat is just the right size for the little primate's bottom.
+
+As the monkey pedals, its tiny legs move rapidly, pumping the pedals up and down as it tries to get its bearings. The tricycle wobbles and sways, but the monkey's sure-footed and agile, and it quickly adjusts to the motion, its confidence growing with each passing moment.
+
+The background of the scene is a",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_16.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_16.wav,0.8067,0.1113,0.7335,0.374,0.8322,0.1953,0.463,"The scene is a whimsical and humorous one, filled with a sense of childlike wonder and playfulness. In the center of the scene, a baby monkey is perched on a miniature tristicle. It's tiny hands grasping the handlebars, as it pedals with all its might. The baby monkey itself is a bundle of energy and...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3427,-0.0078,0.0665,0.1338,0.2023,-0.005,0.0278,0.0751,0.0709
+18,A cat and a bat meditating under a waterfall,"ORIGINAL PROMPT:
+Darth Vader aggressively vacuuming a living room rug.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, opulent living room, with a grandiose chandelier hanging from the ceiling, casting an eerie glow over the space. The walls are adorned with lavish tapestries, and the air is thick with the scent of old leather and polished wood. In the center of the room, a plush, deep-red rug lies sprawled out, its intricate patterns and designs seemingly at odds with the ominous presence dominating the space.
+
+Darth Vader, the infamous Sith Lord, stands towering over the rug, his imposing figure clad in his signature black armor. His helmet's life-support systems hum softly as he exudes an aura of malevolent intent. His gloved hands grasp the vacuum cleaner's handle with an unnerving intensity, the machine's cord trailing behind him like a serpent.
+
+As he begins to vacuum, the machine roars to life, its suction powerful enough to lift the rug's fibers off the floor. Vader's movements are deliberate and calculated, each stroke of the vacuum a testament to his unyielding focus. His breathing is labored, the sound of his life-support systems a constant reminder of his mastery over the dark side.
+
+The rug, once a vibrant and inviting space, now seems to shrink under Vader's relentless vacuuming. The fibers are lifted, revealing the underlying wood floor, and the patterns and designs are distorted, as if the very fabric of reality is being warped by Vader's malevolent presence.
+
+As the vacuuming continues,",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_18.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_18.wav,0.7967,0.1386,0.712,0.3842,0.8185,0.2008,0.462,"The scene unfolds in a dimly lit, opulent living room. With a grandiose chandelier hanging from the ceiling, casting an eerie glow over the space, the walls are adorned with lavish tapestries, and the air is thick with the scent of old leather and polished wood. In the center of the room, a plush D.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3353,0.0625,0.128,0.1753,0.198,0.0393,0.0542,0.0972,0.0946
+19,A seahorse botanist ice skating at night,"ORIGINAL PROMPT:
+Batman crying while chopping a massive onion.
+
+======================================================================
+
+GENERATED TEXT:
+The dimly lit kitchen of Wayne Manor was a stark contrast to the dark, gritty streets of Gotham City that Batman had grown accustomed to. The air was thick with the pungent aroma of a massive onion, its layers glistening in the faint light. Batman stood at the kitchen counter, his eyes fixed intently on the onion as he gripped a large chef's knife in his gloved hand.
+
+His eyes, usually a piercing blue, were now red-rimmed and brimming with tears. The weight of his responsibilities as the Dark Knight bore down on him, and the onion had become a symbol of the emotional burden he carried. As he began to chop the onion, the knife sliced through the layers with a soft, wet sound, releasing a torrent of tears from Batman's eyes.
+
+The tears streamed down his face, mixing with the sweat that had formed on his brow as he worked. His chest heaved with a deep, shuddering breath, and his body trembled with the effort of holding back his emotions. The sound of the knife chopping through the onion was like a metronome, a steady beat that underscored the turmoil that raged within him.
+
+As the onion began to break down, its layers releasing their pungent flavor into the air, Batman's tears fell faster, mixing with the onion's juice to create a salty, bitter taste on his lips. His eyes burned with a mixture of sadness and frustration, and his jaw clenched in a",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_19.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_19.wav,0.7745,0.1154,0.7304,0.3756,0.7877,0.1914,0.4451,"The dimly lit kitchen of Wayne Manor was a stark contrast to the dark gritty streets of Gotham City that Batman had grown accustomed to. The air was thick with the pungent aroma of a massive onion. Its layers glistening in the faint light, Batman stood at the kitchen counter. His eyes fixed in",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.384,0.0614,0.1345,0.1933,0.2208,0.0374,0.0552,0.1045,0.1011
+20,A ant gardening on a balcony on a quiet beach at dusk,"ORIGINAL PROMPT:
+Shrek doing a delicate ballet dance on a stage.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a grand, ornate theater, the walls adorned with intricate gold filigree and the chandeliers casting a warm, golden glow. The audience is seated in hushed anticipation, their eyes fixed on the stage where a most unlikely figure is about to take center stage.
+
+Shrek, the lovable, gruff ogre, stands poised at the edge of the stage, his massive frame awkwardly clad in a tutu and ballet shoes. His usual gruff demeanor has given way to a look of bemused concentration, as if he's trying to recall a long-forgotten memory.
+
+As the music begins, a lilting waltz that seems to dance on the edge of the melody, Shrek takes a deep breath and launches into the first movement of the ballet. His massive feet, clad in shoes that seem to be a size too small, make tentative steps across the stage, as if he's trying not to make a sound.
+
+But as the music builds, Shrek's movements become more confident, more fluid. His arms, usually so broad and muscular, now seem to be made of silk, as he twirls and leaps across the stage with a surprising lightness. His face, usually set in a scowl, now breaks into a wide, goofy grin, as if he's savoring the sheer joy of movement.
+
+The audience watches in rapt attention as Shrek glides across the stage, his movements a perfect blend of",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_20.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_20.wav,0.8101,0.1687,0.893,0.4653,0.8295,0.1639,0.4414,"The scene unfolds in a grand ornate theater. The walls adorned with intricate gold filigree, and the chandel is casting a warm golden glow. The audience is seated in hushed anticipation. Their eyes fixed on the stage, where a most unlikely figure is about to take center stage. Shrek, the lovable.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2973,-0.0371,0.0371,0.0991,0.1896,-0.0232,0.0168,0.0611,0.0568
+21,A cat perfumer solving a crossword,"ORIGINAL PROMPT:
+An astronaut playing the bagpipes on the moon.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds on the lunar surface, bathed in the stark, unforgiving light of the moon. The horizon stretches out in every direction, curving slightly due to the moon's curvature. The sky above is pitch black, punctuated only by the distant Earth, a blue-green marble suspended in the darkness.
+
+The astronaut, clad in a bulky spacesuit, stands on the moon's dusty surface, the suit's life support systems and communication equipment visible beneath the transparent visor. Their gloved hands grasp the bagpipes, a traditional Scottish instrument, seemingly out of place in this alien environment.
+
+As the astronaut begins to play, the sound of the bagpipes echoes across the lunar landscape, a haunting, mournful melody that seems to capture the essence of the moon's desolate beauty. The pipes' reed mouthpiece vibrates with each note, producing a rich, full-bodied sound that resonates through the suit's helmet.
+
+The astronaut's movements are deliberate and precise, their fingers working the bag's valves and the chanter's keys with a practiced ease. The music seems to pulse with a life of its own, as if the very spirit of the moon has been awakened by the pipes' mournful cry.
+
+As the melody builds in intensity, the astronaut's movements become more fluid, their body swaying slightly to the rhythm. The suit's life support systems hum in the background, a steady, reassuring beat that underscores the astronaut's connection to the Earth they left behind.",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_21.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_21.wav,0.7833,0.1791,0.7029,0.4067,0.7975,0.1959,0.4515,"The scene unfolds on the lunar surface, bathed in the stark unforgiving light of the moon. The horizon stretches out in every direction, curving slightly due to the moon's curvature. The sky above is pitch black, punctuated only by the distant earth, a blue-green marble suspended in the darkness.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3526,0.0549,0.0653,0.1576,0.2098,0.0339,0.028,0.0906,0.087
+22,A tiny ladybug holding a wooden music box on a train platform,"ORIGINAL PROMPT:
+A medieval knight trying to use a modern smartphone.
+
+======================================================================
+
+GENERATED TEXT:
+The medieval knight, clad in heavily armored plate mail, stood awkwardly in the modern world, his eyes fixed on the sleek, silver smartphone in his hand. The device, a marvel of modern technology, seemed to be a mystical artifact to him, emitting a soft glow that illuminated his face with a mixture of fascination and confusion.
+
+As he tentatively touched the screen, his gauntleted hand hesitated, unsure of what to do next. He had been tasked with retrieving a magical artifact from the local library, but upon arrival, he found himself face to face with this strange, glowing rectangle. The knight's eyes scanned the screen, taking in the array of icons, apps, and notifications that seemed to dance before him like a jester's troupe.
+
+He poked at the screen with his finger, trying to make sense of the tiny symbols and images that seemed to swirl before him. The phone's touchscreen responded to his touch, but the knight's clumsy armor and thick gloves made it difficult for him to navigate the device's interface. His attempts at typing on the virtual keyboard resulted in a series of awkward, stumbling gestures, as if he were trying to recite a poem in a language he didn't understand.
+
+The knight's face contorted in frustration as he struggled to comprehend the device's purpose. He had been trained in the art of combat, not in the arcane rituals of modern technology. His mind reeled with questions: What sorcery was this? How did it work",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_22.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_22.wav,0.8098,0.1308,0.7997,0.4093,0.8382,0.1885,0.4606,"The medieval knight, clad in heavily armored plate mail, stood awkwardly in the modern world, his eyes fixed on the sleek silver smartphone in his hand. The device, a marvel of modern technology, seemed to be a mystical artifact to him, emitting a soft glow that illuminated his face with a mixture.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4345,0.0853,0.1825,0.2341,0.2648,0.0542,0.0794,0.1328,0.1284
+23,A raccoon and a peacock painting a mural,"ORIGINAL PROMPT:
+A scary T-Rex wearing a pink frilly apron baking cookies.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a cozy, yet eerie, kitchen. The walls are adorned with vintage baking utensils and colorful ceramic tiles, creating a warm and inviting atmosphere. However, the presence of a terrifying Tyrannosaurus Rex, donning a pink frilly apron, instantly shatters the tranquility.
+
+The T-Rex, its massive body towering over the kitchen counter, stands on its hind legs, its long tail swishing back and forth as it moves. Its scaly skin glistens in the soft light, illuminated by the warm glow of the kitchen's overhead lamps. The apron, a vibrant pink with white lace trim, seems to be a stark contrast to the T-Rex's menacing appearance. The frilly edges of the apron flutter as the T-Rex moves, creating a whimsical and unsettling effect.
+
+The T-Rex's eyes, a piercing yellow, gleam with an unsettling intensity as it focuses on the task at hand – baking cookies. Its massive, razor-sharp teeth are slightly ajar, revealing a hint of a growl as it carefully measures out ingredients. The sound of its rough, raspy breathing fills the air, sending shivers down the spine.
+
+On the kitchen counter, a mixing bowl, a whisk, and a set of measuring cups sit precariously close to the T-Rex's massive claws. The T-Rex's long, spindly fingers move with surprising dexterity as it mixes the dough, its claws",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_23.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_23.wav,0.8025,0.1704,0.8812,0.4626,0.8299,0.181,0.4528,"The scene unfolds in a cozy, yet eerie kitchen. The walls are adorned with vintage baking utensils and colorful ceramic tiles, creating a warm and inviting atmosphere. However, the presence of a terrifying tyrannosaurus rex, donning a pink frilly apron instantly shatters the tranquility. The tea-ray?",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3588,0.0648,0.0715,0.165,0.227,0.0407,0.0327,0.1001,0.0961
+24,A lion and a seahorse repairing a pocket watch,"ORIGINAL PROMPT:
+Superman getting a painful leg wax at a salon.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolded in a bustling beauty salon, the sounds of gentle chatter and the hum of hair dryers filling the air. Superman, clad in a crisp white towel wrapped around his waist, sat nervously in a plush, velvet-covered chair. His eyes scanned the room, taking in the array of makeup stations, hair styling tools, and an assortment of beauty products lining the shelves.
+
+Before him stood a petite, yet confident aesthetician, her hands moving with precision as she prepared for the task at hand. She held a small, electric wax warmer in one hand and a strip of hot wax in the other. Superman's eyes widened slightly as he realized what was about to happen.
+
+""Okay, Mr. Superman,"" the aesthetician said with a friendly smile, ""I'm going to get you all smooth and silky for the Metropolis Fashion Show. Just relax and try to breathe deeply.""
+
+Superman nodded, his eyes fixed on the wax warmer as it began to emit a warm, golden glow. The aesthetician carefully applied the hot wax to his leg, smoothing it out with a gentle touch. Superman winced slightly as the wax began to cool and harden, his skin prickling with anticipation.
+
+The aesthetician then quickly ripped off the wax strip, revealing a patch of smooth, hairless skin. Superman let out a pained gasp, his eyes widening in surprise. ""Ow!"" he exclaimed, his voice barely above a whisper.
+
+The aesthetician quickly apologized and handed him",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_24.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_24.wav,0.7832,0.1371,0.7625,0.4009,0.8055,0.1858,0.4476,"The scene unfolded in a bustling beauty salon, the sounds of gentle chatter and the hum of hair dryers filling the air. Superman, clad in a crisp white towel wrapped around his waist, set nervously in a plush velvet-covered chair, his eyes scanned the room. Taking in the array of makeup stations, each...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4467,0.1148,0.1559,0.2391,0.2645,0.0706,0.0661,0.1338,0.1295
+25,A dragonfly coach building a birdhouse,"ORIGINAL PROMPT:
+Iron Man attempting to knit a colorful winter scarf.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in Tony Stark's sleek, high-tech laboratory, located beneath the Stark Industries headquarters. The room is filled with an assortment of cutting-edge gadgets, futuristic machinery, and an assortment of screens displaying various data feeds and schematics. However, amidst the chaos of innovation, Tony Stark, aka Iron Man, has set aside his suit and is attempting to engage in a more...unconventional activity.
+
+Tony sits at a small, ornate wooden table, surrounded by balls of yarn in an array of vibrant colors. He's attempting to knit a colorful winter scarf, but his usual precision and attention to detail seem to be lacking. His hands, accustomed to manipulating complex machinery and wielding high-tech suit components, struggle to grasp the simple yet delicate task of knitting.
+
+As he tries to manipulate the yarn, Tony's fingers fumble, causing the needles to clatter and the yarn to tangle. He lets out a frustrated sigh, his brow furrowed in concentration. The usual confidence and swagger that defines Tony Stark are nowhere to be found, replaced by a look of determination and a hint of embarrassment.
+
+The room is filled with the soft hum of machinery and the occasional beep of a computer alert, but Tony's focus is solely on the scarf. He's determined to create something beautiful and functional, a testament to his ability to adapt and learn new skills. However, his usual perfectionism is at odds with the more relaxed, creative process of knitting.
+
+As he works, Tony's mind",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_25.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_25.wav,0.7922,0.1605,0.7868,0.4246,0.811,0.1556,0.4296,"The scene unfolds in Tony Stark's sleek, high-tech laboratory, located beneath the Stark Industries headquarters. The room is filled with an assortment of cutting-edge gadgets, futuristic machinery, and an assortment of screens displaying various data feeds and schematics. However, amidst the chaos...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3536,0.2489,0.1443,0.249,0.2151,0.1521,0.0616,0.1429,0.141
+26,A toucan and a pufferfish planting a bonsai tree,"ORIGINAL PROMPT:
+A mummy covered in bandages getting stuck in a revolving door.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a grand, upscale hotel lobby, with a sense of opulence and luxury surrounding the mummy. The mummy, wrapped in tattered and worn bandages, is attempting to enter the hotel through a revolving door. The door, made of gleaming glass and polished bronze, is a masterpiece of modern architecture, but it proves to be a formidable obstacle for the ancient relic.
+
+As the mummy pushes through the door, its bandages get caught on the rotating mechanism, causing it to become stuck. The door continues to turn, but the mummy remains stationary, its wrappings snagged on the moving parts. The sound of creaking wood and scraping fabric fills the air as the mummy struggles to free itself.
+
+The lobby, once a hub of activity, falls silent as patrons and staff gather to watch the spectacle. Some onlookers gasp in shock, while others can't help but laugh at the absurdity of the situation. A few brave souls attempt to intervene, but their efforts only seem to make things worse, causing the mummy to become more entangled in the door.
+
+The mummy's face, hidden behind a mask of linen and gold, remains expressionless, but its body language betrays a sense of frustration and desperation. Its arms, wrapped in thick layers of bandages, flail about in an attempt to dislodge itself from the door. The sound of its wrappings ripping and tearing fills the air as the mummy",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_26.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_26.wav,0.7843,0.0614,0.7081,0.3325,0.8134,0.1753,0.4435,"The scene unfolds in a grand upscale hotel lobby, with a sense of opulence and luxury surrounding the mummy. The mummy wrapped in tattered and worn bandages is attempting to enter the hotel through a revolving door. The door made of gleaming glass and polished bronze is a masterpiece of modern.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3653,0.1385,0.188,0.2306,0.204,0.085,0.0729,0.1207,0.1189
+27,A cheerful narwhal fisherman with a tiny umbrella,"ORIGINAL PROMPT:
+A slice of pepperoni pizza skateboarding down a handrail.
+
+======================================================================
+
+GENERATED TEXT:
+What a surreal and whimsical scene. The slice of pepperoni pizza, once a humble and savory delight, has somehow been imbued with the magic of movement and freedom. It now finds itself soaring down a handrail, defying gravity and convention.
+
+The handrail, a rusty metal rod, stretches out before the pizza like a twisted and gnarled highway. The pizza, a perfectly cooked slice with a crispy crust and a gooey layer of melted mozzarella, clings to the rail with an almost impossible grip. Its pepperoni topping, once a neat and tidy arrangement, is now a tangled mess of red and white, flapping wildly in the wind.
+
+As the pizza hurtles down the handrail, it leaves a trail of melted cheese and sauce in its wake. The cheese stretches and pulls, like a golden-brown rubber band, as it drips and drizzles down the rail. The sauce, a vibrant red, splatters and splashes, creating a miniature work of abstract art on the metal surface.
+
+The pizza itself is a blur of motion, its crust spinning and twirling as it speeds down the rail. The pepperoni topping is a wild tangle of color and texture, like a miniature tornado of flavor. The aroma of melted cheese and sauce wafts through the air, enticing and tantalizing.
+
+As the pizza approaches the end of the handrail, it begins to slow down, its momentum waning. It comes to a stop, perfectly balanced",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_27.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_27.wav,0.7976,0.1381,0.6915,0.3765,0.821,0.1815,0.4501,"What a surreal and whimsical scene. The slice of pepperoni pizza, once a humble and savory delight, has somehow been imbued with the magic of movement and freedom, it now finds itself soaring down a handrail, defying gravity and convention, the handrail, a rusty metal rod. Stretches out before the...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.409,0.0672,0.1,0.1921,0.2401,0.0419,0.0413,0.1078,0.1034
+28,A ladybug dj dancing in the rain,"ORIGINAL PROMPT:
+A giant angry taco lifting weights in a gym.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, bustling gym, the air thick with the smell of sweat and the hum of machinery. The walls are adorned with motivational posters and the sound of grunting and heavy breathing fills the air. Amidst the chaos, a colossal figure stands out - a gargantuan, angry taco, its shell a deep, fiery red, its edges twisted in a snarl.
+
+The taco, easily three times the size of a normal human, towers over the other gym-goers, its massive, muscular limbs and torso a testament to its incredible strength. Its ""hands"" are massive, saucy paws, each one grasping a heavy weight with ease. The taco's ""face"" is a twisted, angry visage, its ""eyes"" two beady, fiery embers that seem to burn with an inner fury.
+
+As the taco lifts the weights, its massive body flexes and ripples, its shell creaking with the effort. The sound of grunting and straining fills the air, and the other gym-goers watch in awe as the taco ########################################################################### lifts the weights with ease, its massive muscles bulging with each rep.
+
+The taco's ""voice"" is a low, rumbling growl, a sound that seems to shake the very foundations of the gym. ""I'M THE KING OF THE GYM!"" it bellows, its words echoing off the walls as it drops the weights to the floor with a deafening crash",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_28.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_28.wav,0.8064,0.1169,0.6554,0.3499,0.8269,0.1983,0.4632,"The scene unfolds in a dimly lit bustling gym. The air thick with the smell of sweat and the hum of machinery. The walls are adorned with motivational posters and the sound of grunting and heavy breathing fills the air. Amidst the chaos, a colossal figure stands out, a gargantuan. Angry taco, it's...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4248,0.0855,0.1291,0.2131,0.2456,0.0543,0.0525,0.1175,0.1133
+29,"A moth planting a bonsai tree in a candlelit cafe, photorealistic","ORIGINAL PROMPT:
+An avocado playing a tiny set of drums.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a whimsical, sun-drenched backyard, where a miniature drum set sits atop a colorful, hand-painted wooden crate. The avocado, no larger than a thumb, perches on a tiny stool beside the drums, its vibrant green skin glistening with dew. A tiny pair of drumsticks, no thicker than a paper clip, rests against the avocado's side, as if waiting for the next beat.
+
+The avocado's eyes, two small, dark pits, shine with a mischievous glint, as if it's savoring the thrill of being the center of attention. Its stem, now transformed into a makeshift drumstick holder, twirls with an air of nonchalance, as if it's the most natural thing in the world for an avocado to be playing the drums.
+
+As the avocado raises its drumsticks, the sunlight catches the tiny tips, casting a miniature rainbow across the surrounding foliage. With a delicate, almost imperceptible movement, the avocado strikes the first note, and the sound of the drums echoes through the air, a tiny, muffled beat that's both soothing and infectious.
+
+The avocado's body sways gently to the rhythm, its leaves quivering with the vibrations of the drums. The wooden crate beneath it seems to come alive, as if it's being played by an invisible force, its colors shifting and swirling in time with the music.
+
+As the beat grows more complex, the avocado's movements become more fluid, its",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_29.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_29.wav,0.8024,0.1425,0.766,0.4057,0.8253,0.1736,0.4463,"The scene unfolds in a whimsical, sun-drenched backyard, where a miniature drum set sits a top-of-colorful hand-painted wooden crate, the avocado, no larger than a thumb, perches on a tiny stool beside the drums. It's vibrant green skin glistening with due a tiny pair of drumsticks. No thicker than a.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3343,0.0405,0.023,0.1326,0.2019,0.0253,0.0098,0.079,0.0752
+30,"A iguana tending a beehive, in soft pastel colors","ORIGINAL PROMPT:
+A banana slipping and falling on a human banana peel.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a comical and unpredictable manner. A human, likely a careless individual, has discarded a banana peel on the floor. The peel, once a vibrant yellow, has now begun to turn brown and dry, its sticky surface glistening in the light.
+
+As the unsuspecting banana approaches the discarded peel, it seems to sense its presence, but it's too late. The banana's trajectory is altered by the slippery surface, and it begins to lose its balance. Its once-smooth skin now becomes a blur as it careens towards the peel.
+
+Time seems to slow down as the banana hurtles towards its impending doom. The air is filled with an anticipation of chaos, and the human, who had been oblivious to the impending disaster, suddenly becomes aware of the banana's fate.
+
+The banana's peel, now a perfect landing strip, stretches out before it like a trap. The banana's stem, once a proud and upright appendage, now wobbles precariously as it struggles to maintain its balance.
+
+In a split second, the banana's fate is sealed. It makes contact with the peel, and its momentum is instantly arrested. The banana's peel, now a perfect slip 'n slide, stretches out before it, and the banana's body begins to slide across the floor.
+
+The human, who had been watching in horror, can't help but burst out laughing at the absurdity of the situation. The banana, now a helpless and hapless victim, slides",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_30.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_30.wav,0.7831,0.1936,0.3864,0.2853,0.8208,0.1873,0.4539,"The scene unfolds in a comical and unpredictable manner. A human, likely a careless individual, has discarded a banana peel on the floor. The peel, once a vibrant yellow, has now begun to turn brown and dry. Its sticky surface glistening in the light, as the unsuspecting banana approaches the diska.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3394,0.1482,0.0687,0.1855,0.1813,0.0917,0.0254,0.0995,0.0974
+31,A lemur tailor in a lantern-lit alley,"ORIGINAL PROMPT:
+A marshmallow lifting weights over a campfire.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a serene, rustic setting, illuminated by the warm, golden glow of a crackling campfire. The air is filled with the sweet scent of roasting marshmallows and the soft chirping of crickets in the nearby woods. 
+
+In the center of the scene, a marshmallow stands proudly, its puffy white form glistening with dew from the morning. However, this is no ordinary marshmallow. It's adorned with a pair of miniature weights, carefully balanced on its fluffy surface. The weights, resembling tiny dumbbells, are made of a shiny metal that catches the firelight, adding a touch of whimsy to the scene.
+
+The marshmallow, seemingly determined to reach its fitness goals, is in the midst of a weightlifting routine. Its long, slender stem wobbles slightly as it strains to lift the weights, its sugary surface glistening with beads of moisture. The marshmallow's ""muscles"" – if one can call them that – appear to be tensed, as if it's mustering all its might to hoist the weights into the air.
+
+As the marshmallow lifts the weights, its form begins to shift and contort, its shape morphing into a series of comical, exaggerated poses. Its once-smooth surface now appears puffy and distorted, as if it's been squeezed and stretched to its limits. The weights, meanwhile, seem to be floating in mid-air, as if defying gravity itself.",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_31.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_31.wav,0.802,0.1882,0.568,0.3601,0.8257,0.1966,0.4617,"The scene unfolds in a serene rustic setting, illuminated by the warm golden glow of a crackling campfire. The air is filled with the sweet scent of roasting marshmallows and the soft chirping of crickets in the nearby woods. In the center of the scene, a marshmallow stands proudly. It's Puffy-Wa.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3304,0.0065,0.0512,0.1294,0.192,0.0041,0.021,0.0724,0.0688
+32,"A hippo sketching in a cafe, in soft pastel colors","ORIGINAL PROMPT:
+A sad hotdog sitting alone at a fancy restaurant table.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, upscale restaurant, where the ambiance is sophisticated and elegant. The walls are adorned with rich, dark wood paneling, and the air is filled with the soft hum of hushed conversations and the clinking of fine china. 
+
+At a corner table, nestled between a lush green plant and a delicate crystal vase, sits a small, sad hotdog. The hotdog, dressed in a miniature, starched white tablecloth, looks out of place among the luxurious surroundings. Its bun is neatly wrapped in a small, crisp napkin, but the hotdog itself seems to be wilting under the weight of its isolation.
+
+The hotdog's condiments – a few limp lettuce leaves, a slice of tomato, and a dollop of ketchup – are arranged artfully on the side of the plate, but they only serve to highlight the hotdog's desolation. A small, gleaming knife and fork lie across the top of the plate, as if waiting for a meal that will never arrive.
+
+As the hotdog sits alone, it seems to be shrinking, its presence growing smaller and more insignificant with each passing moment. The restaurant's patrons, all of whom are engrossed in their own conversations and meals, seem to be oblivious to the hotdog's plight. They glance at it occasionally, but only to dismiss it as a minor anomaly in the otherwise refined atmosphere.
+
+The hotdog's owner, a young woman with a look of concern",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_32.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_32.wav,0.8077,0.1889,0.7113,0.416,0.8353,0.184,0.4566,"The scene unfolds in a dimly lit, upscale restaurant, where the ambience is sophisticated and elegant. The walls are adorned with rich dark wood paneling, and the air is filled with the soft hum of hushed conversations and the clinking of fine china at a corner table. Nestled between a lush grey.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.376,0.2073,0.0994,0.2276,0.2301,0.131,0.0434,0.1348,0.1319
+33,"A wolf sketching in a cafe in an autumn park, in gentle morning light","ORIGINAL PROMPT:
+A box of french fries taking a selfie together.
+
+======================================================================
+
+GENERATED TEXT:
+What an imaginative and whimsical scene. 
+
+In a small, colorful café, a box of French fries sat on a table, surrounded by the hustle and bustle of lunchtime activity. The box, adorned with a cheerful red and white striped design, seemed to be the center of attention. Its contents, a crispy and golden batch of French fries, poked out of the box, each one uniquely shaped and sized.
+
+As the camera snapped into place, the box of French fries excitedly arranged themselves for the perfect selfie. The longest French fry, who seemed to be the de facto leader, positioned itself in the center of the box, with the others gathered around it. A particularly short and plump French fry, who had a mischievous glint in its ""eye,"" playfully leaned in to give a thumbs-up to the camera.
+
+The box itself seemed to be grinning, its red and white stripes stretching into a wide, toothy smile. A sprinkle of salt and pepper, which had been carelessly scattered on the box's surface, added a touch of whimsy to the scene. The overall effect was one of joyful camaraderie, as if the French fries were thrilled to be taking a selfie together.
+
+As the camera snapped the photo, the French fries all cheered and high-fived each other (or rather, high-fived the box). The short and plump French fry, still grinning from ear to ear, exclaimed, ""Say cheese!"" – or",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_33.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_33.wav,0.7936,0.1244,0.6153,0.3397,0.8317,0.1815,0.4537,"What an imaginative and whimsical scene. In a small colorful cafe, a box of French fries sat on a table, surrounded by the hustle and bustle of lunchtime activity, the box, adorned with a cheerful red and white stripe design, seemed to be the center of attention. Its contents are crispy and gold.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3095,0.0703,0.0693,0.1497,0.1754,0.0438,0.0275,0.0822,0.08
+34,A tiny beetle holding a paper lantern on a train platform,"ORIGINAL PROMPT:
+A sentient alarm clock screaming and running away.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolded in a chaotic and surreal manner, as if the very fabric of reality had been warped by the sentient alarm clock's sudden and frantic escape. The clock, which had once been a mundane, inanimate object, now pulsed with a life of its own, its digital display flashing wildly as it emitted a blood-curdling scream.
+
+The alarm clock, which stood about six inches tall, sprang to life with an unnatural jerky motion, its plastic casing rattling and vibrating as it bounced across the bedside table. Its once-steady hands now flailed wildly, as if trying to grasp for something just out of reach. The clock's face glowed with an eerie, pulsing light, casting an otherworldly glow across the surrounding furniture.
+
+As the clock continued to scream, its voice grew louder and more frantic, echoing off the walls and ceiling in a cacophonous din. The sound was like nothing anyone had ever heard before – a mixture of a shrieking siren, a wailing child, and a madman's laughter all blended together in a maddening cacophony.
+
+The clock's legs launched it off the table, sending it careening across the floor with a series of rapid-fire bounces. It zigzagged between the bed and the dresser, dodging a startled cat that had been sleeping in the bed and sending a nearby lamp crashing to the floor.
+
+As the clock continued its frantic flight, its display flashed a dizzying array of",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_34.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_34.wav,0.805,0.1684,0.4383,0.2943,0.8339,0.2016,0.4678,"The scene unfolded in a chaotic and surreal manner as if the very fabric of reality had been warped by the sentient alarm clock's sudden and frantic escape. The clock, which had once been a mundane, inanimate object, now pulsed with a life of its own. Its digital display flashing wildly as it emit.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2925,0.1069,0.1599,0.1864,0.1608,0.068,0.0609,0.0966,0.0955
+35,A newt reading under an umbrella in a snowy village,"ORIGINAL PROMPT:
+A walking toaster throwing slices of burnt toast like boomerangs.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a whimsical, dreamlike atmosphere, as if the laws of physics have been playfully distorted. In the center of the scene, a walking toaster stands upright, its metal body gleaming in the sunlight. The toaster's normally sleek design has been transformed, with its once-smooth surfaces now adorned with a series of chunky, mismatched wheels that allow it to move about with a stiff, mechanical gait.
+
+As the toaster walks, it begins to toss slices of burnt toast into the air, each piece flying through the air like a boomerang. The toast slices are a deep, charred brown, with a few wisps of smoke curling off their edges. They spin and twirl through the air, their crispy edges glinting in the sunlight.
+
+The toaster's ""arms"" – actually, two long, curved metal levers – swing back and forth, propelling the toast slices into the air with a series of sharp, metallic clicks. The levers move with a jerky, mechanical motion, as if they're being operated by a series of hidden pulleys and cables.
+
+As the toast slices fly through the air, they begin to curve and dip, their trajectories influenced by the whims of the wind. Some of them sail high overhead, while others plummet towards the ground, only to be caught by the toaster's outstretched ""hands"" – actually, two large, flat metal plates that snap shut with a loud clang.
+
+The scene",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_35.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_35.wav,0.8029,0.1426,0.5903,0.3414,0.8356,0.166,0.4447,"The scene unfolds in a whimsical dream-like atmosphere, as if the laws of physics have been playfully distorted. In the center of the scene, a walking toaster stands upright, its metal body gleaming in the sunlight, the toaster's normally sleek design has been transformed. With its once smooth surfa.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3514,0.1058,0.1159,0.191,0.2011,0.066,0.0456,0.1042,0.1018
+36,A lemur and a hamster forging a silver key,"ORIGINAL PROMPT:
+A group of broccoli pieces having a loud rock concert.
+
+======================================================================
+
+GENERATED TEXT:
+The scene is set in a dimly lit, underground music venue, aptly named ""The Green Room."" The walls are adorned with vibrant, neon-lit posters of various vegetables, each one more outrageous than the last. The air is thick with the smell of freshly cut grass and the distant hum of electric guitars.
+
+On stage, a group of broccoli pieces, each one uniquely shaped and sized, are getting ready to perform. There's Broccolius Maximus, the lead singer, a towering, thick-stemmed broccoli with a powerful voice that can shake the rafters. Next to him is his trusty sidekick, a smaller, more agile broccoli named Broccolius Jr., who handles the lead guitar with ease.
+
+Behind them, the rhythm section is comprised of two massive, tree-like broccoli pieces, Broccolius the Bouncer and Broccolius the Thunder, who pound out the beat on their respective drums and bass. The keyboards are handled by a delicate, florets-only broccoli named Broccolius the Whiz, who weaves a mesmerizing melody that complements the band's energetic performance.
+
+As the lights dim and the crowd starts to murmur, the band launches into their first song, ""The Green Revolution."" The music is a high-energy blend of punk, rock, and vegetable-themed lyrics that have the crowd going wild. Broccolius Maximus screams into the mic, ""We're the broccoli rebels, fighting for our rights",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_36.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_36.wav,0.7805,0.1642,0.7868,0.427,0.8046,0.1948,0.4532,"The scene is set in a dimly lit underground music venue, aptly named the Green Room. The walls are adorned with vibrant neon lit posters of various vegetables, each one more outrageous than the last. The air is thick with the smell of freshly cut grass and the distant hum of electric guitars. Oh!",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3463,0.0062,0.0415,0.1313,0.2091,0.0038,0.0183,0.0771,0.0727
+37,"A kangaroo reading a giant book, in warm golden light","ORIGINAL PROMPT:
+A business suit made entirely out of bubble wrap popping.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds like a surreal dreamscape, where the laws of physics and reality are distorted. In the center of the room, a business suit hangs from a mannequin, but it's not like any suit you've ever seen before. The entire garment is made entirely out of bubble wrap, each plastic sphere inflated to a precise size, creating a mesmerizing, iridescent sheen.
+
+The suit's jacket is a deep, rich blue, with a subtle texture that seems to shift and ripple like the surface of a pond. The sleeves and lapels are adorned with intricate patterns of silver and gold, created by the delicate, crinkled texture of the bubble wrap. Each bubble is perfectly uniform, giving the illusion of a perfectly crafted, high-end fabric.
+
+As the light catches the suit, the bubbles seem to come alive, popping and releasing tiny, high-pitched sounds that fill the air. The sound is almost musical, like a chorus of tiny, plastic birds singing in harmony. The popping is not random, but rather, it seems to be orchestrated, as if the bubbles are following a hidden rhythm.
+
+The suit's pants are a matching blue, with a subtle sheen that suggests a high-tech material. The fabric appears to be woven from thousands of tiny, interconnected bubbles, each one bursting and reforming in a never-ending cycle. The effect is hypnotic, like watching a kaleidoscope turn.
+
+As you watch, the suit begins to change, the bubbles shifting",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_37.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_37.wav,0.801,0.1238,0.6618,0.3566,0.829,0.1952,0.4619,"The scene unfolds like a surreal dreamscape, where the laws of physics and reality are distorted. In the center of the room, a business suit hangs from a mannequin. But it's not like any suit you've ever seen before. The entire garment is made entirely out of bubble wrap. Each plastic sphere inflate.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2947,0.1231,0.1358,0.1845,0.1706,0.0777,0.0556,0.1013,0.1001
+38,"A chameleon flying a kite in a storm, in warm golden light","ORIGINAL PROMPT:
+A toilet paper roll escaping down a busy city street.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds on a bustling city street, teeming with people rushing to and fro. The morning sun casts a warm glow over the concrete jungle, illuminating the towering skyscrapers and the vibrant street art that adorns the walls. Amidst the chaos, a most unexpected and absurd sight catches the attention of passersby: a toilet paper roll has somehow managed to escape its confines and is now careening down the street.
+
+The toilet paper roll, once a humble and mundane object, now finds itself in a state of utter bewilderment. It spins and twirls, its cardboard core rotating wildly as it picks up speed. The roll's once-tidy sheets of toilet paper now stream behind it like a banner, flapping in the wind.
+
+As the roll hurtles down the sidewalk, it narrowly avoids being trampled by pedestrians. People stop in their tracks, staring in confusion at the errant toilet paper roll. Some try to grab it, but it's too fast, and it continues on its merry way. Others attempt to step aside, but the roll is too unpredictable, and it dodges and weaves between their feet.
+
+The roll's trajectory takes it past a street performer, who's juggling clubs and trying to entertain a small crowd. The performer's eyes widen in surprise as the roll zooms past, and he instinctively tries to catch it. However, the roll is too slippery, and it continues on its way, leaving the performer to laugh and",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_38.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_38.wav,0.8033,0.1414,0.6006,0.3446,0.8348,0.1818,0.455,"The scene unfolds on a bustling city street, teeming with people rushing to infrow. The morning sun casts a warm glow over the concrete jungle, illuminating the towering skyscrapers and the vibrant street art that adorns the walls, amidst the chaos, a most unexpected and absurd sight catches the at.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3309,0.0777,0.1581,0.1889,0.1899,0.0489,0.0632,0.1007,0.0987
+39,A axolotl potter reading under an umbrella,"ORIGINAL PROMPT:
+A giant rubber ducky driving a red convertible car.
+
+======================================================================
+
+GENERATED TEXT:
+What a whimsical and fantastical scene. Let me paint a vivid picture for you.
+
+The sun-kissed highway stretches out before us, a seemingly endless ribbon of asphalt that unwinds like a golden serpent through the rolling hills and verdant forests. The air is alive with the sweet scent of blooming wildflowers and the distant thrum of a gentle breeze.
+
+In the midst of this serene landscape, a most unlikely vehicle comes into view. A gleaming red convertible car, its sleek lines and curvaceous shape a testament to the art of automotive design, speeds down the highway with a hint of reckless abandon. But it's not just any driver behind the wheel – it's a giant rubber ducky, its bright yellow and white feathers glistening in the sunlight like a beacon of joy.
+
+The rubber ducky, which appears to be at least three times the size of a normal ducky, sits comfortably in the driver's seat, its webbed feet firmly planted on the pedals and its beak grasping the steering wheel with a surprisingly firm grip. Its eyes, two shiny black marbles, twinkle with mischief as it navigates the twists and turns of the highway with ease.
+
+As the rubber ducky drives, its feathers ruffle in the wind, creating a soft whooshing sound that's almost musical. The car itself seems to be a custom job, with a gleaming chrome exhaust pipe and a pair of gleaming silver hubcaps that reflect the sunlight like tiny",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_39.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_39.wav,0.759,0.1879,0.9137,0.485,0.7809,0.1882,0.4407,What a whimsical and fantastical scene. Let me paint a vivid picture for you. The sun-kissed highway stretches out before us. A seemingly endless ribbon of asphalt that unwinds like a golden serpent through the rolling hills and verdant forests. The air is alive with the sweet scent of blooming will.,5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3546,0.0183,0.0319,0.1349,0.2206,0.011,0.0148,0.0821,0.0773
+40,"A mantis watering a rooftop garden, in gentle morning light","ORIGINAL PROMPT:
+A cloud in the sky blowing bubble gum.
+
+======================================================================
+
+GENERATED TEXT:
+What an imaginative and whimsical scene. Let me paint a vivid picture for you.
+
+The sky above is a brilliant blue, with a few wispy clouds scattered about, like cotton candy tufts carried by the gentle breeze. Among these clouds, one peculiar cloud stands out – a puffy, white cloud with a mischievous grin. This cloud, which we'll call ""Bubbles,"" has a peculiar fascination with bubble gum.
+
+Bubbles has somehow managed to procure a giant piece of bubble gum, which it has blown up to an enormous size, roughly the equivalent of a small beach ball. The gum is a bright pink color, with swirling patterns that resemble the wispy tendrils of a cloud. As the cloud blows into the gum, it begins to inflate, growing larger and larger until it's almost as big as the cloud itself.
+
+The bubble gum, now a majestic, glowing orb, starts to take on a life of its own. It begins to bounce and float in mid-air, as if it's being manipulated by an invisible force. The cloud, Bubbles, continues to blow into the gum, creating an endless stream of bubbles that burst and pop in a mesmerizing display of color and sound.
+
+As the bubbles float away, they leave behind a trail of glittering, iridescent sparks that dance in the sunlight. The air is filled with the sweet, sticky scent of bubble gum, and the sound of the cloud's contented sighs as it blows its gum",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_40.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_40.wav,0.7876,0.1626,0.5818,0.3502,0.8169,0.1929,0.4563,"What an imaginative and whimsical scene. Let me paint a vivid picture for you. The sky above is a brilliant blue, with a few wispy clouds scattered about, like cotton candy tuffs carried by the gentle breeze. Among these clouds, one peculiar cloud stands out a puffy, white cloud with a mistrune.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2162,0.068,0.2235,0.1693,0.123,0.0423,0.0901,0.0851,0.0846
+41,A bumblebee knight beside a waterfall,"ORIGINAL PROMPT:
+A couch sitting on a human living room floor.
+
+======================================================================
+
+GENERATED TEXT:
+The scene before us is a quintessential representation of a cozy living room, with a plush couch taking center stage. The couch, a sturdy and comfortable piece of furniture, sits majestically on the human living room floor, its presence commanding attention and inviting relaxation.
+
+The couch itself is a rich, dark brown color, with a smooth, velvety texture that seems to invite touch. Its cushions are plush and deep, with a subtle give when pressed, suggesting a high level of comfort and support. The couch's frame is sturdy and well-made, with a classic, timeless design that exudes a sense of warmth and hospitality.
+
+The couch is situated in a comfortable position, with its back against a wall and its arms facing outwards, as if beckoning occupants to come and sit. The floor around it is clear of clutter, with a small area rug providing a soft, plush surface for feet to rest on. The rug is a deep, muted color that complements the couch's rich brown hue, creating a sense of cohesion and harmony in the room.
+
+The walls surrounding the couch are a warm, neutral color, with a few pieces of artwork and decorative items scattered about to add visual interest. A large window to the left of the couch lets in a flood of natural light, casting a warm glow over the entire scene and highlighting the comfort and coziness of the space.
+
+As we gaze upon the scene, we can almost feel the warmth and comfort emanating from the couch, inviting",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_41.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_41.wav,0.7841,0.1254,0.9357,0.4485,0.8122,0.1617,0.434,"The scene before us is a quintessential representation of a cozy living room with a plush couch taking center stage. The couch, a sturdy and comfortable piece of furniture, sits majestically on the human living room floor, its presence commanding attention, and inviting relaxation. The couch itself?",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2843,0.0335,0.1089,0.1422,0.1752,0.0204,0.0481,0.0812,0.079
+42,A lemur potter on a cliff overlooking the sea,"ORIGINAL PROMPT:
+A professional office meeting run entirely by plush teddy bears.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolded in a sleek, modern conference room with a large, polished wooden table at its center. The walls were adorned with framed motivational posters featuring cute, cartoonish illustrations of teddy bears in various business settings. The plush teddy bears, all dressed in miniature business attire, sat around the table, each one representing a different department within the company.
+
+At the head of the table, a particularly regal-looking teddy bear with a bright red bow tie and a suit jacket sat in a high-backed chair, surveying the room with a discerning gaze. This was Reginald, the CEO of the company, a plush teddy bear with a commanding presence and a no-nonsense attitude.
+
+To Reginald's right sat Bertha, the CFO, a stout teddy bear with a calculator watch and a spreadsheet-print scarf. She was known for her keen eye for numbers and her ability to crunch even the most complex financial data with ease.
+
+On the opposite side of the table, a trio of young teddy bears sat huddled together, whispering and giggling. These were the marketing team, led by the enthusiastic and creative Teddy, who was sporting a bright pink tie and a name tag that read ""Teddy, Marketing Guru.""
+
+As the meeting began, Reginald cleared his throat and stood up, his paws clasped together in front of him. ""Good morning, everyone,"" he said in a deep, rumbling voice. ""Today, we're",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_42.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_42.wav,0.7925,0.1434,0.6804,0.3759,0.8249,0.1592,0.4367,"The scene unfolded in a sleek modern conference room with a large polished wooden table at its center. The walls were adorned with framed motivational posters featuring cute, cartonish illustrations of teddy bears in various business settings, the plush teddy bears. All dressed in miniature bison.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.4084,0.0996,0.18,0.2293,0.2386,0.0612,0.0731,0.1243,0.121
+43,A tiny turtle holding a steaming teacup under a starry sky,"ORIGINAL PROMPT:
+A lawnmower cutting a lawn made entirely of green spaghetti.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds like a surreal dreamscape, as if the laws of reality have been twisted and distorted. The lawn, once a lush and vibrant expanse of green, has transformed into a seemingly endless sea of green spaghetti. The noodles, each one perfectly uniform in size and shape, stretch out before the lawnmower like an unending forest of twisted, wavy strands.
+
+The lawnmower, a sturdy and reliable machine, stands poised at the edge of this bizarre landscape. Its blades, whirring with a steady hum, are poised to cut through the spaghetti like a hot knife through butter. The machine's operator, a bemused expression on their face, grips the handlebars tightly as they prepare to tackle this strange and daunting task.
+
+As the lawnmower begins to move, its blades slice through the spaghetti with a soft, wet whooshing sound. The noodles part and reassemble around the machine, like a living, breathing entity adapting to the threat. The operator navigates the lawnmower through the spaghetti, expertly avoiding tangles and knots as they make their way across the lawn.
+
+The spaghetti, in turn, responds to the lawnmower's presence with a series of strange and unsettling sounds. The noodles seem to writhe and twist beneath the blades, like a living creature in agony. The air is filled with the sound of snapping and crunching, as the spaghetti is cut and rearranged by the lawnmower's relentless blades.
+
+As the law",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_43.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_43.wav,0.7954,0.106,0.5152,0.2897,0.8207,0.1895,0.4553,"The scene unfolds like a surreal dreamscape, as if the laws of reality have been twisted and distorted. The lawn, once a lush and vibrant expanse of green, has transformed into a seemingly endless sea of greens' spaghetti, the noodles, each one perfectly uniform in size and shape. Stretch out before T?",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3306,0.0805,0.0619,0.1577,0.1794,0.0503,0.0231,0.0843,0.0819
+44,A llama flying a hot air balloon beside a waterfall,"ORIGINAL PROMPT:
+A grandfather clock walking on two robotic legs.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, ornate room with high ceilings and intricately carved wooden paneling. The air is thick with the scent of old books and polished wood. A grandfather clock, its traditional face and ornate details gleaming in the soft light, stands upright on two sturdy robotic legs. The clock's body, once a static fixture, now moves with a jerky, mechanical gait, its legs rising and falling in a stiff, unnatural rhythm.
+
+The clock's face, a traditional round dial with Roman numerals and delicate hands, remains unchanged, but its gleaming brass body is now encased in a sleek, metallic exoskeleton. The robotic legs, with their gleaming steel joints and pistons, support the clock's massive weight with ease, allowing it to move with a stiff, mechanical stride.
+
+As the clock walks, its mechanical limbs creak and groan, the sound echoing through the room like the ticking of its internal mechanisms. The clock's face remains serene, its hands moving in a steady, predictable rhythm, as if oblivious to the mechanical transformation that has taken place.
+
+The room around the clock is a testament to its former life as a stationary fixture. The walls are adorned with cobweb-covered portraits, and the floor is covered in a plush, faded carpet. The clock's movement through the room is a jarring contrast to the stately, sedate atmosphere it once inhabited.
+
+Despite its mechanical nature, the clock exudes a sense",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_44.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_44.wav,0.7916,0.0845,0.5042,0.2723,0.8099,0.1862,0.4494,"The scene unfolds in a dimly lit, ornate room with high ceilings and intricately carved wooden paneling. The air is thick with the scent of old books and polished wood, a grandfather clock, its traditional face and ornate details gleaming in the soft light. Stands a bright on two sturdy robotic legs.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.352,0.1116,0.15,0.2045,0.1872,0.0692,0.0541,0.1035,0.1018
+45,A newt watering a rooftop garden in an enchanted forest,"ORIGINAL PROMPT:
+A computer monitor wearing reading glasses and looking confused.
+
+======================================================================
+
+GENERATED TEXT:
+The scene is a whimsical and humorous depiction of a computer monitor, typically a sleek and modern device, now sporting a pair of reading glasses perched on the end of its screen. The glasses are a classic, wire-framed style with round lenses, which seem slightly too large for the monitor's screen.
+
+The monitor itself appears to be a standard 24-inch LCD model, with a thin bezel and a flat, matte finish. However, the addition of the reading glasses gives it a comical, almost human-like quality. The glasses seem to be resting on the monitor's screen, as if it's trying to read something on its own display.
+
+The monitor's expression is one of confusion and bewilderment, as if it's trying to make sense of the information on its screen but is having trouble deciphering the text. Its screen is filled with a jumbled mess of code, lines of text, and icons, which only adds to the monitor's frustration.
+
+The reading glasses seem to be slipping down the monitor's screen, as if they're too heavy for the device to hold. The temples of the glasses are bent and twisted, giving the impression that the monitor is struggling to keep them in place.
+
+The overall effect of the scene is one of absurdity and playfulness, as if the computer monitor has suddenly developed a sense of self-awareness and is trying to navigate the complexities of its own digital world. The image is both humorous and endearing, inviting the viewer to",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_45.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_45.wav,0.7953,0.1556,0.7695,0.4154,0.8287,0.1892,0.4578,"The scene is a whimsical and humorous depiction of a computer monitor, typically a sleek and modern device, now sporting a pair of reading glasses perched on the end of its screen. The glasses are a classic, wireframe style with round lenses, which seem slightly too large for the monitor's screen.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3032,0.2318,0.2565,0.2638,0.1835,0.1452,0.112,0.1469,0.1465
+46,"A dolphin reading tarot cards, in a whimsical cartoon style","ORIGINAL PROMPT:
+A baby rattle shaking itself to heavy metal music.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, cramped room with a handful of scattered items on the floor. A worn-out baby rattle, its once-bright colors now faded, sits on a cluttered shelf in the corner. The rattle itself is a simple, cylindrical toy with a series of small, colorful beads inside. A tangled mess of wires and a small, rusty metal motor protrude from the rattle's base.
+
+Suddenly, the air is filled with the deafening sounds of heavy metal music. The rattle, seemingly possessed by an otherworldly energy, begins to shake and vibrate violently. The motor whirs to life, propelling the rattle into a frenzied dance. The beads inside the rattle clatter and clink against each other as the rattle shakes back and forth, creating a cacophonous symphony of sound.
+
+The rattle's metal body rattles and clanks against the shelf, sending tiny shockwaves through the air. Dust and debris from the shelf scatter in all directions as the rattle continues its chaotic dance. The heavy metal music seems to61 fuel the rattle's frenzy, with the rattle's vibrations synchronizing perfectly with the pounding drums and screaming guitars.
+
+As the rattle shakes itself to the music, it begins to emit a low-pitched whine, like the sound of a distant jet engine. The whine grows louder and more intense, culminating in a deafening screech that threatens to",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_46.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_46.wav,0.8048,0.1543,0.673,0.38,0.8294,0.1822,0.4535,"The scene unfolds in a dimly lit cramped room with a handful of scattered items on the floor. A worn out baby rattled, its once bright colors now faded, sits on a cluttered shelf in the corner. The rattle itself is a simple cylindrical toy with a series of small. Colorful beads inside, a tangled me.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2877,0.1045,0.0445,0.1456,0.1704,0.0657,0.0185,0.0849,0.0829
+47,A tiny salamander holding a pocket watch on a rooftop at night,"ORIGINAL PROMPT:
+Cat riding a vacuum cleaner.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a quaint, suburban living room with a hint of chaos and whimsy. The walls are painted a soothing light blue, adorned with family photos and a few decorative vases. However, the focus of the room is on the unlikely duo at the center: a mischievous cat and a vacuum cleaner.
+
+The cat, a sleek black feline with bright green eyes, sits regally atop the vacuum cleaner, its paws gripping the handles as if it's the most natural thing in the world. The vacuum, a vintage model with a faded red and white design, looks almost as if it's been hijacked by the cunning feline.
+
+As the cat rides the vacuum, it seems to be in complete control, maneuvering the machine with an air of confidence. The vacuum's cord, which normally trails behind, is now wrapped neatly around the cat's tail, as if it's been deliberately tied there. The cat's ears perk up, and its whiskers twitch with excitement, as if it's savoring the thrill of the ride.
+
+The room around them is a mess, with toys and books scattered everywhere, and a faint trail of dust and dirt Depicts the cat's earlier mischief. However, the cat seems oblivious to the chaos it's created, too caught up in the joy of riding the vacuum to worry about the consequences.
+
+As the scene continues to unfold, the cat begins to move the vacuum slowly across the floor, its paws barely touching the",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_47.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_47.wav,0.8075,0.1886,0.5306,0.345,0.8325,0.2063,0.4704,"The scene unfolds in a quaint, suburban living room with a hint of chaos and whimsy. The walls are painted a soothing light blue, adorned with family photos and a few decorative vases. However, the focus of the room is on the unlikely duo at the center of mischievous cat and a vacuum cleaner. The sea.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2639,0.099,0.0945,0.1525,0.1521,0.0633,0.0385,0.0846,0.0834
+48,A mantis meteorologist flying a hot air balloon,"ORIGINAL PROMPT:
+Banana playing the saxophone.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a small, dimly lit jazz club, the air thick with the smell of smoke and the hum of anticipation. The crowd is sparse, but the atmosphere is electric, with everyone focused on the lone figure on stage.
+
+Banana, a charismatic and enigmatic performer, stands tall, his slender frame swaying gently to the rhythm of the music. He holds his saxophone, a sleek, black instrument with a subtle sheen, and brings it to his lips. As he begins to play, the notes seem to dance in the air, a mesmerizing blend of smooth, soulful melodies and sharp, staccato bursts.
+
+The music is a fusion of jazz and blues, with hints of Latin American rhythms and a dash of improvisational flair. Banana's fingers move deftly over the keys, coaxing out a kaleidoscope of sounds that seem to capture the very essence of the human experience.
+
+As he plays, Banana's eyes seem to close, and his face becomes a mask of intense concentration. His body sways and twitches, as if the music is coursing through his very being, animating him from the inside out. The crowd is entranced, hanging on every note, every nuance of expression.
+
+The saxophone seems to come alive in Banana's hands, its reed vibrating with a life of its own. The sound is both raw and refined, a perfect balance of emotion and technique. Banana's playing is a testament to the",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_48.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_48.wav,0.783,0.198,0.4075,0.2973,0.8056,0.1975,0.4554,"The scene unfolds in a small dimly lit jazz club, the air thick with the smell of smoke and the hum of anticipation. The crowd is sparse, but the atmosphere is electric, with everyone focused on the lone figure on stage. Banana, a charismatic and enigmatic performer. Stan's tall, his slender frame.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3286,0.0596,0.0774,0.1552,0.1775,0.0369,0.0291,0.0812,0.0789
+49,A chinchilla shepherd rowing across a misty lake,"ORIGINAL PROMPT:
+Dinosaur on a pogo stick.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a vibrant, prehistoric landscape, teeming with lush greenery and towering trees. The air is filled with the sweet scent of blooming flowers and the distant calls of early birds. Amidst this idyllic backdrop, a majestic dinosaur stands out, its enormity and unusual mode of transportation making it a sight to behold.
+
+The dinosaur, a towering Apatosaurus, stands at least 30 feet tall, its long neck stretching towards the sky like a giant, scaly column. Its body is a deep, earthy brown, with a series of lighter-colored stripes running along its back. The Apatosaurus's eyes, a piercing brown, seem to gleam with a mixture of excitement and mischief as it bounces up and down on its pogo stick.
+
+The pogo stick itself is a marvel of prehistoric ingenuity, crafted from a sturdy branch and reinforced with vines and twine. It's attached to the Apatosaurus's hind legs, allowing the dinosaur to propel itself into the air with a series of explosive, spring-like movements. As the Apatosaurus bounces, its long tail swings back and forth, providing a counterbalance to its movements and keeping it stable.
+
+As the dinosaur soars through the air, its massive body creates a whirlwind of leaves and debris, sending small creatures scurrying for cover. The sound of its pogo stick is like a deep, rumbling drumbeat, echoing through the forest",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_49.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_49.wav,0.7862,0.1616,0.8804,0.4564,0.8104,0.1717,0.44,"The scene unfolds in a vibrant prehistoric landscape, teeming with lush greenery and towering trees, the air is filled with the sweet scent of blooming flowers and the distant calls of early birds, amidst this idyllic backdrop, a majestic dinosaur stands out. It's an ormity and unusual mode of transp.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2871,-0.0254,0.0706,0.1108,0.1784,-0.0156,0.0316,0.0648,0.0614
+50,A elephant and a gecko folding origami cranes,"ORIGINAL PROMPT:
+Robot eating a bowl of cereal.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a quiet, morning-lit kitchen. The walls are painted a soft, creamy white, and the countertops are made of a sleek, dark granite. A stainless steel refrigerator hums gently in the background, its doors slightly ajar to reveal a neatly organized interior.
+
+In the center of the kitchen, a small, round table is set with a single bowl of cereal. The bowl is made of white ceramic, adorned with a simple, red stripe at its base. A spoon rests across the top of the bowl, its metal handle gleaming in the morning light.
+
+A robot, approximately three feet tall, stands beside the table. Its body is made of a silver, metallic material, with a series of small, glowing blue lines etched into its surface. The robot's head is shaped like a human's, with a small, round face and a pair of large, black eyes that seem to be taking in every detail of the scene.
+
+The robot's right hand is extended, holding a small, flat utensil that looks like a cross between a spoon and a fork. This utensil is used to pick up and manipulate the cereal pieces, which are a colorful, ring-shaped variety.
+
+As the robot begins to eat, its mechanical arm moves in a slow, deliberate motion, carefully scooping up a few pieces of cereal at a time. The spoon-like utensil glides through the milk, which is a pale, creamy color, and lifts the cereal pieces to the",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_50.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_50.wav,0.7851,0.1261,0.9252,0.4458,0.7931,0.1542,0.4226,"The scene unfolds in a quiet morning lit kitchen. The walls are painted a soft creamy white, and the countertops are made of a sleek dark granite. A stainless steel refrigerator hums gently in the background. It stores slightly a jar to reveal a neatly organized interior. In the center of the kit,",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3427,0.176,0.2548,0.2578,0.2109,0.1063,0.1106,0.1426,0.1414
+51,A snail chasing fireflies in a neon nightclub,"ORIGINAL PROMPT:
+Pig flying a helicopter.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a picturesque landscape, with rolling hills and lush green forests stretching as far as the eye can see. The sky above is a brilliant blue, with only a few wispy clouds scattered about. Amidst this serene backdrop, a most unlikely sight catches the attention: a pig, dressed in a miniature pilot's uniform, is expertly navigating a helicopter through the air.
+
+The pig, whose name is Percy, is perched in the pilot's seat, his trotters grasping the controls with surprising dexterity. His ears, typically floppy and rounded, are folded back against his head, giving him a determined look. A pair of small, round goggles perches on the end of his snout, protecting his eyes from the wind and sun.
+
+As Percy banks the helicopter to the left, the rotors whir and whizz, creating a gentle hum that fills the air. The machine responds eagerly to his touch, soaring and dipping with a precision that belies its unusual pilot. The pig's tail, normally a long, curly appendage, is tucked neatly behind him, as if to avoid getting in the way of the controls.
+
+Below, the landscape unfolds like a patchwork quilt, with fields of golden wheat and emerald green forests stretching out to the horizon. A few birds flit about, seemingly oblivious to the flying pig above. The wind ruffles Percy's bristly coat, but he seems entirely at ease, his eyes fixed intently on the horizon",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_51.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_51.wav,0.8041,0.184,0.5431,0.3474,0.8175,0.1959,0.4584,"The scene unfolds in a picturesque landscape, with rolling hills and lush green forests stretching as far as the eye can see. The sky above is a brilliant blue, with only a few wispy clouds scattered about, amidst the serene backdrop, a most unlikely sight catches the attention a pick. Dressed in a",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3559,0.0762,0.0999,0.1773,0.2049,0.0481,0.0402,0.0978,0.0949
+52,A frog and a butterfly reading tarot cards,"ORIGINAL PROMPT:
+Shark wearing a party hat.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a vibrant and whimsical underwater setting, teeming with colorful marine life. The camera pans across a coral reef, where schools of neon fish dart and weave through the waving sea fans. The sunlight filtering down from above casts a warm, golden glow over the entire scene, illuminating the intricate details of the coral and the shimmering scales of the fish.
+
+As the camera continues to pan, a figure comes into view - a shark, its sleek, gray body gliding effortlessly through the water. But what sets this shark apart from its peers is the party hat perched atop its head. The hat is a bright, electric blue color with white polka dots and a jaunty, curved brim. It's a bit too small for the shark's head, but it's securely fastened in place with a tiny, sparkly band.
+
+The shark itself is a bit of an oddity, with a patchy, mottled coat that suggests it's been around the block a few times. Its fins are a bit worn and frayed, and its eyes seem to hold a perpetual glint of mischief. But despite its rough-around-the-edges appearance, the shark exudes a sense of confidence and joy that's infectious.
+
+As the camera zooms in on the shark's face, we see that it's wearing a wide, toothy grin. Its jaws are slightly ajar, revealing a row of sharp, pointed teeth, but the shark's expression is",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_52.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_52.wav,0.7913,0.1374,0.427,0.2717,0.8217,0.1934,0.4582,"The scene unfolds in a vibrant and whimsical underwater setting, teaming with colorful marine life. The camera pans across a coral reef, where schools of neon fish dart and weave through the waving sea fans, the sunlight filtering down from above casts a warm, golden glow over the entire scene, Ilo.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2701,0.0359,0.0957,0.1339,0.1436,0.0224,0.0349,0.067,0.0655
+53,A butterfly baker reading a giant book,"ORIGINAL PROMPT:
+Chicken lifting heavy weights.
+
+======================================================================
+
+GENERATED TEXT:
+The scene is set in a dimly lit, industrial-style gym. The walls are made of cold, grey concrete, and the air is thick with the smell of sweat and metal. In the center of the room, a large, stainless steel weightlifting platform stands, surrounded by rows of heavy dumbbells and barbells.
+
+On the platform, a chicken stands proudly, its feathers ruffled and its beak held high. The chicken, a muscular and imposing bird, is wearing a tiny pair of weightlifting gloves and a miniature weightlifting belt around its waist. In its beak, it holds a small, leather-bound weightlifting journal, where it keeps track of its progress.
+
+The chicken, whose name is Cluck Norris, is a professional weightlifter and a celebrity in the world of poultry athletics. It has spent years honing its strength and technique, and has won numerous awards and accolades for its impressive lifts.
+
+As Cluck prepares to lift, it surveys the weights on the platform, its eyes scanning the rows of heavy dumbbells and barbells. It selects a massive weight, a 100-pound dumbbell, and holds it in its beak, testing its weight and balance.
+
+With a fierce cry of ""Fowl play!"", Cluck begins to lift the weight, its powerful legs and back muscles straining as it heaves the dumbbell upwards. The weight rises higher and higher, until it is almost at eye level with Cluck's be",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_53.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_53.wav,0.7947,0.1573,0.5379,0.3295,0.8214,0.2119,0.4702,"The scene is set in a dimly lit industrial-style gym. The walls are made of cold, grey concrete, and the air is thick with the smell of sweat and metal. In the center of the room, a large stainless steel weightlifting platform stands, surrounded by rows of heavy dumbbells and barbells. On the plow.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2644,0.1126,0.1453,0.1741,0.1486,0.0712,0.0581,0.0926,0.0918
+54,A hummingbird planting tulips under a starry sky,"ORIGINAL PROMPT:
+Potato singing opera on stage.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a grand, dimly lit opera house, the air thick with anticipation. The audience is hushed, their eyes fixed on the stage as the spotlight shines brightly on the unlikely performer: a potato, resplendent in a miniature top hat and a sparkling white bow tie.
+
+The potato, named ""Spud"" by the opera house staff, stands at the edge of the stage, its rough, brown skin glistening under the bright lights. As the orchestra begins to play a soaring melody, Spud opens its mouth, revealing a tiny, toothless grin. The audience gasps in surprise, unsure of what to expect from this unconventional performer.
+
+As the music swells, Spud begins to sing, its voice a rich, baritone tenor that fills the opera house. The words are in Italian, and Spud's pronunciation is flawless, its accent perfectly nuanced. The audience is entranced, mesmerized by the potato's powerful vocals.
+
+Spud's performance is a masterclass in dramatic flair, its every gesture and movement perfectly choreographed to the music. As it sings, Spud's eyes seem to gleam with a fierce intensity, its very presence on stage commanding the audience's attention.
+
+The opera house is filled with gasps and applause as Spud reaches the climax of the aria, its voice soaring to a breathtaking high note. The audience erupts into cheers and whistles, showering Spud with praise and adoration.
+
+As the curtain falls",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_54.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_54.wav,0.7904,0.1788,0.7285,0.4159,0.8141,0.1941,0.456,"The scene unfolds in a grand dimly lit opera house, the air thick with anticipation. The audience is hushed, their eyes fixed on the stage as the spotlight shines brightly on the unlikely performer of potato, resplendent in a miniature top hat and a sparkling white bow tie. The potato named Spud.",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.3871,0.0581,0.1054,0.1836,0.2335,0.0362,0.0459,0.1052,0.1011
+55,A panda skateboarding down a hill in a neon nightclub,"ORIGINAL PROMPT:
+Alien doing the chicken dance.
+
+======================================================================
+
+GENERATED TEXT:
+The scene unfolds in a dimly lit, abandoned space station, the air thick with an eerie silence. The only sound is the faint hum of damaged equipment and the creaking of twisted metal. Suddenly, a lone figure emerges from the shadows. It's an Alien, its elongated body a mass of dark, scaly flesh, its long neck craned forward as it surveys its surroundings.
+
+As the Alien moves, its massive, muscular body undulates like a living shadow, its tail swishing back and forth with a hypnotic rhythm. The air seems to vibrate with tension as the Alien begins to move its body in a strange, jerky motion.
+
+At first, it's almost imperceptible, but as the Alien continues to move, its body begins to take on a more recognizable shape. The Alien's legs start to twitch and flap, its long fingers wiggling in a manner that's both grotesque and comical.
+
+And then, in a moment that's both shocking and hilarious, the Alien breaks into the chicken dance. Its body begins to bounce and flail, its long neck bobbing up and down as it lets out a series of high-pitched, almost-human-like squawks.
+
+The Alien's tail swishes back and forth with a frantic energy, its massive body undulating in time with the music that's playing in its mind. The air is filled with the sound of its own laughter, a low, rumbling growl that's both menacing",d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\images\prompt_55.png,d:\nihal\Collaborative-Project\testing multiple models\cloudflare\outputs\audio\prompt_55.wav,0.796,0.187,0.9834,0.5059,0.8203,0.2,0.4621,"The scene unfolds in a dimly lit, abandoned space station, the air thick with an eerie silence. The only sound is the faint hum of damaged equipment and the creaking of twisted metal. Suddenly, a lone figure emerges from the shadows. It's an alien. It's elongated body a massive dark. Scaly flesh, it's...",5,5,5,5,FAILED,0.3333,0.3333,0.3333,0.5,0.2816,0.1459,0.1668,0.1981,0.1833,0.0918,0.0807,0.1186,0.1175

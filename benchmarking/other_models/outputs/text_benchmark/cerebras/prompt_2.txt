@@ -1,0 +1,11 @@
+**Prompt for AI Image Generators (Midjourney / DALL·E / Stable Diffusion)**  
+
+```
+A vivid, anthropomorphic red fox perched on a wooden stool beside a classic pottery wheel, carefully shaping a smooth, white‑clay vase with its delicate forepaws. The fox’s russet fur catches warm, golden‑hour sunlight streaming through a large, lace‑framed window, casting soft, elongated shadows across a cluttered artist’s studio: splattered brick walls, shelves of dried pottery, jars of glaze pigments, and a rolling wheel with a thin veil of misty clay. The fox’s eyes are focused, whiskers slightly furrowed, while its tail curls gracefully around the stool leg. Ultra‑realistic, high‑detail 4K rendering; shallow depth of field that blurs the background shelves, emphasizing the fox’s expressive face and the tactile texture of the wet clay. Cinematic lighting, warm color palette (amber, burnt orange, earth tones), subtle bokeh, volumetric light rays, and a slight vignette for mood. Shot from a slightly low angle to give the scene a noble, intimate feel.
+```
+
+**Tips for tweaking the result**
+
+| Desired Variation | Prompt Adjustment |
+|-------------------|-------------------|
+| **Stylistic** (watercolor, illustration, etc

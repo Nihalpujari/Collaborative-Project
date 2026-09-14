@@ -1,0 +1,14 @@
+**Prompt (for Stable Diffusion / Midjourney / DALL‑E 3)**  
+
+```
+A majestic bald eagle, feathers ruffled by the wind, wearing a sleek, vintage‑style leather pilot’s headset with brass ear cups and a microphone, perched on the control stick of a bright‑red, open‑cowl 1920s biplane. The aircraft is mid‑flight, its twin propellers churning white foam as it soars through soft, sun‑lit cumulus clouds. The eagle’s sharp golden eyes stare forward with confident determination. Sunlight streams from behind, casting a warm golden‑hour glow on the metal ribs of the wings and highlighting the eagle’s glossy plumage. The background is a deep blue sky fading into pastel pink at the horizon. Ultra‑realistic, cinematic lighting, 8K resolution, shallow depth of field focusing on the eagle’s face and headset, with a slight motion blur on the propellers to convey speed. Shot on a full‑frame DSLR style, with a slightly warm color grade reminiscent of classic adventure posters.```
+
+---
+
+### Breakdown & Tips for Fine‑Tuning
+
+| Element | Details & Why It Helps |
+|---------|------------------------|
+| **Subject** | “Majestic bald eagle” + “wearing a vintage leather pilot’s headset” makes the focal point clear and distinct. |
+| **Vehicle** | “Bright‑red 1920s open‑cowl biplane” adds a nostalgic vintage vibe; the color contrast makes the eagle stand out. |
+| **Environment** | “Soft, sun

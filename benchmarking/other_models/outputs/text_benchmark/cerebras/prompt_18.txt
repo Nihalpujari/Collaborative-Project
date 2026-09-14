@@ -1,0 +1,5 @@
+**Prompt for an AI image generator (e.g., Midjourney, Stable Diffusion):**
+
+```
+Darth Vader aggressively vacuuming a living‑room rug, the dark, glossy black helmet and cape contrasted against warm, sun‑lit modern interior. Vader holds a sleek, high‑tech vacuum cleaner like a lightsaber, the nozzle pointed at the plush rug as he sweeps it with kinetic force. The rug is a deep crimson Persian pattern with hints of gold, slightly rumpled from the vigorous cleaning. A contemporary sofa with pastel cushions and a glass coffee table sit in the background, reflecting the soft natural light streaming through large windows. The room features minimalist décor: a potted plant in the corner, abstract art on the wall, and a subtle dust motes swirl in the beam of light. Cinematic, ultra‑realistic rendering, 8K resolution, shallow depth of field focusing on Vader’s gloved hand and the vacuum hose, with dramatic shadows and highlights that emphasize the iconic helmet and the motion blur of the cleaning action. --ar 16:9 --v 5 --q 2 --style photorealistic
+```

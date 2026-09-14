@@ -1,0 +1,54 @@
+prompt_id,prompt,clap_score,semantic_score,wer_inv,q_audio_clap,q_audio_sem,clap_is_zero
+1,An elegant owl librarian wearing reading glasses.,0.2128,0.8537,0.1751,0.1938,0.4568,False
+2,"A red fox sitting at a pottery wheel, shaping a clay vase with its paws.",0.0355,0.885,0.1858,0.1078,0.4743,True
+3,"A majestic eagle wearing a pilot's headset, flying a vintage biplane through the",0.0771,0.8859,0.1992,0.1363,0.4836,False
+4,"A squirrel wearing a business suit, aggressively speaking into a tiny gold smart",0.2153,0.8601,0.18,0.1975,0.4622,False
+5,"An astronaut riding a bicycle on a ring of Saturn, delivering a cardboard pizza ",0.1936,0.8685,0.1619,0.1776,0.4528,False
+6,A fluffy kitten wearing heavy metal spiked armor.,0.0846,0.8828,0.2196,0.1498,0.4962,False
+7,A cat wearing headphones DJing at a packed nightclub.,0.0,0.8431,0.166,0.0796,0.4473,True
+8,A golden retriever in a tuxedo swimming.,0.0,0.8603,0.2051,0.0973,0.479,True
+9,A hamster lifting a tiny barbell in a gym.,0.0,0.868,0.1949,0.0927,0.4748,True
+10,A squirrel wearing a cowboy hat riding a skateboard.,0.139,0.8687,0.1739,0.1563,0.461,False
+11,A penguin wearing a grass skirt doing the hula dance.,0.0,0.8184,0.2134,0.101,0.4702,True
+12,A pug wearing sunglasses sunbathing on a pool float.,0.0,0.8706,0.186,0.0887,0.4697,True
+14,A frog playing a miniature electric guitar on a lilypad.,0.2057,0.8466,0.1786,0.1921,0.4568,False
+15,A fancy owl drinking a cup of hot coffee.,0.0414,0.8387,0.17,0.1036,0.4485,True
+16,A baby monkey wearing a diaper and riding a tricycle.,0.0,0.8692,0.1953,0.0929,0.4755,True
+18,Darth Vader aggressively vacuuming a living room rug.,0.1637,0.8286,0.2008,0.1821,0.4654,False
+19,Batman crying while chopping a massive onion.,0.1946,0.8427,0.1914,0.193,0.464,False
+20,Shrek doing a delicate ballet dance on a stage.,0.1683,0.8627,0.1639,0.1661,0.4523,False
+21,An astronaut playing the bagpipes on the moon.,0.1978,0.8388,0.1959,0.1968,0.4657,False
+22,A medieval knight trying to use a modern smartphone.,0.3044,0.8856,0.1885,0.2448,0.4763,False
+23,A scary T-Rex wearing a pink frilly apron baking cookies.,0.1474,0.8854,0.181,0.1641,0.4712,False
+24,Superman getting a painful leg wax at a salon.,0.1529,0.8454,0.1858,0.1692,0.4612,False
+25,Iron Man attempting to knit a colorful winter scarf.,0.1491,0.8404,0.1556,0.1524,0.4394,False
+26,A mummy covered in bandages getting stuck in a revolving door.,0.0771,0.878,0.1753,0.125,0.4649,False
+27,A slice of pepperoni pizza skateboarding down a handrail.,0.0,0.8707,0.1815,0.0866,0.4667,True
+28,A giant angry taco lifting weights in a gym.,0.0,0.8465,0.1983,0.0942,0.4699,True
+29,An avocado playing a tiny set of drums.,0.0731,0.8614,0.1736,0.1221,0.4583,False
+30,A banana slipping and falling on a human banana peel.,0.0,0.8561,0.1873,0.0893,0.4657,True
+31,A marshmallow lifting weights over a campfire.,0.0,0.8585,0.1966,0.0935,0.4728,True
+32,A sad hotdog sitting alone at a fancy restaurant table.,0.0857,0.8507,0.184,0.1337,0.4618,False
+33,A box of french fries taking a selfie together.,0.0324,0.8588,0.1815,0.1042,0.4628,True
+34,A sentient alarm clock screaming and running away.,0.1153,0.8783,0.2016,0.1575,0.4827,False
+35,A walking toaster throwing slices of burnt toast like boomerangs.,0.0,0.8438,0.166,0.0796,0.4475,True
+36,A group of broccoli pieces having a loud rock concert.,0.0943,0.842,0.1948,0.1433,0.4661,False
+37,A business suit made entirely out of bubble wrap popping.,0.0909,0.8784,0.1952,0.1417,0.4785,False
+38,A toilet paper roll escaping down a busy city street.,0.0,0.8498,0.1818,0.0868,0.46,True
+39,A giant rubber ducky driving a red convertible car.,0.113,0.8225,0.1882,0.1499,0.4551,False
+40,A cloud in the sky blowing bubble gum.,0.021,0.8522,0.1929,0.1033,0.4682,True
+41,A couch sitting on a human living room floor.,0.0,0.8841,0.1617,0.0776,0.4577,True
+42,A professional office meeting run entirely by plush teddy bears.,0.2527,0.857,0.1592,0.2049,0.4472,False
+43,A lawnmower cutting a lawn made entirely of green spaghetti.,0.0,0.8483,0.1895,0.0903,0.4647,True
+44,A grandfather clock walking on two robotic legs.,0.0804,0.8633,0.1862,0.1319,0.4675,False
+45,A computer monitor wearing reading glasses and looking confused.,0.2048,0.8723,0.1892,0.197,0.4724,False
+46,A baby rattle shaking itself to heavy metal music.,0.0,0.8465,0.1822,0.087,0.4592,True
+47,Cat riding a vacuum cleaner.,0.0448,0.8517,0.2063,0.1223,0.477,True
+48,Banana playing the saxophone.,0.23,0.8442,0.1975,0.2136,0.4686,False
+49,Dinosaur on a pogo stick.,0.0,0.8202,0.1717,0.0822,0.4434,True
+50,Robot eating a bowl of cereal.,0.0239,0.8243,0.1542,0.0869,0.4331,True
+51,Pig flying a helicopter.,0.0,0.8286,0.1959,0.0932,0.4622,True
+52,Shark wearing a party hat.,0.0219,0.8382,0.1934,0.104,0.4638,True
+53,Chicken lifting heavy weights.,0.0,0.8529,0.2119,0.1003,0.481,True
+54,Potato singing opera on stage.,0.3228,0.8455,0.1941,0.2564,0.4668,False
+55,Alien doing the chicken dance.,0.0651,0.8284,0.2,0.1303,0.4649,False

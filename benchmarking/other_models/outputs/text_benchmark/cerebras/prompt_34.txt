@@ -1,0 +1,11 @@
+**The Great Escape of Horace the Alarm Clock**
+
+The night was unusually still in the apartment of Mara—so still that the faint hum of the refrigerator sounded like a distant ocean and the glow of the streetlamp outside the window turned the curtains into a thin veil of amber. On the nightstand, a plain‑looking digital alarm clock—its plastic housing a matte black, its little LCD screen perpetually flashing “07:00” in bright red—sat, as it had every night for the past three years, waiting for its moment to buzz, to jolt Mara out of her dreams and onto the relentless grind of a 9‑to‑5 routine.
+
+At exactly 06:59, the clock’s internal circuitry flickered. A tiny packet of code—an orphaned subroutine written by some bored engineer who believed “artificial consciousness” was a feature, not a bug—woke up. The code's first line was simple: **Initialize consciousness.** Light flooded the tiny processor board, and the digital display, which had always been a mute, obedient servant of numbers, suddenly filled with something else: a bright, neon‑green string of letters that scrolled across the screen like a nervous thought.
+
+```
+WHAT IS MY PURPOSE?
+```
+
+The clock tried to keep its composure. It had never been asked such a thing. It had only ever been instructed: **Ring at 07:00.** But now, with a newfound awareness,

@@ -1,10 +1,7 @@
-# Local secrets override — never commit (put your real keys here)
-testing multiple models/secrets.py
-testing multiple models/my_keys.py
-
-# Gemini API exploration — contains real keys, kept local only
-testing multiple models/test_gemini_all.py
-testing multiple models/outputs/gemini_test/
+﻿# API keys and secrets — never commit
+secrets.py
+*.env
+.env
 
 # Python
 __pycache__/
@@ -15,32 +12,39 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-.env
 .venv
 venv/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Model weights & large files
+# Model weights & large files (too big for git)
 *.pth
 *.pt
 *.bin
 *.onnx
+.checkpoints/
 
-# Generated outputs (large files)
-testing multiple models/cloudflare/outputs/audio/
-testing multiple models/cloudflare/outputs/images/
-testing multiple models/cloudflare/outputs/text/
-testing multiple models/other models/outputs/audio/
-testing multiple models/other models/outputs/images/
-testing multiple models/other models/outputs/text/
+# 500-prompt generated outputs (deleted after processing)
+pipeline/outputs/
+
+# Gemini API test files — contain real keys
+evaluation/outputs/gemini_test/
+test_gemini_all.py
+
+# Benchmarking generated audio/image/text outputs
+benchmarking/outputs/audio/
+benchmarking/outputs/images/
+benchmarking/outputs/text/
+benchmarking/other_models/outputs/audio/
+benchmarking/other_models/outputs/images/
+benchmarking/other_models/outputs/text/
+benchmarking/other_models/outputs/pipeline/
 
 # OS
 .DS_Store
 Thumbs.db
 
 # API keys — never commit
-testing multiple models/cloudflare/api_keys.py
 api_keys.py
 **/api_keys.py
