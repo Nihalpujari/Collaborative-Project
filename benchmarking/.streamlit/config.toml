@@ -1,0 +1,9 @@
+# The app hard-codes a light ground (#F0F4F8) in frontend.py. Without this,
+# Streamlit follows the OS theme, and on macOS dark mode every metric,
+# caption and expander header renders white-on-white.
+[theme]
+base = "light"
+primaryColor = "#2563EB"
+backgroundColor = "#F0F4F8"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#0F172A"
