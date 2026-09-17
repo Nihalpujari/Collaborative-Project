@@ -164,10 +164,64 @@ LIKELIHOOD RATIO  (what a similarity score actually means)
 
     Note: summing log LR over independent features = Naive Bayes
 
+------------------------------------------------------------------------------
+
+1 Prompt → 3 Generated Outputs
+           ├── Text  (generated paragraph)
+           ├── Image (generated picture)
+           └── Audio (generated speech)
+
+
+Q_text  = BERTScore(generated_text, prompt)
+
+Q_image = avg(CLIP_score, Aesthetic_score)
+          - λ(0.5) × variance(CLIP_score, Aesthetic_score)                                                
+
+                                                                 
+Q_audio = avg(semantic_score, wer_inv) - 0.5 × variance(semantic_score, wer_inv)                                           CLAP returns 0.0 for 25/53 prompts (47%)
+                                                                                                                             
+
+                                                                                                                          semantic score - 1. Whisper — converts audio to text
+                                                                                                                          WAV file → Whisper → "The owl sat behind a grand desk..."
+                                                                                                                          2. BERTScore — compares that text to the prompt
+                                                                                                                          transcript + prompt → BERTScore → 0.8537
 
 
 
+LLM Judge rates all 56 prompt outputs → overall score per prompt
+          ↓
+Linear Regression on [Q_text, Q_image, Q_audio] → overall                                           X (features) = [Q_text, Q_image, Q_audio]   ← 3 columns
+          ↓                                                                                         y (target)   = LLM overall score             ← 1 column
+Learned weights: w1, w2, w3
 
 
+s1_weighted = s1 × (w1×Q_text  + w2×Q_image) / (w1 + w2)
+s2_weighted = s2 × (w1×Q_text  + w3×Q_audio) / (w1 + w3)
+s3_weighted = s3 × (w2×Q_image + w3×Q_audio) / (w2 + w3)
 
 
+s1_w, s2_w, s3_w  ←  this is the feature vector f(p) = [f1, f2, f3]
+          ↓
+LABEL each of the 500 prompts as binary:
+    Good     → judge_mean > 3.5   (273 prompts)
+    Not-Good → judge_mean ≤ 3.5   (227 prompts)
+          ↓
+LOO CROSS-VALIDATION (leave-one-out, 500 rounds):
+  Each round: hold out prompt p, train on remaining 499
+    → fit a Gaussian on Good prompts:     μᵢ⁺, σᵢ⁺  for i=1,2,3
+    → fit a Gaussian on Not-Good prompts: μᵢ⁻, σᵢ⁻  for i=1,2,3
+          ↓
+SCORE the held-out prompt p:
+
+         3
+S(p) =  Σ  [ (fᵢ − μᵢ⁻)²      (fᵢ − μᵢ⁺)²        σᵢ⁻  ]
+        i=1  ────────────── − ────────────── + log ────
+              2(σᵢ⁻)²           2(σᵢ⁺)²             σᵢ⁺
+
+  ↑ this is log P(f|Good) − log P(f|Not-Good)
+          ↓
+S(p) > 0  →  Good
+S(p) < 0  →  Not-Good
+          ↓
+Correlate S(p) against judge_mean across all 500 prompts
+→ Spearman ρ = 0.195  ←  this is the final reported number
