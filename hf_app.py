@@ -42,6 +42,10 @@ AUDIO_MODELS = {
     "Gemini TTS (Google)":          {"provider": "gemini",     "id": "gemini-2.5-flash-preview-tts"},
 }
 
+# A pool rather than a fixed row: six are drawn from it at random, so the
+# suggestions change on every refresh instead of showing the same six forever.
+# Kept deliberately varied - places, creatures, ideas, single moments - because
+# all three models have to do something with whichever one is picked.
 EXAMPLE_PROMPTS = [
     "A lighthouse keeper's last night on duty",
     "Tokyo ramen shop, 2 a.m., raining",
@@ -49,7 +53,34 @@ EXAMPLE_PROMPTS = [
     "A library grown from living trees",
     "Mars colony breakfast, year 40",
     "The last payphone in America",
+    "A beekeeper explaining winter to the hive",
+    "A night train crossing Siberia in February",
+    "Why flamingos stand on one leg",
+    "The last bookshop in a flooded city",
+    "A blacksmith's forge at dawn",
+    "How ravens remember human faces",
+    "An abandoned amusement park in autumn",
+    "The moment before a thunderstorm breaks",
+    "A watchmaker's bench, magnified",
+    "Deep sea creatures that make their own light",
+    "A street market in Marrakesh at dusk",
+    "The physics of a perfect skipping stone",
+    "A shepherd's hut in the Scottish Highlands",
+    "Why some trees share nutrients underground",
+    "A jazz club that never closes",
+    "The first frost on a spiderweb",
+    "An astronaut's first hour back on Earth",
+    "How salmon find the river they were born in",
+    "A candlelit monastery scriptorium",
+    "The last ice cream van of summer",
+    "Fog rolling into San Francisco Bay",
+    "A potter centering clay on the wheel",
+    "Termites building a cathedral of mud",
+    "The quietest room in the world",
 ]
+
+#: how many suggestion chips to show at once
+EXAMPLE_COUNT = 6
 
 # ── Scoring params ────────────────────────────────────────────────────────────
 LAMBDA    = 0.5
@@ -265,7 +296,11 @@ html, body {
 }
 gradio-app, .gradio-container {
   background: #E7E1D2 !important;
-  max-width: 960px !important;
+  /* was a flat 960px, which left ~520px of dead background on each side of a
+     1920px window. Fluid instead: grows with the window, capped so the result
+     paragraph never becomes an unreadably long line on an ultrawide monitor.
+     Tune the 1400px if you want it tighter or fuller. */
+  max-width: min(1400px, 94vw) !important;
   margin: 0 auto !important;
   padding: 0 !important;
   width: 100% !important;
@@ -320,6 +355,95 @@ gradio-app, .gradio-container {
 #trio-again-btn { display: none !important; }
 /* Hide Gradio footer */
 footer, .built-with { display: none !important; }
+
+/* ── Result-page detail (local build) ────────────────────────────────────── */
+
+/* prompt echo: the form is hidden on the results page, so this is the only
+   thing telling you what was asked */
+.tp-echo {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  margin: 2px 0 14px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+  font-family: "Source Serif 4", Georgia, serif; font-size: 17px; color: var(--ink);
+}
+.tp-echo-k {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-45); flex: 0 0 auto;
+}
+
+/* model name in a card header, pushed left of the action buttons */
+.tp-model {
+  font-size: 10px; letter-spacing: .04em; color: var(--ink-45);
+  margin-left: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 14ch;
+}
+@container (min-width: 720px) { .tp-model { max-width: 20ch; } }
+
+/* Whisper transcript under the audio player */
+.tp-transcript { margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px; }
+.tp-transcript-h {
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-45); margin-bottom: 6px;
+}
+.tp-transcript-b {
+  font-size: 13.5px; line-height: 1.55; color: var(--ink-70);
+  font-style: italic; text-wrap: pretty;
+}
+
+/* staggered entrance: the cards already share one fade-and-rise animation,
+   so they all landed at the same instant. Delaying each lane by 110ms lets
+   them arrive left to right instead of popping in as a block. */
+.tp-results .tp-card:nth-child(1) { animation-delay: 0ms; }
+.tp-results .tp-card:nth-child(2) { animation-delay: 110ms; }
+.tp-results .tp-card:nth-child(3) { animation-delay: 220ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-results .tp-card { animation-delay: 0ms !important; }
+}
+
+
+/* Typewriter: pin card height while text is being revealed */
+.tp-body[data-tw][data-typing] { min-height: var(--tw-h, 0); overflow: hidden; }
+
+/* ── Empty-state preview + a Gradio artefact fix (local build) ───────────── */
+
+/* Gradio wraps the off-screen bridge textbox in its own .form div. Only the
+   textbox was moved to -9999px, so the wrapper stayed behind as a 2px bar in
+   Gradio's dark-theme colour, drawn across the page under the card. */
+#trio-data-hidden, #trio-btn-hidden { border: 0 !important; background: none !important; }
+.gradio-container .form:has(#trio-data-hidden),
+.gradio-container .form:has(#trio-btn-hidden) {
+  position: fixed !important; top: -9999px !important; left: -9999px !important;
+  border: 0 !important; background: none !important; box-shadow: none !important;
+}
+
+.tp-ghost { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.tp-ghost-h {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-45); margin-bottom: 10px;
+}
+/* inert on purpose: dashed and flat, so it never reads as "loading" */
+.tp-ghost-card { border-style: dashed; background: transparent; opacity: .72; }
+.tp-ghost-card .tp-card-h { border-bottom-color: var(--rule); color: var(--ink-45); }
+.tp-ghost-card .tp-card-h b { color: var(--ink-45); font-weight: 500; }
+.tp-ghost-card .tp-figure { opacity: .55; }
+.tp-ghost-card .tp-wave { opacity: .45; }
+.tp-ghost-lines { display: grid; gap: 9px; }
+.tp-ghost-lines i {
+  display: block; height: 10px; border-radius: 2px; background: var(--rule);
+}
+.tp-ghost-lines i:nth-child(2) { width: 92%; }
+.tp-ghost-lines i:nth-child(3) { width: 97%; }
+.tp-ghost-lines i:nth-child(4) { width: 58%; }
+/* the three previews have different content heights (a square image is much
+   taller than four skeleton lines), so pin every caption to the bottom of its
+   card - otherwise the row reads as three mismatched boxes */
+.tp-ghost-card .tp-body { display: flex; flex-direction: column; }
+.tp-ghost-cap {
+  margin-top: auto; padding-top: 10px; font-size: 11.5px; color: var(--ink-45);
+  font-family: "IBM Plex Mono", monospace;
+}
+
 """
 
 # ── JavaScript for the static Trio UI ────────────────────────────────────────
@@ -330,6 +454,37 @@ if (!window._trioSetup) {
 
   // Current page: '01'=form, '02'=generating, '03'=complete, '04'=partial/fail
   window._trioPage = '01';
+
+  // Re-draw the suggestion chips from the full pool. Gradio builds the static
+  // HTML once at import, so a server-side sample would only change when the
+  // process restarts - doing it here means a plain refresh gives new ones.
+  window.trioShuffleChips = function() {
+    var row = document.querySelector('.tp-chips');
+    if (!row || !row.dataset.pool) return;
+    var pool;
+    try { pool = JSON.parse(row.dataset.pool); } catch (e) { return; }
+    if (!Array.isArray(pool) || !pool.length) return;
+
+    var n = Math.min(parseInt(row.dataset.count, 10) || 6, pool.length);
+    var picked = pool.slice();
+    // Fisher-Yates over just the first n slots
+    for (var i = 0; i < n; i++) {
+      var j = i + Math.floor(Math.random() * (picked.length - i));
+      var t = picked[i]; picked[i] = picked[j]; picked[j] = t;
+    }
+    picked = picked.slice(0, n);
+
+    row.textContent = '';
+    picked.forEach(function(text) {
+      var b = document.createElement('button');
+      b.className = 'tp-chip';
+      b.type = 'button';
+      b.dataset.p = text;
+      b.textContent = text;              // textContent, so no markup can slip in
+      b.addEventListener('click', function() { trioRunChip(text); });
+      row.appendChild(b);
+    });
+  };
 
   window.trioSync = function() {
     var data = {
@@ -350,6 +505,7 @@ if (!window._trioSetup) {
   // Page 01 — show form, hide results (back-nav from results pages)
   window.trioGoToForm = function() {
     window._trioPage = '01';
+    window._trioTypedTexts.clear();
     var formView = document.getElementById('tp-view-form');
     var resultsArea = document.querySelector('#trio-results-area');
     var againBtn = document.getElementById('trio-again-btn');
@@ -395,11 +551,78 @@ if (!window._trioSetup) {
     }, 60);
   };
 
+  // ── Typewriter reveal for text cards ─────────────────────────────────────
+  window._trioTypedTexts = new Set();
+
+  window.trioTypewriter = function(el) {
+    if (!el || el.dataset.twDone) return;
+    el.dataset.twDone = '1';
+    var fullText = (el.textContent || '').trim();
+    if (!fullText) return;
+    // Don't re-animate the same text on the scoring update yield
+    if (window._trioTypedTexts.has(fullText)) return;
+    window._trioTypedTexts.add(fullText);
+
+    var nodes = [];
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    var n;
+    while ((n = walker.nextNode())) if (n.textContent.trim()) nodes.push(n);
+    if (!nodes.length) return;
+
+    var h = el.offsetHeight;
+    el.style.setProperty('--tw-h', h + 'px');
+    el.setAttribute('data-typing', '');
+
+    var total = nodes.reduce(function(s, nd) { return s + nd.textContent.length; }, 0);
+    nodes.forEach(function(nd) { nd._twFull = nd.textContent; nd.textContent = ''; });
+
+    var duration = Math.max(900, Math.min(3200, total * 12));
+    var start = null;
+
+    requestAnimationFrame(function step(ts) {
+      if (!start) start = ts;
+      var target = Math.min(total, Math.floor((ts - start) / duration * total));
+      var filled = 0;
+      for (var i = 0; i < nodes.length; i++) {
+        var len = nodes[i]._twFull.length;
+        if (filled + len <= target) {
+          nodes[i].textContent = nodes[i]._twFull; filled += len;
+        } else {
+          nodes[i].textContent = nodes[i]._twFull.slice(0, target - filled); break;
+        }
+      }
+      if (target < total) requestAnimationFrame(step);
+      else el.removeAttribute('data-typing');
+    });
+  };
+
+  window.trioWatchResults = function() {
+    var area = document.querySelector('#trio-results-area');
+    if (!area) { setTimeout(trioWatchResults, 200); return; }
+    new MutationObserver(function() {
+      area.querySelectorAll('[data-tw]:not([data-tw-done])').forEach(function(el) {
+        trioTypewriter(el);
+      });
+    }).observe(area, { childList: true, subtree: true });
+    area.querySelectorAll('[data-tw]:not([data-tw-done])').forEach(function(el) {
+      trioTypewriter(el);
+    });
+  };
+
   window.trioRunChip = function(text) {
     var inp = document.getElementById('trio-prompt-field');
     if (inp) inp.value = text;
     trioGenerate();
   };
+
+  // Boot: chip shuffle + start typewriter watcher
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      trioShuffleChips(); trioWatchResults();
+    });
+  } else {
+    trioShuffleChips(); trioWatchResults();
+  }
 
   // Poll every 250ms: gen_meta appearing signals generation done → transition to Page 03/04
   setInterval(function() {
@@ -431,19 +654,63 @@ if (!window._trioSetup) {
 """
 
 # ── Build static Trio UI HTML (no f-strings — all concatenation) ──────────────
+# ── Empty-state preview (added for the Mac/local build) ───────────────────────
+def _ghost_lanes_html():
+    """Outlined, inert versions of the three result cards for the landing page.
+
+    The form on its own leaves roughly 400px of dead space at the bottom of a
+    900px window, which reads as unfinished. These sit inside #tp-view-form, so
+    trioGenerate() hides them with the rest of the form and trioGoToForm()
+    brings them back - no JS changes needed.
+
+    Built only from classes the design already defines, and deliberately NOT
+    animated: .tp-skel and .tp-wave.is-live both pulse, which would suggest
+    something is loading when nothing has started.
+    """
+    return (
+        '<div class="tp-ghost" aria-hidden="true">'
+        '<div class="tp-ghost-h mono">What you get back</div>'
+        '<div class="tp-results">'
+        '<article class="tp-card tp-ghost-card">'
+        '<div class="tp-card-h"><i class="tp-dot d-text"></i><b>Text</b></div>'
+        '<div class="tp-body">'
+        '<div class="tp-ghost-lines"><i></i><i></i><i></i><i></i></div>'
+        '<p class="tp-ghost-cap">a short paragraph</p>'
+        '</div></article>'
+        '<article class="tp-card tp-ghost-card">'
+        '<div class="tp-card-h"><i class="tp-dot d-img"></i><b>Image</b></div>'
+        '<div class="tp-body">'
+        '<div class="tp-figure"><span>your picture</span></div>'
+        '<p class="tp-ghost-cap">one square image</p>'
+        '</div></article>'
+        '<article class="tp-card tp-ghost-card">'
+        '<div class="tp-card-h"><i class="tp-dot d-audio"></i><b>Audio</b></div>'
+        '<div class="tp-body">'
+        '<div class="tp-wave">' + ('<i></i>' * 28) + '</div>'
+        '<p class="tp-ghost-cap">the paragraph, read aloud</p>'
+        '</div></article>'
+        '</div></div>'
+    )
+
+
 def _build_static_html():
     # Use data-p attribute instead of inline json in onclick to avoid
     # double-quote conflicts that break the HTML attribute parser
     def _html_attr(s):
         return s.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#39;')
 
+    # a random six for the initial render; trioShuffleChips() re-draws them on
+    # every page load so a refresh really does change the suggestions
+    import random as _random
+    _shown = _random.sample(EXAMPLE_PROMPTS, min(EXAMPLE_COUNT, len(EXAMPLE_PROMPTS)))
     chips = "".join(
         '<button class="tp-chip" type="button"'
         + ' data-p="' + _html_attr(p) + '"'
         + ' onclick="trioRunChip(this.dataset.p)">'
         + p + '</button>'
-        for p in EXAMPLE_PROMPTS
+        for p in _shown
     )
+    chip_pool = _html_attr(json.dumps(EXAMPLE_PROMPTS))
 
     def _sel(elem_id, models):
         opts = "".join(
@@ -497,7 +764,8 @@ def _build_static_html():
         +     '</div>'
         +     '<div class="tp-egs">'
         +       '<span class="tp-egs-label">Or start with one of these &#8212; click to run it</span>'
-        +       '<div class="tp-chips">' + chips + '</div>'
+        +       '<div class="tp-chips" data-pool="' + chip_pool + '"'
+        +            ' data-count="' + str(EXAMPLE_COUNT) + '">' + chips + '</div>'
         +     '</div>'
         +     '<details class="tp-settings">'
         +       '<summary>Model options &#8212; fine as they are</summary>'
@@ -508,6 +776,7 @@ def _build_static_html():
         +       '</div>'
         +     '</details>'
         +   '</div>'
+        +   _ghost_lanes_html()
         +   '</section>'
         # Page 02/03/04: results injected by Gradio into #trio-results-area below
         + '</div>'
@@ -622,10 +891,43 @@ def _coherence_block(q_text, q_image, q_audio):
 </details>
 {_method_block()}"""
 
+def _transcript_block(scores):
+    """Whisper's transcript, under the player.
+
+    compute_scores() already runs Whisper to build Q_audio and then discards
+    the text. Showing it fills a column that was otherwise a player above 400px
+    of nothing, and it lets the reader check for themselves that the narration
+    says what the paragraph says.
+    """
+    t = (scores or {}).get("transcript") or ""
+    t = t.strip()
+    if not t:
+        return ""
+    if len(t) > 600:
+        t = t[:600].rsplit(" ", 1)[0] + "\u2026"
+    safe = (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return ('<div class="tp-transcript">'
+            '<div class="tp-transcript-h mono">Transcript</div>'
+            f'<p class="tp-transcript-b prose">&#8220;{safe}&#8221;</p>'
+            '</div>')
+
+
+def _model_chip(models, kind):
+    """Small mono model name in a card header, e.g. llama-3.1-8b."""
+    name = (models or {}).get(kind, "")
+    if not name:
+        return ""
+    # the catalogue keys read "Llama 3.1 8B (Cloudflare)"; the provider is
+    # already implied by the app, so show just the model
+    name = name.split("(")[0].strip()
+    return f'<span class="tp-model mono">{name}</span>'
+
+
 def _result_cards_html(text_out, text_err, text_t,
                        img_b64, img_err, img_t,
                        audio_b64, audio_err, audio_t,
-                       scores):
+                       scores, prompt="", models=None):
+    models = models or {}
     cards = []
 
     if text_out:
@@ -638,10 +940,11 @@ def _result_cards_html(text_out, text_err, text_t,
             '<div class="tp-card-h">'
             '<i class="tp-out is-text" style="border:0;padding:0;background:none"><i></i></i>'
             f'<b>Text</b><span class="tp-tick mono">&#10003; {text_t:.1f}s</span>'
+            + _model_chip(models, "text") +
             '<span class="tp-acts">'
             f'<button class="tp-btn" type="button" onclick="navigator.clipboard.writeText({copy_data})">&#8853; Copy</button>'
             '</span></div>'
-            f'<div class="tp-body">{body}</div>'
+            f'<div class="tp-body" data-tw>{body}</div>'
             '</article>'
         )
     elif text_err:
@@ -659,6 +962,7 @@ def _result_cards_html(text_out, text_err, text_t,
             '<div class="tp-card-h">'
             '<i class="tp-out is-image" style="border:0;padding:0;background:none"><i></i></i>'
             f'<b>Image</b><span class="tp-tick mono">&#10003; {img_t:.1f}s</span>'
+            + _model_chip(models, "image") +
             '<span class="tp-acts">'
             f'<a class="tp-btn" href="{data_uri}" download="trio-image.png">&#8595; PNG</a>'
             '</span></div>'
@@ -679,11 +983,13 @@ def _result_cards_html(text_out, text_err, text_t,
             '<div class="tp-card-h">'
             '<i class="tp-out is-audio" style="border:0;padding:0;background:none"><i></i></i>'
             f'<b>Audio</b><span class="tp-tick mono">&#10003; {audio_t:.1f}s</span>'
+            + _model_chip(models, "audio") +
             '<span class="tp-acts">'
             f'<a class="tp-btn" href="data:audio/wav;base64,{audio_b64}" download="trio-audio.wav">&#8595; WAV</a>'
             '</span></div>'
             '<div class="tp-body">'
             f'<audio controls style="width:100%;border-radius:4px"><source src="data:audio/wav;base64,{audio_b64}" type="audio/wav"></audio>'
+            + _transcript_block(scores) +
             '</div></article>'
         )
     elif audio_err:
@@ -705,7 +1011,14 @@ def _result_cards_html(text_out, text_err, text_t,
     elif scores and scores.get("error"):
         coh_html = f'<p style="margin-top:10px;font-size:12px;color:var(--ink-45)">Scoring: {scores["error"]}</p>'
 
-    return '<div class="tp-results">' + "".join(cards) + '</div>' + coh_html
+    echo = ""
+    if prompt:
+        safe = (prompt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+        # the form is hidden on the results page, so without this the page
+        # never says what was actually asked for
+        echo = f'<div class="tp-echo"><span class="tp-echo-k mono">Prompt</span>{safe}</div>'
+
+    return echo + '<div class="tp-results">' + "".join(cards) + '</div>' + coh_html
 
 def _generating_cards_html():
     return (
@@ -729,8 +1042,19 @@ def _generating_cards_html():
     )
 
 def _wrap_results(inner):
-    """Wrap results in a container that enables container queries for the 3-col grid."""
-    return '<div style="container-type:inline-size">' + inner + '</div>'
+    """Wrap results in a container that enables container queries for the 3-col grid.
+
+    The `tp tp-page-root` classes are load-bearing, not decoration. Gradio puts
+    #trio-results-area in its own block, a SIBLING of the static HTML - so the
+    results are not descendants of .tp, where --ink / --card / --rule-str and
+    the rest of the palette are declared. Without them every var() in here
+    resolved to nothing: cards lost their panel, border and offset shadow, and
+    the coherence meter rendered blank. tp-page-root re-applies the palette
+    while suppressing .tp's own border/padding, so it does not draw a second
+    panel around the results.
+    """
+    return ('<div class="tp tp-page-root" style="container-type:inline-size">'
+            + inner + '</div>')
 
 # ── Generation helpers ────────────────────────────────────────────────────────
 TEXT_INSTRUCTION = "Describe this scene in vivid detail in 3-4 sentences: {p}"
@@ -905,6 +1229,7 @@ def compute_scores(prompt, text_out, img_bytes, audio_bytes):
             aes = next((r["score"] for r in M["aesthetic"](img) if r["label"]=="aesthetic"), 0.0)
             q_image = _qpair(clip_s, float(aes))
         q_audio = None
+        transcript = ""
         if audio_bytes:
             wav, sr = sf.read(io.BytesIO(audio_bytes), dtype="float32")
             if wav.ndim > 1: wav = wav.mean(axis=1)
@@ -915,7 +1240,8 @@ def compute_scores(prompt, text_out, img_bytes, audio_bytes):
             q_audio = _qpair(sem, wer_inv)
         valid = [q for q in [q_text, q_image, q_audio] if q is not None]
         lr = _lr([q_text or 0, q_image or 0, q_audio or 0]) if len(valid) >= 2 else None
-        return {"q_text": q_text, "q_image": q_image, "q_audio": q_audio, "lr_score": lr}
+        return {"q_text": q_text, "q_image": q_image, "q_audio": q_audio,
+                "lr_score": lr, "transcript": transcript}
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
 
@@ -976,11 +1302,12 @@ def generate(data_json):
     )
 
     # Yield results immediately so the user sees text/image/audio right away
+    _models = {"text": text_model, "image": image_model, "audio": audio_model}
     results_html = _result_cards_html(
         text_out, text_err, text_t,
         img_b64,  img_err,  img_t,
         audio_b64, audio_err, audio_t,
-        None,
+        None, prompt, _models,
     )
     yield _wrap_results(results_html + gen_meta + footer)
 
@@ -994,7 +1321,7 @@ def generate(data_json):
             text_out, text_err, text_t,
             img_b64,  img_err,  img_t,
             audio_b64, audio_err, audio_t,
-            scores,
+            scores, prompt, _models,
         )
         yield _wrap_results(results_scored + gen_meta + footer)
 
