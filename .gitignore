@@ -44,3 +44,4 @@ benchmarking/other_models/outputs/pipeline/
 # OS
 .DS_Store
 Thumbs.db
+api_keys.py

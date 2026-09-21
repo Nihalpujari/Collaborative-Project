@@ -110,12 +110,11 @@ Q_audio = avg(semantic_score, wer_inv) - 0.5 × variance(semantic_score, wer_inv
 
 
 
-LLM Judge rates all 56 prompt outputs → overall score per prompt
+LLM Judge rates all 56 prompt outputs → overall score per prompt 
           ↓
 Linear Regression on [Q_text, Q_image, Q_audio] → overall                                           X (features) = [Q_text, Q_image, Q_audio]   ← 3 columns
           ↓                                                                                         y (target)   = LLM overall score             ← 1 column
 Learned weights: w1, w2, w3
-
 
 s1_weighted = s1 × (w1×Q_text  + w2×Q_image) / (w1 + w2)
 s2_weighted = s2 × (w1×Q_text  + w3×Q_audio) / (w1 + w3)

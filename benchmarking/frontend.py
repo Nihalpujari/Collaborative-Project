@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 import os
 import base64
 import time
@@ -11,12 +11,13 @@ import requests
 # ---------------------------
 # Load credentials
 #
-# Loading via importlib with an alias avoids the stdlib `secrets` shadow bug
-# that hit this project twice. The alias "project_secrets" means Python never
-# registers it as the stdlib `secrets` module, so transformers/FastAPI are safe.
+# NOTE: the file is api_keys.py, NOT secrets.py. A module named secrets.py
+# shadows Python's standard-library `secrets`, which silently breaks
+# huggingface_hub -> transformers -> the whole scoring stack. This project
+# has hit that bug twice; do not rename it back.
 # ---------------------------
 BASE_DIR = Path(os.path.abspath(__file__)).parent
-_spec = importlib.util.spec_from_file_location("project_secrets", BASE_DIR.parent / "secrets.py")
+_spec = importlib.util.spec_from_file_location("project_api_keys", BASE_DIR.parent / "api_keys.py")
 _mod  = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
 
@@ -82,6 +83,10 @@ AUDIO_MODELS = {
 # ---------------------------
 # Generation Functions
 # ---------------------------
+# Same instruction and token budget as pipeline/step1_generate.py. The
+# likelihood-ratio Gaussians were fitted on text produced this way; a longer
+# "write a story" prompt drifts Q_text ~3 sd below the training mean and
+# gets cut off mid-sentence by the token cap.
 TEXT_INSTRUCTION = "Describe this scene in vivid detail in 3-4 sentences: {p}"
 TEXT_MAX_TOKENS  = 200
 
@@ -95,7 +100,12 @@ def trim_to_sentence(text):
 
 
 def tts_text(text):
+    """The exact string handed to TTS. Sentence-aware cap so the audio never
+    stops mid-word, and one place to compute it so scoring can compare the
+    transcript against what was actually spoken."""
     t = trim_to_sentence(text)
+    # 3-4 sentences at 200 tokens is ~600-700 chars; 900 covers it with room.
+    # Deepgram Aura caps at 2000, MeloTTS and Gemini are well above that.
     return t if len(t) <= 900 else trim_to_sentence(t[:900]) or t[:900]
 
 
@@ -190,16 +200,14 @@ def generate_audio(text, model_info):
                 f"{CF_BASE_URL}/{model_id}", headers=CF_HEADERS, json=payload, timeout=60
             )
             if r.status_code == 200:
-                try:
-                    result = r.json().get("result", {})
-                    audio_b64 = result.get("audio", "")
-                    if audio_b64:
-                        return base64.b64decode(audio_b64), None
-                except Exception:
-                    pass
+                result = r.json().get("result", {})
+                audio_b64 = result.get("audio", "")
+                if audio_b64:
+                    return base64.b64decode(audio_b64), None
                 if r.content:
                     return r.content, None
             return None, f"Error {r.status_code}: {r.text[:200]}"
+
         if provider == "gemini":
             client = get_gemini()
             if client is None:
@@ -237,10 +245,26 @@ def _pcm_to_wav(pcm_bytes, sample_rate=24000, channels=1, bits=16):
 
 # =========================================================================
 # SCORING
+#
+# Constants below ARE the fitted model. They come from the 500-prompt run
+# (results/all_500_v2_summary.csv and the Gaussians fitted in
+# pipeline/run_v2.py). Nothing is trained at runtime - only the features
+# are computed. Do not hand-edit these without re-running the pipeline.
 # =========================================================================
-JUDGE_SPLIT = 3.5
+# W1, W2, W3 = 7.8666, 2.2790, 0.7796  - learned modality weights from the
+# 500-prompt run. Used only to weight the ImageBind coherence features, which
+# the app no longer computes. Kept here as a record of the fitted values.
+JUDGE_SPLIT = 3.5                              # Good if judge rating > 3.5
 LAMBDA      = 0.5
 
+# Fitted likelihood-ratio parameters (V1), validated on the 500 prompts with
+# leave-one-out CV. Features = [Q_text, Q_image, Q_audio] - no extra models.
+#
+# The study also fitted a V2 variant on quality-weighted ImageBind coherence
+# features [s1_w, s2_w, s3_w]: r = 0.2046 vs. 0.1604 here. That looks better
+# until you check ranking accuracy - 57.5% vs. 57.4%, a 0.1pp gain for a 4.5 GB
+# download. The app therefore ships V1 only; V2 stays in the benchmark table
+# below as a published result. See the report for the full comparison.
 LR_PARAMS = {
     "mu_good": [0.8400, 0.4656, 0.8723],
     "sd_good": [0.0088, 0.0255, 0.0153],
@@ -258,7 +282,10 @@ def quality_pair(a, b, lam=LAMBDA):
 
 
 def likelihood_ratio(f):
-    """S(p) = sum_i [ log P(f_i|Good) - log P(f_i|Not-Good) ]. >0 => likely Good."""
+    """S(p) = sum_i [ log P(f_i|Good) - log P(f_i|Not-Good) ]. >0 => likely Good.
+
+    f = [Q_text, Q_image, Q_audio]
+    """
     import math
     p = LR_PARAMS
     mu_g, sd_g, mu_b, sd_b = p["mu_good"], p["sd_good"], p["mu_bad"], p["sd_bad"]
@@ -270,7 +297,7 @@ def likelihood_ratio(f):
     return float(s)
 
 
-@st.cache_resource(show_spinner="Loading quality models (first run only)â€¦")
+@st.cache_resource(show_spinner="Loading quality models (first run only)...")
 def _load_quality_models():
     from transformers import CLIPModel, CLIPProcessor, pipeline as hf_pipeline
     import whisper
@@ -289,9 +316,18 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
     try:
         M = _load_quality_models()
 
+        # ---- Q_text : BERTScore(generated text, prompt)
         from bert_score import score as bert_score_fn
 
         def _bertscore_f1(candidate, reference):
+            """BERTScore F1, guarding the empty-candidate case.
+
+            bert_score's sent_encode() falls back to the tokenizer's
+            build_inputs_with_special_tokens() for empty strings, which
+            transformers 5.x removed. An empty candidate has no semantic
+            overlap anyway, so score it 0 instead of encoding bare
+            special tokens.
+            """
             if not (candidate or "").strip():
                 return 0.0
             _, _, f1 = bert_score_fn([candidate], [reference], lang="en", verbose=False)
@@ -299,10 +335,15 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
 
         q_text = _bertscore_f1(text_out, prompt)
 
+        # ---- Q_image : quality_pair(CLIP, aesthetic)
         img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         ti = M["clip_proc"](text=[prompt], return_tensors="pt", padding=True,
                             truncation=True, max_length=77)
         ii = M["clip_proc"](images=img, return_tensors="pt")
+        # transformers 5.x changed get_text_features/get_image_features to return
+        # a BaseModelOutputWithPooling whose pooler_output is NOT projected into
+        # CLIP's shared space. Take text_embeds/image_embeds off the full forward
+        # instead - those are the projected embeddings the 500-prompt run used.
         with torch.no_grad():
             clip_out = M["clip"](input_ids=ti["input_ids"],
                                  attention_mask=ti["attention_mask"],
@@ -313,6 +354,7 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
         aes = next((r["score"] for r in M["aesthetic"](img) if r["label"] == "aesthetic"), 0.0)
         q_image = quality_pair(clip_s, float(aes))
 
+        # ---- Q_audio : quality_pair(semantic, 1 - WER)
         import soundfile as sf
         from scipy import signal as scipy_signal
         wav, sr = sf.read(io.BytesIO(audio_bytes), dtype="float32")
@@ -328,6 +370,8 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
 
         out = {"q_text": q_text, "q_image": q_image, "q_audio": q_audio,
                "clip": clip_s, "aesthetic": float(aes), "transcript": transcript}
+
+        # Likelihood ratio on the quality features - free once the Q scores exist.
         out["lr_score"] = likelihood_ratio([q_text, q_image, q_audio])
         return out
     except Exception as e:
@@ -356,10 +400,15 @@ def llm_judge(prompt, text_out, image_bytes, audio_bytes, transcript):
     if image_bytes:
         parts.append(types.Part.from_bytes(data=image_bytes, mime_type="image/png"))
     if audio_bytes:
+        # Attach the audio itself so the judge rates what it hears, not a
+        # Whisper transcript (which is empty whenever scoring is off).
         mime = "audio/wav" if audio_bytes[:4] == b"RIFF" else "audio/mp3"
         parts.append(types.Part.from_bytes(data=audio_bytes, mime_type=mime))
     cfg = types.GenerateContentConfig(temperature=0.1, max_output_tokens=2048)
 
+    # Flash is shared capacity and returns 503 under load. Retry with backoff,
+    # then fall back to the other models this key can reach. "-latest" first so
+    # we track Google's current Flash instead of pinning a version that 404s.
     last_err = None
     for model_id in ("gemini-flash-latest", "gemini-3.6-flash", "gemini-flash-lite-latest"):
         for attempt in range(3):
@@ -376,10 +425,10 @@ def llm_judge(prompt, text_out, image_bytes, audio_bytes, transcript):
                 transient = any(c in str(e) for c in ("503", "UNAVAILABLE", "429",
                                                       "RESOURCE_EXHAUSTED", "500"))
                 if not transient:
-                    break
+                    break                       # 404/400 -> next model, no retry
                 if attempt < 2:
-                    _time.sleep(2 ** attempt)
-    return None, f"all judge models unavailable â€” last error: {last_err}"
+                    _time.sleep(2 ** attempt)   # 1s, 2s
+    return None, f"all judge models unavailable - last error: {last_err}"
 
 
 # ---------------------------
@@ -397,6 +446,13 @@ st.set_page_config(
 # ---------------------------
 @st.cache_data(show_spinner=False)
 def _asset_uri(filename: str) -> str:
+    """Return an image from assets/ as a data URI.
+
+    Streamlit will not serve a local file to a CSS url(), so images have to
+    be inlined. Cached so the base64 encode happens once per session.
+    Returns "" if the file is missing, and the UI falls back to a plain
+    gradient or hides the image rather than breaking.
+    """
     path = Path(__file__).parent / "assets" / filename
     if not path.exists():
         return ""
@@ -409,7 +465,9 @@ def _asset_uri(filename: str) -> str:
     return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
-HERO_IMAGE    = "dashboard_bg.webp"
+# Artwork used around the dashboard. Drop another file into assets/ and
+# change the filename here to restyle - nothing else needs touching.
+HERO_IMAGE    = "dashboard_bg.webp"   # alternative: "hero_alt.webp"
 SIDEBAR_IMAGE = "dashboard_bg.webp"
 EMPTY_IMAGE   = "empty_state.webp"
 
@@ -417,247 +475,162 @@ BG_URI    = _asset_uri(HERO_IMAGE)
 SIDE_URI  = _asset_uri(SIDEBAR_IMAGE)
 EMPTY_URI = _asset_uri(EMPTY_IMAGE)
 
-
 # ---------------------------
-# CSS â€” Obsidian theme
+# CSS
 # ---------------------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; }
-* { font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important; }
-
-/* â”€â”€ Page ground â”€â”€ */
-.stApp { background: #03070F !important; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+* { font-family: 'Inter', sans-serif; }
+.stApp { background: #F0F4F8; }
 .block-container {
     padding-top: 1.5rem !important;
-    padding-bottom: 3rem !important;
-    padding-left: 2.2rem !important;
-    padding-right: 2.2rem !important;
+    padding-bottom: 2rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
     max-width: 100% !important;
 }
 header[data-testid="stHeader"] { background: transparent !important; }
 
-/* â”€â”€ Global text overrides (dark ground) â”€â”€ */
-.stApp p, .stApp li, .stApp div, .stApp span { color: #CBD5E1; }
-.stMarkdown p, .stMarkdown li { color: #94A3B8; }
-
-/* â”€â”€ Metrics â”€â”€ */
-[data-testid="stMetricLabel"],
-[data-testid="stMetricLabel"] * {
-    color: #475569 !important;
-    font-size: 0.72rem !important;
+/* Sidebar */
+[data-testid="stSidebar"] { background: #1E293B !important; }
+[data-testid="stSidebar"] label {
+    color: #94A3B8 !important;
+    font-size: 0.75rem !important;
     font-weight: 700 !important;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-[data-testid="stMetricValue"],
-[data-testid="stMetricValue"] * {
-    color: #F1F5F9 !important;
-    font-weight: 700 !important;
-    font-family: 'JetBrains Mono', monospace !important;
-}
-[data-testid="stCaptionContainer"],
-[data-testid="stCaptionContainer"] * { color: #334155 !important; }
-[data-testid="stExpander"] summary,
-[data-testid="stExpander"] summary * { color: #94A3B8 !important; }
-
-/* â”€â”€ Sidebar â”€â”€ */
-[data-testid="stSidebar"] {
-    background: #020509 !important;
-    border-right: 1px solid rgba(255,255,255,0.05) !important;
-}
-[data-testid="stSidebar"] label {
-    color: #334155 !important;
-    font-size: 0.68rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.09em !important;
+    letter-spacing: 0.05em;
 }
 [data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.09) !important;
-    border-radius: 10px !important;
-    color: #CBD5E1 !important;
+    background: #273549 !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    color: #E2E8F0 !important;
 }
-[data-testid="stSidebar"] .stSelectbox span { color: #CBD5E1 !important; }
+[data-testid="stSidebar"] .stSelectbox span { color: #E2E8F0 !important; }
 [data-testid="stSidebar"] [data-testid="stCheckbox"] p,
 [data-testid="stSidebar"] [data-testid="stCheckbox"] span,
-[data-testid="stSidebar"] .stMarkdown p { color: #64748B !important; }
+[data-testid="stSidebar"] .stMarkdown p { color: #E2E8F0 !important; }
 [data-testid="stSidebar"] [data-testid="stTooltipIcon"] svg,
-[data-testid="stSidebar"] [data-testid="stTooltipHoverTarget"] svg {
-    fill: #334155 !important; color: #334155 !important;
-}
+[data-testid="stSidebar"] [data-testid="stTooltipHoverTarget"] svg { fill: #94A3B8 !important; color: #94A3B8 !important; }
 
-/* â”€â”€ Hero â”€â”€ */
+.page-title { font-size: 2rem; font-weight: 800; color: #0F172A; }
+
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] * { color: #64748B !important; }
+[data-testid="stMetricValue"],
+[data-testid="stMetricValue"] * { color: #0F172A !important; font-weight: 700; }
+[data-testid="stCaptionContainer"],
+[data-testid="stCaptionContainer"] * { color: #475569 !important; }
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary * { color: #0F172A !important; }
+.stMarkdown p, .stMarkdown li { color: #1E293B; }
+
 .hero {
     position: relative;
-    border-radius: 20px;
+    border-radius: 18px;
     overflow: hidden;
-    padding: 2.4rem 2.6rem 2.1rem;
-    margin-bottom: 1.8rem;
-    background: linear-gradient(135deg, #04091A 0%, #0C1C38 45%, #112444 100%);
-    border: 1px solid rgba(255,255,255,0.07);
-    box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07);
-}
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 50%, #06B6D4 100%);
-    border-radius: 20px 20px 0 0;
+    padding: 2.1rem 2.2rem;
+    margin-bottom: 1.4rem;
+    background: linear-gradient(100deg, #0B1526 0%, #16294A 60%, #1E3A6B 100%);
+    box-shadow: 0 8px 28px rgba(15,23,42,0.18);
 }
 .hero-title {
-    font-size: clamp(1.9rem, 3.2vw, 2.5rem);
+    font-size: 2.1rem;
     font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-    background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 55%, #C4B5FD 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.4rem;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
 }
 .hero-sub {
-    font-size: 0.93rem;
-    color: #4A5C7A;
-    font-weight: 500;
-    letter-spacing: 0.01em;
+    font-size: 0.95rem;
+    color: #C7D2E4;
+    margin-top: 0.35rem;
 }
 @media (max-width: 640px) {
-    .hero { padding: 1.6rem 1.4rem; }
+    .hero { padding: 1.5rem 1.2rem; }
+    .hero-title { font-size: 1.5rem; }
 }
+.page-subtitle { font-size: 0.95rem; color: #64748B; margin-top: 0.3rem; margin-bottom: 1.5rem; }
 
-/* â”€â”€ Composer card â”€â”€ */
 .composer-wrap {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 1.5rem 1.8rem 1.3rem;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 18px;
+    padding: 1.4rem 1.6rem 1.1rem 1.6rem;
+    box-shadow: 0 4px 20px rgba(15,23,42,0.07);
     margin-bottom: 2rem;
 }
-
-/* â”€â”€ Prompt chip â”€â”€ */
 .prompt-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(99,102,241,0.10);
-    border: 1px solid rgba(99,102,241,0.22);
-    border-radius: 99px;
-    padding: 0.42rem 1.1rem;
-    font-size: 0.86rem;
-    color: #A5B4FC;
-    font-weight: 600;
+    background: #EEF4FF;
+    border: 1px solid #DBEAFE;
+    border-radius: 10px;
+    padding: 0.55rem 1rem;
+    font-size: 0.88rem;
+    color: #1E40AF;
+    font-weight: 500;
     margin-bottom: 1rem;
     margin-top: 0.5rem;
-    letter-spacing: 0.005em;
 }
-
-/* â”€â”€ Card labels â”€â”€ */
 .card-label {
-    font-size: 0.66rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 0.9rem;
-    padding-bottom: 0.65rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #F1F5F9;
 }
-.label-text  { color: #38BDF8; }
-.label-image { color: #C084FC; }
-.label-audio { color: #4ADE80; }
-
-/* â”€â”€ Divider â”€â”€ */
+.label-text  { color: #2563EB; }
+.label-image { color: #7C3AED; }
+.label-audio { color: #059669; }
 .divider {
     height: 1px;
-    background: rgba(255,255,255,0.04);
-    margin: 2rem 0 2.2rem;
+    background: linear-gradient(to right, #CBD5E1, transparent);
+    margin: 1.5rem 0 2rem 0;
 }
-
-/* â”€â”€ Empty state â”€â”€ */
-.empty-state {
-    text-align: center;
-    padding: 3rem 1rem 4rem;
-}
-.empty-icon { font-size: 2.2rem; margin-bottom: 0.6rem; opacity: 0.35; }
+.empty-state { text-align: center; padding: 2.2rem 1rem 3rem; color: #94A3B8; }
+.empty-icon  { font-size: 2.8rem; margin-bottom: 0.7rem; }
 .empty-art {
     display: block;
     width: 100%;
-    max-width: 500px;
-    margin: 0 auto 1.8rem;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    opacity: 0.80;
+    max-width: 540px;
+    margin: 0 auto 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 12px 34px rgba(15,23,42,0.16);
 }
-.empty-text { font-size: 1rem; font-weight: 600; color: #1E293B; }
-
-/* â”€â”€ Text area â”€â”€ */
-.stTextArea textarea {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.10) !important;
-    border-radius: 14px !important;
-    color: #E2E8F0 !important;
-    font-size: 0.94rem !important;
-    resize: none !important;
-    caret-color: #60A5FA;
-}
-.stTextArea textarea:focus {
-    border-color: rgba(96,165,250,0.4) !important;
-    box-shadow: 0 0 0 3px rgba(96,165,250,0.10) !important;
-    outline: none !important;
-}
-.stTextArea textarea::placeholder { color: #1E293B !important; }
-
-/* â”€â”€ Generate button â”€â”€ */
+.empty-text  { font-size: 1rem; font-weight: 500; }
 .stFormSubmitButton > button {
-    background: linear-gradient(135deg, #1D4ED8 0%, #4F46E5 100%) !important;
+    background: #2563EB !important;
     color: #FFFFFF !important;
     border: none !important;
     border-radius: 12px !important;
-    padding: 0.6rem 2.2rem !important;
+    padding: 0.55rem 2rem !important;
     font-weight: 700 !important;
-    font-size: 0.9rem !important;
-    letter-spacing: 0.01em !important;
-    box-shadow: 0 4px 22px rgba(79,70,229,0.38) !important;
-    transition: box-shadow 0.2s ease, transform 0.15s ease !important;
+    font-size: 0.95rem !important;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.25) !important;
 }
-.stFormSubmitButton > button:hover {
-    box-shadow: 0 6px 32px rgba(79,70,229,0.55) !important;
-    transform: translateY(-1px) !important;
+.stTextArea textarea {
+    border-radius: 12px !important;
+    border: 1px solid #E2E8F0 !important;
+    font-size: 0.95rem !important;
+    resize: none !important;
 }
-
-/* â”€â”€ Images â”€â”€ */
-[data-testid="stImage"] img {
-    border-radius: 12px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.4);
-}
-
-/* â”€â”€ Spinner â”€â”€ */
-.stSpinner > div { border-top-color: #3B82F6 !important; }
-
-/* â”€â”€ Scrollbar â”€â”€ */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
-
-/* â”€â”€ Alert / warning â”€â”€ */
-.stAlert { border-radius: 12px !important; }
+[data-testid="stImage"] img { border-radius: 10px; }
+/* ARTWORK-INJECTION-POINT */
 
 </style>
 """, unsafe_allow_html=True)
 
+# Layer the artwork in: full strength behind the hero, and a very faint
+# fixed wash behind the whole page. The wash sits under a near-opaque
+# tint so the dark image never fights the light UI underneath it.
 if BG_URI:
     st.markdown("""
 <style>
 .stApp {
     background-image:
-        linear-gradient(rgba(3,7,15,0.97), rgba(3,7,15,0.97)),
+        linear-gradient(rgba(240,244,248,0.93), rgba(240,244,248,0.93)),
         url("__BG__");
     background-size: cover;
     background-position: center;
@@ -666,21 +639,25 @@ if BG_URI:
 }
 .hero {
     background-image:
-        linear-gradient(135deg,
-            rgba(4,9,26,0.98) 0%,
-            rgba(9,20,44,0.92) 40%,
-            rgba(9,20,44,0.55) 75%,
-            rgba(9,20,44,0.22) 100%),
+        linear-gradient(100deg,
+            rgba(9,17,33,0.95) 0%,
+            rgba(9,17,33,0.82) 40%,
+            rgba(9,17,33,0.35) 72%,
+            rgba(9,17,33,0.20) 100%),
         url("__BG__");
     background-size: cover, cover;
     background-position: center, center right;
 }
+
+/* Sidebar - same artwork cropped to the bulb, fading to solid at the
+   bottom so the dropdowns keep a clean surface to sit on.
+   !important is needed to beat the flat colour set further up. */
 [data-testid="stSidebar"] {
     background-image:
         linear-gradient(180deg,
-            rgba(2,5,9,0.97) 0%,
-            rgba(2,5,9,0.99) 65%,
-            rgba(2,5,9,1.00) 100%),
+            rgba(15,23,42,0.90) 0%,
+            rgba(15,23,42,0.96) 60%,
+            rgba(15,23,42,0.99) 100%),
         url("__SIDE__") !important;
     background-size: cover !important;
     background-position: 32% center !important;
@@ -692,81 +669,48 @@ if BG_URI:
 
 
 # ---------------------------
-# Sidebar â€” Model Selection
+# Sidebar - Model Selection
 # ---------------------------
 with st.sidebar:
     st.markdown(
-        "<div style='padding:1.4rem 0 0.6rem; font-size:0.95rem; font-weight:800;"
-        " color:#E2E8F0; letter-spacing:-0.01em;'>âš™ Models</div>",
+        "<div style='padding:1.2rem 0 0.5rem; font-size:1rem; font-weight:800; color:#F1F5F9;'>⚙️ Model Selection</div>",
         unsafe_allow_html=True,
     )
-    st.markdown(
-        "<div style='height:1px; background:rgba(255,255,255,0.06); margin-bottom:1rem;'></div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<div style='height:1px; background:#334155; margin-bottom:1rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown(
-        "<div style='font-size:0.65rem; font-weight:700; color:#334155;"
-        " text-transform:uppercase; letter-spacing:0.10em; margin-bottom:0.35rem;'>"
-        "Text</div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<div style='font-size:0.7rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem;'>Text Model</div>", unsafe_allow_html=True)
     selected_text_model  = st.selectbox("Text model",  list(TEXT_MODELS.keys()),  label_visibility="collapsed")
 
-    st.markdown(
-        "<div style='height:1px; background:rgba(255,255,255,0.05); margin:0.8rem 0;'></div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<div style='font-size:0.65rem; font-weight:700; color:#334155;"
-        " text-transform:uppercase; letter-spacing:0.10em; margin-bottom:0.35rem;'>"
-        "Image</div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<div style='height:1px; background:#334155; margin:0.8rem 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:0.7rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem;'>Image Model</div>", unsafe_allow_html=True)
     selected_image_model = st.selectbox("Image model", list(IMAGE_MODELS.keys()), label_visibility="collapsed")
 
-    st.markdown(
-        "<div style='height:1px; background:rgba(255,255,255,0.05); margin:0.8rem 0;'></div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<div style='font-size:0.65rem; font-weight:700; color:#334155;"
-        " text-transform:uppercase; letter-spacing:0.10em; margin-bottom:0.35rem;'>"
-        "Audio</div>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<div style='height:1px; background:#334155; margin:0.8rem 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:0.7rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem;'>Audio Model</div>", unsafe_allow_html=True)
     selected_audio_model = st.selectbox("Audio model", list(AUDIO_MODELS.keys()), label_visibility="collapsed")
 
+    st.markdown("<div style='height:1px; background:#334155; margin:1rem 0 0.5rem;'></div>", unsafe_allow_html=True)
     st.markdown(
-        "<div style='height:1px; background:rgba(255,255,255,0.05); margin:1rem 0 0.6rem;'></div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        f"<div style='font-size:0.7rem; color:#1E293B; line-height:1.7;"
-        f" font-family:JetBrains Mono, monospace;'>"
-        f"<span style='color:#1D3A5C;'>{TEXT_MODELS[selected_text_model]['id']}</span><br>"
-        f"<span style='color:#1D3A5C;'>{IMAGE_MODELS[selected_image_model]['id']}</span><br>"
-        f"<span style='color:#1D3A5C;'>{AUDIO_MODELS[selected_audio_model]['id']}</span>"
+        f"<div style='font-size:0.75rem; color:#475569; line-height:1.6;'>"
+        f"<b style='color:#94A3B8;'>Text</b><br>{TEXT_MODELS[selected_text_model]['id']}<br><br>"
+        f"<b style='color:#94A3B8;'>Image</b><br>{IMAGE_MODELS[selected_image_model]['id']}<br><br>"
+        f"<b style='color:#94A3B8;'>Audio</b><br>{AUDIO_MODELS[selected_audio_model]['id']}"
         f"</div>",
         unsafe_allow_html=True,
     )
 
-    st.markdown(
-        "<div style='height:1px; background:rgba(255,255,255,0.05); margin:1.2rem 0 0.8rem;'></div>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<div style='font-size:0.65rem; font-weight:700; color:#334155;"
-        " text-transform:uppercase; letter-spacing:0.10em; margin-bottom:0.5rem;'>"
-        "Scoring</div>",
-        unsafe_allow_html=True,
-    )
+    # ---- Scoring controls
+    st.markdown("<div style='height:1px; background:#334155; margin:1.2rem 0 0.8rem;'></div>",
+                unsafe_allow_html=True)
+    st.markdown("<div style='font-size:0.7rem; font-weight:700; color:#64748B; "
+                "text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem;'>"
+                "Scoring</div>", unsafe_allow_html=True)
 
     do_quality = st.checkbox("Quality + likelihood ratio", value=False,
                              help="Q_text / Q_image / Q_audio plus the likelihood-ratio "
                                   "score. Loads ~3 GB on first use. r = 0.1604.")
     do_judge = st.checkbox("LLM judge (Gemini)", value=False,
-                           help="Sends the generated triple to Gemini for a 1â€“5 rating. "
+                           help="Sends the generated triple to Gemini for a 1-5 rating. "
                                 "No local models needed.")
 
 
@@ -781,10 +725,12 @@ if "history" not in st.session_state:
 # Page Header
 # ---------------------------
 st.markdown(
-    '<div class="hero">'
-    '<div class="hero-title">AI Content Generator</div>'
-    '<div class="hero-sub">One prompt &rarr; text &middot; image &middot; audio</div>'
-    '</div>',
+    """
+<div class="hero">
+    <div class="hero-title">AI Content Generator</div>
+    <div class="hero-sub">One prompt &rarr; text &middot; image &middot; audio</div>
+</div>
+""",
     unsafe_allow_html=True,
 )
 
@@ -797,10 +743,10 @@ with st.form("prompt_form", clear_on_submit=True):
     user_input = st.text_area(
         "prompt",
         height=90,
-        placeholder="Describe a scene, topic, or idea â€” e.g. A mountain lake surrounded by pine trees at sunrise",
+        placeholder="Describe a scene, topic, or idea - e.g. A mountain lake surrounded by pine trees at sunrise",
         label_visibility="collapsed",
     )
-    submitted = st.form_submit_button("âœ¦  Generate text Â· image Â· audio", type="primary")
+    submitted = st.form_submit_button("✦  Generate text · image · audio", type="primary")
 st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -836,14 +782,15 @@ if submitted and user_input.strip():
             audio_out, audio_err = generate_audio(text_out or user_input, audio_model_id)
             audio_time = time.perf_counter() - t2
 
+    # ---- Scoring (only when requested, and only if all three outputs exist)
     scores = None
     judge = None
     have_all = bool(text_out and image_out and audio_out)
 
     if (do_quality or do_judge) and not have_all:
-        st.warning("Scoring skipped â€” it needs all three outputs to succeed.")
+        st.warning("Scoring skipped - it needs all three outputs to succeed.")
     elif do_quality and have_all:
-        with st.spinner("Scoring outputsâ€¦"):
+        with st.spinner("Scoring outputs..."):
             t3 = time.perf_counter()
             scores = compute_scores(user_input, text_out, image_out, audio_out,
                                     spoken_text=tts_text(text_out or user_input))
@@ -851,7 +798,7 @@ if submitted and user_input.strip():
                 scores["score_time"] = time.perf_counter() - t3
 
     if do_judge and have_all:
-        with st.spinner("Asking the judgeâ€¦"):
+        with st.spinner("Asking the judge..."):
             judge, judge_err = llm_judge(
                 user_input, text_out, image_out, audio_out,
                 (scores or {}).get("transcript", ""),
@@ -884,7 +831,7 @@ if submitted and user_input.strip():
 # ---------------------------
 if not st.session_state.history:
     art = (f'<img class="empty-art" src="{EMPTY_URI}" alt="">'
-           if EMPTY_URI else '<div class="empty-icon">âœ¦</div>')
+           if EMPTY_URI else '<div class="empty-icon">✦</div>')
     st.markdown(f"""
     <div class="empty-state">
         {art}
@@ -893,81 +840,80 @@ if not st.session_state.history:
     """, unsafe_allow_html=True)
 
 for entry in reversed(st.session_state.history):
-    st.markdown(f"<div class='prompt-chip'>&#x2764; {entry['prompt']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='prompt-chip'>💬 {entry['prompt']}</div>", unsafe_allow_html=True)
 
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        st.markdown(f'<div class="card-label label-text">&#x25C6; Text &mdash; {entry.get("text_model","")}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="card-label label-text">✦ Text — {entry.get("text_model","")}</div>', unsafe_allow_html=True)
         if entry.get("text_err"):
             st.error(entry["text_err"])
         elif entry.get("text"):
             st.markdown(
-                f"<div style='color:#94A3B8; font-size:0.93rem; line-height:1.7;'>{entry['text']}</div>",
+                f"<div style='color:#1E293B; font-size:0.93rem; line-height:1.6;'>{entry['text']}</div>",
                 unsafe_allow_html=True,
             )
             st.caption(f"Generated in {entry['text_time']:.1f}s")
 
     with c2:
-        st.markdown(f'<div class="card-label label-image">&#x25C6; Image &mdash; {entry.get("image_model","")}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="card-label label-image">✦ Image — {entry.get("image_model","")}</div>', unsafe_allow_html=True)
         if entry.get("image_err"):
             st.error(entry["image_err"])
         elif entry.get("image"):
-            st.image(entry["image"], use_column_width=True)
+            st.image(entry["image"], use_container_width=True)
             st.caption(f"Generated in {entry['image_time']:.1f}s")
 
     with c3:
-        st.markdown(f'<div class="card-label label-audio">&#x25C6; Audio &mdash; {entry.get("audio_model","")}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="card-label label-audio">✦ Audio — {entry.get("audio_model","")}</div>', unsafe_allow_html=True)
         if entry.get("audio_err"):
             st.error(entry["audio_err"])
         elif entry.get("audio"):
             st.audio(entry["audio"], format="audio/wav")
             st.caption(f"Generated in {entry['audio_time']:.1f}s")
 
+    # ---- Per-generation metrics
     sc = entry.get("scores")
     jd = entry.get("judge")
     if sc or jd:
         st.markdown("<div style='height:0.6rem;'></div>", unsafe_allow_html=True)
 
         if sc and sc.get("error"):
-            st.warning(f"Scoring failed â€” {sc['error']}")
+            st.warning(f"Scoring failed - {sc['error']}")
         elif sc:
             m1, m2, m3, m4 = st.columns(4)
             m1.metric("Q_text",  f"{sc['q_text']:.4f}", help="BERTScore(generated text, prompt)")
             m2.metric("Q_image", f"{sc['q_image']:.4f}",
                       help=f"quality_pair(CLIP {sc['clip']:.3f}, aesthetic {sc['aesthetic']:.3f})")
             m3.metric("Q_audio", f"{sc['q_audio']:.4f}",
-                      help="quality_pair(semantic, 1 âˆ’ WER) on the Whisper transcript")
+                      help="quality_pair(semantic, 1 - WER) on the Whisper transcript")
             if "lr_score" in sc:
                 verdict = "likely Good" if sc["lr_score"] > 0 else "likely Not-Good"
                 m4.metric("Likelihood ratio", f"{sc['lr_score']:+.3f}", delta=verdict,
                           delta_color="normal" if sc["lr_score"] > 0 else "inverse",
-                          help=f"S(p) = Î£ [log P(fáµ¢|Good) âˆ’ log P(fáµ¢|Not-Good)], "
+                          help=f"S(p) = sum [log P(fi|Good) - log P(fi|Not-Good)], "
                                f"computed on {LR_PARAMS['label']}. >0 predicts Good.")
             else:
-                m4.metric("Likelihood ratio", "â€”", help="Enable 'Quality scores'")
+                m4.metric("Likelihood ratio", "—", help="Enable 'Quality scores'")
 
         if jd:
             if jd.get("error"):
-                st.warning(f"Judge unavailable â€” {jd['error']}")
+                st.warning(f"Judge unavailable - {jd['error']}")
             else:
                 j1, j2, j3, j4 = st.columns(4)
-                j1.metric("Judge â€” overall", f"{jd.get('overall','?')}/5")
-                j2.metric("Judge â€” text",    f"{jd.get('text','?')}/5")
-                j3.metric("Judge â€” image",   f"{jd.get('image','?')}/5")
-                j4.metric("Judge â€” audio",   f"{jd.get('audio','?')}/5")
+                j1.metric("Judge — overall", f"{jd.get('overall','?')}/5")
+                j2.metric("Judge — text",    f"{jd.get('text','?')}/5")
+                j3.metric("Judge — image",   f"{jd.get('image','?')}/5")
+                j4.metric("Judge — audio",   f"{jd.get('audio','?')}/5")
                 if jd.get("reasoning"):
                     st.caption(f"Judge: {jd['reasoning']}")
 
+        # Reliability caveat - r is a corpus statistic, not a per-prompt value
         if sc and "lr_score" in sc:
             st.caption(
                 f"Likelihood ratio: r = {LR_PARAMS['r']:.2f} against the judge over 500 prompts "
-                f"({LR_PARAMS['pairwise']:.0f}% pairwise, 50% = chance) â€” indicative, not authoritative."
+                f"({LR_PARAMS['pairwise']:.0f}% pairwise, 50% = chance) - indicative, not authoritative."
             )
         if sc and sc.get("score_time"):
             st.caption(f"Scored in {sc['score_time']:.1f}s")
 
     st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
-
-
-
