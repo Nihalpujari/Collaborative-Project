@@ -11,24 +11,21 @@
 
 Give it one short prompt. Get back three things at once.
 
-The system takes a text description — *"an owl librarian wearing glasses"* — and returns a written paragraph about it, an AI-generated image of it, and a spoken audio narration of that paragraph. Three separate models do the work independently, each from the same prompt, and their outputs are shown together in a live Streamlit web app.
+The system takes a text description — *"an owl librarian wearing glasses"* — and returns a written paragraph about it, an AI-generated image of it, and a spoken audio narration of that paragraph. Three separate models do the work independently, each from the same prompt, and their outputs are shown together in a live Gradio web app.
 
 The harder problem — and the main contribution — is **evaluating whether the three outputs actually match each other**. Nothing guarantees they will, because each model never sees what the others produced. We built a five-layer evaluation pipeline that compares three scoring methods (averaging, Naive Bayes, Likelihood Ratio) against ratings from an LLM judge across 500 prompts.
 
 ---
 
-## Live Demo (Streamlit App)
+## Live Demo (Gradio App)
 
 ```bash
-# 1. Start the LR scorer server (run from Desktop — avoids a Python path conflict)
-cd %USERPROFILE%\OneDrive\Desktop
-python -m uvicorn lr_scorer:app --port 8000
-
-# 2. Start the frontend
-streamlit run benchmarking/frontend.py
+# Start the app — automatically probes the 9-account Cloudflare pool and picks
+# a live account, then launches the Gradio UI
+python run_trio_local.py
 ```
 
-Open **http://localhost:8502** · Enter a prompt · Get text + image + audio + a live LR score badge.
+Open **http://localhost:7860** · Enter a prompt · Get text + image + audio + a live LR score badge.
 
 The badge shows:
 - **Good / Not-Good** — whether the three outputs are coherent with each other
@@ -87,10 +84,14 @@ Collaborative-Project/
 │
 ├── research_papers/           ← reference PDFs
 │
-├── lr_scorer.py               real-time LR scorer FastAPI server (for the live app)
+├── scoring/                   ← final LR approach (the live scorer)
+│   ├── lr_scorer.py           FastAPI server — POST /score, GET /params
+│   └── parameter.txt          derivation notes: TSAS → WTSAS → NB → LR evolution
+│
+├── hf_app.py                  main Gradio app (text + image + audio + live scoring)
+├── run_trio_local.py          local launcher — probes 9-account Cloudflare pool
 ├── config.example.py          API key template (safe to commit)
-├── requirements.txt
-└── parameter.txt              hyperparameter notes
+└── requirements.txt
 ```
 
 ---
@@ -157,11 +158,21 @@ Likelihood Ratio score (best method)
 
 Trained on 500 prompts with leave-one-out cross-validation. `Good` = judge mean > 3.5.
 
+**Pipeline parameters** (f1/f2/f3 = ImageBind-weighted cross-modal features):
+
 | Feature | μ⁺ (Good) | σ⁺ | μ⁻ (Not-Good) | σ⁻ |
 |---------|-----------|-----|--------------|-----|
 | f1 | 0.3062 | 0.0344 | 0.2902 | 0.0358 |
 | f2 | 0.0545 | 0.0416 | 0.0532 | 0.0421 |
 | f3 | 0.0487 | 0.0274 | 0.0468 | 0.0280 |
+
+**Live-app parameters** (s1/s2/s3 = BERTScore / CLIP similarity / audio quality — lighter features that run in real time without ImageBind):
+
+| Feature | μ⁺ (Good) | σ⁺ | μ⁻ (Not-Good) | σ⁻ |
+|---------|-----------|-----|--------------|-----|
+| s1 (BERTScore) | 0.8400 | 0.0088 | 0.8372 | 0.0097 |
+| s2 (CLIP sim) | 0.4656 | 0.0255 | 0.4585 | 0.0245 |
+| s3 (audio quality) | 0.8723 | 0.0153 | 0.8706 | 0.0153 |
 
 ---
 
@@ -169,9 +180,9 @@ Trained on 500 prompts with leave-one-out cross-validation. `Good` = judge mean 
 
 | Modality | Model | Provider |
 |----------|-------|----------|
-| Text | Llama 3.1 8B Instruct | Cloudflare Workers AI |
+| Text | Llama 4 Scout 17B (default) | Cloudflare Workers AI |
 | Image | FLUX.1 [schnell] | Cloudflare Workers AI |
-| Audio | MeloTTS | Cloudflare Workers AI |
+| Audio | Deepgram Aura-1 (default) | Cloudflare Workers AI |
 | Judge | Gemini 1.5 Flash Lite | Google AI Studio |
 | Coherence | ImageBind-Huge | Meta AI (local) |
 | Quality | CLIP ViT-B/32 + CLAP | OpenAI / LAION (local) |
