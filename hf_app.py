@@ -3,7 +3,8 @@ Trio — multimodal AI generator for Hugging Face Spaces
 Reads credentials from HF Secrets (Settings → Variables and secrets).
 """
 
-import os, base64, time, io, math, tempfile, struct, re, json, requests
+import os, base64, time, io, math, tempfile, struct, re, json, requests, secrets as _tok
+from collections import OrderedDict
 from pathlib import Path
 
 import gradio as gr
@@ -356,6 +357,30 @@ gradio-app, .gradio-container {
 /* Hide Gradio footer */
 footer, .built-with { display: none !important; }
 
+/* Tricoherence verdict pill, in place of a 0-1 bar: S(p) is an unbounded
+   log-ratio, so a percentage meter would be meaningless for it. */
+.tp-verdict {
+  font: 500 9.5px/1 "IBM Plex Mono", monospace; letter-spacing: .12em;
+  text-transform: uppercase; padding: 4px 7px; border-radius: 2px;
+  border: 1px solid var(--rule-str); color: var(--ink-45); background: #fff;
+  white-space: nowrap;
+}
+.tp-verdict.is-good { border-color: var(--voice); color: var(--voice); background: var(--voice-soft); }
+.tp-verdict.is-bad  { border-color: var(--wait);  color: var(--wait);  background: var(--wait-soft); }
+.tp-appr-n { align-items: baseline; }
+
+
+/* typewriter caret - the design's blink keyframes, borrowed from .dot3 */
+.tp-caret::after {
+  content: ""; display: inline-block; width: 7px; height: 1.05em;
+  margin-left: 2px; background: var(--accent); vertical-align: -2px;
+  animation: tp-blink 1s steps(1) infinite;
+}
+/* while typing, hold the final height so the card does not grow line by line
+   and shove the coherence panel down the page on every frame */
+.tp-body[data-tw][data-typing] { min-height: var(--tw-h, auto); }
+
+
 /* ── Result-page detail (local build) ────────────────────────────────────── */
 
 /* prompt echo: the form is hidden on the results page, so this is the only
@@ -401,9 +426,6 @@ footer, .built-with { display: none !important; }
   .tp-results .tp-card { animation-delay: 0ms !important; }
 }
 
-
-/* Typewriter: pin card height while text is being revealed */
-.tp-body[data-tw][data-typing] { min-height: var(--tw-h, 0); overflow: hidden; }
 
 /* ── Empty-state preview + a Gradio artefact fix (local build) ───────────── */
 
@@ -486,6 +508,154 @@ if (!window._trioSetup) {
     });
   };
 
+  // ── Typewriter reveal for the generated paragraph ───────────────────────
+  // The model returns the whole paragraph at once, so this is a reveal, not a
+  // token stream: the markup is already in the DOM and we walk its text nodes
+  // blanking and then restoring them. Doing it that way keeps the headings,
+  // bold runs and paragraph breaks that markdown produced - typing into
+  // textContent would flatten all of it.
+  window._trioTyped = null;
+
+  window.trioTypewriter = function(el) {
+    if (!el) return;
+
+    // collect every text node, in order, and remember what it said
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    var parts = [], node;
+    while ((node = walker.nextNode())) {
+      if (node.nodeValue && node.nodeValue.length) {
+        parts.push({ node: node, text: node.nodeValue });
+      }
+    }
+    if (!parts.length) return;
+
+    var total = parts.reduce(function(n, p) { return n + p.text.length; }, 0);
+
+    // reduced motion, or a suspiciously huge paragraph: just show it
+    var reduce = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || total > 6000) return;
+
+    // pin the finished height first, so the card does not grow line by line
+    // and push everything below it down on every frame
+    el.style.setProperty('--tw-h', el.getBoundingClientRect().height + 'px');
+    el.setAttribute('data-typing', '');
+
+    parts.forEach(function(p) { p.node.nodeValue = ''; });
+
+    // Fixed duration rather than a fixed character rate: paragraphs vary from
+    // ~400 to ~1200 characters, and a constant rate makes the long ones crawl.
+    // TYPE_MS is the knob - raise it to slow the reveal down, lower to speed up.
+    // Short paragraphs finish sooner than this, because the per-frame budget
+    // bottoms out at one character.
+    var TYPE_MS = 3200, FRAME = 16;
+    var perFrame = Math.max(1, Math.ceil(total / (TYPE_MS / FRAME)));
+
+    var pi = 0, ci = 0;
+    function tick() {
+      var budget = perFrame;
+      while (budget > 0 && pi < parts.length) {
+        var p = parts[pi];
+        var take = Math.min(budget, p.text.length - ci);
+        ci += take; budget -= take;
+        p.node.nodeValue = p.text.slice(0, ci);
+
+        // caret rides the element currently being filled
+        var host = p.node.parentElement;
+        if (host && host !== window._trioCaretHost) {
+          if (window._trioCaretHost) window._trioCaretHost.classList.remove('tp-caret');
+          host.classList.add('tp-caret');
+          window._trioCaretHost = host;
+        }
+        if (ci >= p.text.length) { pi++; ci = 0; }
+      }
+      if (pi < parts.length) {
+        requestAnimationFrame(tick);
+      } else {
+        if (window._trioCaretHost) {
+          window._trioCaretHost.classList.remove('tp-caret');
+          window._trioCaretHost = null;
+        }
+        el.removeAttribute('data-typing');
+        el.style.removeProperty('--tw-h');
+      }
+    }
+    requestAnimationFrame(tick);
+  };
+
+  // Watch the results area. generate() yields twice - once when the three
+  // lanes finish and again ~25s later with the scores - and the second yield
+  // replaces the same markup. Without remembering what was already typed, the
+  // paragraph would type itself a second time when the coherence panel lands.
+  window.trioWatchResults = function() {
+    var area = document.querySelector('#trio-results-area');
+    if (!area || area._trioObserved) return;
+    area._trioObserved = true;
+    new MutationObserver(function() {
+      var el = area.querySelector('[data-tw]');
+      if (!el) return;
+      var text = el.textContent.trim();
+      if (!text || text === window._trioTyped) return;
+      window._trioTyped = text;
+      window.trioTypewriter(el);
+    }).observe(area, { childList: true, subtree: true });
+  };
+
+  // ── Elapsed timer ───────────────────────────────────────────────────────
+  // The status used to show three blinking dots, which look identical at one
+  // second and at thirty. A counting clock tells you it is still working and
+  // roughly how long this one is taking.
+  window._trioTimer = null;
+
+  window.trioStartTimer = function(label) {
+    window.trioStopTimer();
+    var el = document.getElementById('trio-status');
+    if (!el) return;
+    var t0 = Date.now();
+    var render = function() {
+      var s = (Date.now() - t0) / 1000;
+      el.textContent = (label ? label + ' ' : '') + s.toFixed(1) + 's';
+    };
+    render();
+    window._trioTimer = setInterval(render, 100);
+  };
+
+  window.trioStopTimer = function() {
+    if (window._trioTimer) { clearInterval(window._trioTimer); window._trioTimer = null; }
+  };
+
+  // ── Retry just the audio lane ───────────────────────────────────────────
+  // The old button called trioGenerate(), which re-ran all three models: the
+  // label was wrong, it cost triple the neurons, and the image changed under
+  // someone who was happy with it. The server keeps the finished text and
+  // image against this token and only calls the voice model.
+  window.trioRetryAudio = function() {
+    var meta = document.getElementById('trio-gen-meta');
+    var token = meta && meta.getAttribute('data-token');
+    if (!token) { trioGenerate(); return; }   // nothing cached: full run
+
+    var ta = document.querySelector('#trio-data-hidden textarea');
+    if (!ta) return;
+    var data = {
+      retry: 'audio',
+      token: token,
+      audio_model: (document.getElementById('trio-audio-sel') || {value: ''}).value || '',
+      scoring: false
+    };
+    var setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
+    setter.call(ta, JSON.stringify(data));
+    ta.dispatchEvent(new Event('input', {bubbles: true}));
+
+    var goBtn = document.getElementById('trio-go');
+    if (goBtn) goBtn.disabled = true;
+    window.trioStartTimer('retrying audio');
+
+    setTimeout(function() {
+      var btn = document.querySelector('#trio-btn-hidden');
+      if (btn) btn.click();
+    }, 60);
+  };
+
   window.trioSync = function() {
     var data = {
       prompt: (document.getElementById('trio-prompt-field') || {value: ''}).value || '',
@@ -505,7 +675,6 @@ if (!window._trioSetup) {
   // Page 01 — show form, hide results (back-nav from results pages)
   window.trioGoToForm = function() {
     window._trioPage = '01';
-    window._trioTypedTexts.clear();
     var formView = document.getElementById('tp-view-form');
     var resultsArea = document.querySelector('#trio-results-area');
     var againBtn = document.getElementById('trio-again-btn');
@@ -515,10 +684,13 @@ if (!window._trioSetup) {
     if (resultsArea) resultsArea.style.display = 'none';
     if (againBtn) againBtn.style.removeProperty('display');
     if (goBtn) { goBtn.disabled = false; }
+    window.trioStopTimer();
     if (statusEl) statusEl.innerHTML = '~2s · free';
     setTimeout(function() {
       var inp = document.getElementById('trio-prompt-field');
-      if (inp) inp.focus();
+      // select, not just focus: coming back from a result you almost always
+      // want a different prompt, so typing should replace the old one
+      if (inp) { inp.focus(); inp.select(); }
     }, 60);
   };
 
@@ -538,7 +710,7 @@ if (!window._trioSetup) {
     window._trioPage = '02';
     if (goBtn) { goBtn.disabled = true; }
     if (againBtn) againBtn.style.removeProperty('display');
-    if (statusEl) statusEl.innerHTML = '<span class="dot3"><i></i><i></i><i></i></span>';
+    window.trioStartTimer('');
     // Page 02: hide form completely, show results area (Gradio injects loading HTML)
     if (formView) formView.style.display = 'none';
     if (resultsArea) resultsArea.style.display = 'block';
@@ -551,78 +723,19 @@ if (!window._trioSetup) {
     }, 60);
   };
 
-  // ── Typewriter reveal for text cards ─────────────────────────────────────
-  window._trioTypedTexts = new Set();
-
-  window.trioTypewriter = function(el) {
-    if (!el || el.dataset.twDone) return;
-    el.dataset.twDone = '1';
-    var fullText = (el.textContent || '').trim();
-    if (!fullText) return;
-    // Don't re-animate the same text on the scoring update yield
-    if (window._trioTypedTexts.has(fullText)) return;
-    window._trioTypedTexts.add(fullText);
-
-    var nodes = [];
-    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-    var n;
-    while ((n = walker.nextNode())) if (n.textContent.trim()) nodes.push(n);
-    if (!nodes.length) return;
-
-    var h = el.offsetHeight;
-    el.style.setProperty('--tw-h', h + 'px');
-    el.setAttribute('data-typing', '');
-
-    var total = nodes.reduce(function(s, nd) { return s + nd.textContent.length; }, 0);
-    nodes.forEach(function(nd) { nd._twFull = nd.textContent; nd.textContent = ''; });
-
-    var duration = Math.max(900, Math.min(3200, total * 12));
-    var start = null;
-
-    requestAnimationFrame(function step(ts) {
-      if (!start) start = ts;
-      var target = Math.min(total, Math.floor((ts - start) / duration * total));
-      var filled = 0;
-      for (var i = 0; i < nodes.length; i++) {
-        var len = nodes[i]._twFull.length;
-        if (filled + len <= target) {
-          nodes[i].textContent = nodes[i]._twFull; filled += len;
-        } else {
-          nodes[i].textContent = nodes[i]._twFull.slice(0, target - filled); break;
-        }
-      }
-      if (target < total) requestAnimationFrame(step);
-      else el.removeAttribute('data-typing');
-    });
-  };
-
-  window.trioWatchResults = function() {
-    var area = document.querySelector('#trio-results-area');
-    if (!area) { setTimeout(trioWatchResults, 200); return; }
-    new MutationObserver(function() {
-      area.querySelectorAll('[data-tw]:not([data-tw-done])').forEach(function(el) {
-        trioTypewriter(el);
-      });
-    }).observe(area, { childList: true, subtree: true });
-    area.querySelectorAll('[data-tw]:not([data-tw-done])').forEach(function(el) {
-      trioTypewriter(el);
-    });
-  };
+  // draw a fresh set as soon as the DOM is ready, and start watching results
+  function trioBoot() { window.trioShuffleChips(); window.trioWatchResults(); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trioBoot);
+  } else {
+    trioBoot();
+  }
 
   window.trioRunChip = function(text) {
     var inp = document.getElementById('trio-prompt-field');
     if (inp) inp.value = text;
     trioGenerate();
   };
-
-  // Boot: chip shuffle + start typewriter watcher
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      trioShuffleChips(); trioWatchResults();
-    });
-  } else {
-    trioShuffleChips(); trioWatchResults();
-  }
 
   // Poll every 250ms: gen_meta appearing signals generation done → transition to Page 03/04
   setInterval(function() {
@@ -631,6 +744,7 @@ if (!window._trioSetup) {
     var meta = document.getElementById('trio-gen-meta');
     if (!meta) return;
     goBtn.disabled = false;
+    window.trioStopTimer();
     var againBtn = document.getElementById('trio-again-btn');
     var statusEl = document.getElementById('trio-status');
     var done  = parseInt(meta.getAttribute('data-done')  || '0', 10);
@@ -741,7 +855,8 @@ def _build_static_html():
         +       '<span class="tp-out is-audio"><i></i>audio</span>'
         +     '</div>'
         +     '<div class="tp-head-right" style="display:flex;align-items:center;gap:12px">'
-        +       '<div id="trio-status" class="mono" style="font-size:11px;color:#7C7767">~2s &#183; free</div>'
+        +       '<div id="trio-status" class="mono" role="status" aria-live="polite"'
+        +            ' style="font-size:11px;color:#7C7767">~2s &#183; free</div>'
         +       '<button id="trio-again-btn" class="tp-go" type="button"'
         +         ' onclick="trioGoToForm()">'
         +         'Generate again &#8594;'
@@ -796,100 +911,115 @@ def _seg_class(val):
 def _seg_pct(val):
     return f"{int(val * 100)}%" if val is not None else "0%"
 
-def _method_block():
-    return """
+def _fmt(v, places=4):
+    return "&#8212;" if v is None else f"{v:.{places}f}"
+
+
+def _bar(v):
+    """0-1 bar for a quality score; blank when the lane did not run."""
+    if v is None:
+        return '<span class="tp-rbar"><i style="--w:0%"></i></span>'
+    return f'<span class="tp-rbar"><i style="--w:{max(0.0, min(1.0, v)) * 100:.1f}%"></i></span>'
+
+
+def _method_block(scores=None):
+    """The three per-output quality scores, then the combined Tricoherence score.
+
+    Shows THIS generation's numbers rather than the study's leaderboard: the
+    formulas are the ones that produced them, so the panel explains the score
+    on screen instead of describing three approaches the app does not run.
+    """
+    sc = scores or {}
+    qt, qi, qa = sc.get("q_text"), sc.get("q_image"), sc.get("q_audio")
+    lr = sc.get("lr_score")
+
+    if lr is None:
+        verdict, vclass = "&#8212;", ""
+    elif lr > 0:
+        verdict, vclass = "Good", "is-good"
+    else:
+        verdict, vclass = "Not-Good", "is-bad"
+
+    lr_txt = "&#8212;" if lr is None else f"{lr:+.3f}"
+
+    return f"""
 <details class="tp-method">
-  <summary>How we measure this <em>3 approaches &#183; 500 prompts</em></summary>
+  <summary>How we measure this <em>500 prompts</em></summary>
   <div class="tp-method-b">
-    <p class="tp-method-intro">Three ways of turning pairwise quality scores into one number, each scored by Pearson r against human ratings on 500 prompts.</p>
+    <p class="tp-method-intro">Each output is scored against your prompt on its
+    own terms, then the three are combined into one number. &#955; = {LAMBDA}
+    penalises a pair that disagrees with itself, so a picture that is beautiful
+    but off-prompt cannot coast on looks alone.</p>
+
     <div class="tp-appr">
-      <div class="tp-appr-n">Averaging <small>WTSAS</small></div>
-      <div class="tp-f">avg(s1_w, s2_w, s3_w) &#8722; &#955;&#183;variance(...)</div>
-      <div class="tp-r"><span class="tp-rbar"><i style="--w:30.5%"></i></span><b>r 0.0763</b></div>
+      <div class="tp-appr-n">Q_text</div>
+      <div class="tp-f">BERTScore(generated_text, prompt)</div>
+      <div class="tp-r">{_bar(qt)}<b>{_fmt(qt)}</b></div>
     </div>
+
     <div class="tp-appr">
-      <div class="tp-appr-n">Naive Bayes</div>
-      <div class="tp-f">P(Good)&#183;&#928; P(f&#7522; | Good)</div>
-      <div class="tp-r"><span class="tp-rbar"><i style="--w:77.2%"></i></span><b>r 0.1931</b></div>
+      <div class="tp-appr-n">Q_image</div>
+      <div class="tp-f">avg(CLIP, Aesthetic) &#8722; {LAMBDA}&#183;var(CLIP, Aesthetic)</div>
+      <div class="tp-r">{_bar(qi)}<b>{_fmt(qi)}</b></div>
     </div>
+
+    <div class="tp-appr">
+      <div class="tp-appr-n">Q_audio</div>
+      <div class="tp-f">avg(semantic, wer_inv) &#8722; {LAMBDA}&#183;var(semantic, wer_inv)</div>
+      <div class="tp-r">{_bar(qa)}<b>{_fmt(qa)}</b></div>
+    </div>
+
     <div class="tp-appr is-best">
-      <div class="tp-appr-n">Likelihood Ratio <span class="tp-badge">Best &#183; in use</span></div>
+      <div class="tp-appr-n">Tricoherence score
+        <span class="tp-badge">Likelihood ratio</span></div>
       <div class="tp-f">S(p) = &#931;&#7522; [ log P(f&#7522;|Good) &#8722; log P(f&#7522;|Not-Good) ]</div>
-      <div class="tp-r"><span class="tp-rbar"><i style="--w:81.9%"></i></span><b>r 0.2047</b></div>
+      <div class="tp-r"><span class="tp-verdict {vclass}">{verdict}</span><b>{lr_txt}</b></div>
     </div>
-    <div class="tp-scale"><span>0</span><span>&#8212; bars scaled to r = 0.25 &#8212;</span><span>0.25</span></div>
-    <p class="tp-mnote">Likelihood Ratio and Naive Bayes share the same mathematics; both beat averaging because averaging cannot down-weight weak features.</p>
+
+    <p class="tp-mnote">Gaussians for Good and Not-Good were fitted on 500
+    prompts with leave-one-out cross-validation, split at a judge rating of
+    3.5 (273 Good, 227 Not-Good). S(p) above zero means the three quality
+    scores look more like a Good generation than a Not-Good one. A lane that
+    failed is skipped rather than scored zero.</p>
+
     <div class="tp-honest">
       <span>Read this honestly</span>
-      <b>r &#8776; 0.20 is weak</b> &#8212; about 58% pairwise accuracy, where 50% is chance.
-      These metrics rank outputs better than a coin flip, not reliably.
+      <b>r &#8776; 0.16 is weak</b> &#8212; about 57% pairwise accuracy, where 50%
+      is chance. Tricoherence ranks outputs better than a coin flip, not reliably.
     </div>
   </div>
 </details>"""
 
-def _coherence_block(q_text, q_image, q_audio):
-    if q_text is None and q_image is None and q_audio is None:
+def _tricoherence_block(scores=None):
+    sc = scores or {}
+    qt = sc.get("q_text")
+    qi = sc.get("q_image")
+    qa = sc.get("q_audio")
+    lr = sc.get("lr_score")
+
+    if qt is None and qi is None and qa is None:
         return ""
-    lr = LR_PARAMS
-    features = [q_text, q_image, q_audio]
-    valid = [f for f in features if f is not None]
-    avg = sum(valid) / len(valid) if valid else 0
-    coh_label = "is-good" if avg >= 0.5 else "is-mid" if avg >= 0.35 else ""
 
-    has_audio = q_audio is not None
-    if avg >= 0.5:
+    if lr is None:
+        verdict, vclass = "&#8212;", ""
+        read_text = "scoring in progress"
+    elif lr > 0:
+        verdict, vclass = "Good", "is-good"
         read_text = "all three outputs are tracking the same idea"
-    elif avg >= 0.35:
-        read_text = "outputs are related but drifted a little"
     else:
-        read_text = "outputs diverged &#8212; the models didn't agree on direction"
+        verdict, vclass = "Not-Good", "is-bad"
+        read_text = "outputs diverged &#8212; the models didn&#8217;t agree on direction"
 
-    t_i_pct = _seg_pct((q_text + q_image) / 2 if q_text and q_image else None)
-    t_a_pct = _seg_pct((q_text + q_audio) / 2 if q_text and q_audio else None)
-    i_a_pct = _seg_pct((q_image + q_audio) / 2 if q_image and q_audio else None)
-    t_a_cls = "is-off" if not has_audio else _seg_class((q_text + q_audio) / 2 if q_text and q_audio else None)
-    i_a_cls = "is-off" if not has_audio else _seg_class((q_image + q_audio) / 2 if q_image and q_audio else None)
-    t_i_cls = _seg_class((q_text + q_image) / 2 if q_text and q_image else None)
-
-    pair_off   = "is-off" if not has_audio else ""
-    audio_icon = "d-audio" if has_audio else "d-off"
-    ta_w       = t_a_pct if has_audio else "0%"
-    ia_w       = i_a_pct if has_audio else "0%"
-    lr_r       = lr["r"]
-    lr_pw      = lr["pairwise"]
-    t_i_val    = f'{((q_text+q_image)/2):.2f}' if (q_text and q_image) else "&#8212;"
-    t_a_val    = f'{((q_text+q_audio)/2):.2f}' if (q_text and q_audio) else "&#8212;"
-    i_a_val    = f'{((q_image+q_audio)/2):.2f}' if (q_image and q_audio) else "&#8212;"
+    lr_txt = "&#8212;" if lr is None else f"{lr:+.3f}"
 
     return f"""
-<details class="tp-coh">
-  <summary>
-    <span class="tp-coh-k mono">Coherence</span>
-    <span class="tp-coh-n">{avg:.2f}</span>
-    <span class="tp-seg {coh_label}" aria-hidden="true"><i style="--w:{int(avg*100)}%"></i></span>
-    <span class="tp-coh-read">{read_text}</span>
-    <span class="tp-coh-more mono"><span>see</span></span>
-  </summary>
-  <div class="tp-coh-body">
-    <div class="tp-pair">
-      <span class="tp-pair-k mono"><i class="d-text"></i><i class="d-img"></i>text &#8596; image</span>
-      <span class="tp-seg {t_i_cls}" aria-hidden="true"><i style="--w:{t_i_pct}"></i></span>
-      <span class="tp-pair-v mono">{t_i_val}</span>
-    </div>
-    <div class="tp-pair {pair_off}">
-      <span class="tp-pair-k mono"><i class="d-text"></i><i class="{audio_icon}"></i>text &#8596; audio</span>
-      <span class="tp-seg {t_a_cls}" aria-hidden="true"><i style="--w:{ta_w}"></i></span>
-      <span class="tp-pair-v mono">{t_a_val}</span>
-    </div>
-    <div class="tp-pair {pair_off}">
-      <span class="tp-pair-k mono"><i class="d-img"></i><i class="{audio_icon}"></i>image &#8596; audio</span>
-      <span class="tp-seg {i_a_cls}" aria-hidden="true"><i style="--w:{ia_w}"></i></span>
-      <span class="tp-pair-v mono">{i_a_val}</span>
-    </div>
-    <p class="tp-coh-foot">The three models never see each other&#8217;s work. <b>r = {lr_r:.4f} &#183; {lr_pw:.0f}% pairwise &#183; weak signal.</b></p>
-  </div>
-</details>
-{_method_block()}"""
+<div class="tp-coh" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 2px;min-height:42px">
+  <span class="tp-coh-k mono">Tricoherence</span>
+  <span class="tp-verdict {vclass}">{verdict}</span>
+  <span class="tp-coh-n">{lr_txt}</span>
+  <span class="tp-coh-read">{read_text}</span>
+</div>
+{_method_block(scores)}"""
 
 def _transcript_block(scores):
     """Whisper's transcript, under the player.
@@ -904,7 +1034,7 @@ def _transcript_block(scores):
     if not t:
         return ""
     if len(t) > 600:
-        t = t[:600].rsplit(" ", 1)[0] + "\u2026"
+        t = t[:600].rsplit(" ", 1)[0] + "…"
     safe = (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
     return ('<div class="tp-transcript">'
             '<div class="tp-transcript-h mono">Transcript</div>'
@@ -999,15 +1129,14 @@ def _result_cards_html(text_out, text_err, text_t,
             '<div class="tp-body"><div class="tp-fail">'
             '<p><b>The voice model didn&#8217;t answer.</b> It&#8217;s the flakiest of the three '
             'and this happens now and then. Your paragraph and image are unaffected.</p>'
-            '<button class="tp-btn" type="button" onclick="trioGenerate()">Retry audio only</button>'
+            '<button class="tp-btn" type="button" onclick="trioRetryAudio()">Retry audio only</button>'
             '</div></div>'
             '</article>'
         )
 
     coh_html = ""
     if scores and not scores.get("error"):
-        coh_html = _coherence_block(
-            scores.get("q_text"), scores.get("q_image"), scores.get("q_audio"))
+        coh_html = _tricoherence_block(scores)
     elif scores and scores.get("error"):
         coh_html = f'<p style="margin-top:10px;font-size:12px;color:var(--ink-45)">Scoring: {scores["error"]}</p>'
 
@@ -1194,9 +1323,19 @@ def _qpair(a, b):
     return float(min(max(avg-LAMBDA*var, 0), 1))
 
 def _lr(f):
+    """S(p) = sum over available features of log P(f|Good) - log P(f|Not-Good).
+
+    A missing feature is SKIPPED, not scored as 0.0. The fitted sigmas are tiny
+    (sd_good[0] = 0.0088), so substituting zero puts the value ~95 standard
+    deviations from the mean: a failed text lane used to give S = -831, and a
+    failed image gave +8.52 - i.e. losing an output made the result score as
+    strongly "Good". A lane that did not run is simply no evidence either way.
+    """
     p = LR_PARAMS
     s = 0.0
     for i in range(3):
+        if f[i] is None:
+            continue
         s += (((f[i]-p["mu_bad"][i])**2/(2*p["sd_bad"][i]**2))
               - ((f[i]-p["mu_good"][i])**2/(2*p["sd_good"][i]**2))
               + math.log(p["sd_bad"][i]/p["sd_good"][i]))
@@ -1239,13 +1378,27 @@ def compute_scores(prompt, text_out, img_bytes, audio_bytes):
             wer_inv = 1.0 - float(np.clip(jwer(_tts_text(text_out).lower(), (transcript or "").lower()), 0, 1))
             q_audio = _qpair(sem, wer_inv)
         valid = [q for q in [q_text, q_image, q_audio] if q is not None]
-        lr = _lr([q_text or 0, q_image or 0, q_audio or 0]) if len(valid) >= 2 else None
+        lr = _lr([q_text, q_image, q_audio]) if len(valid) >= 2 else None
         return {"q_text": q_text, "q_image": q_image, "q_audio": q_audio,
                 "lr_score": lr, "transcript": transcript}
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
 
 # ── Main generate function ────────────────────────────────────────────────────
+# Holds the text and image of recent generations so "Retry audio only" can
+# call the voice model alone. Without it the button had to re-run all three
+# lanes - roughly triple the neurons, and the image changed underneath a user
+# who was happy with it. Capped; this is a convenience, not storage.
+_LAST_RUNS = OrderedDict()
+_LAST_RUNS_MAX = 20
+
+
+def _remember_run(token, payload):
+    _LAST_RUNS[token] = payload
+    while len(_LAST_RUNS) > _LAST_RUNS_MAX:
+        _LAST_RUNS.popitem(last=False)
+
+
 def generate(data_json):
     """Takes JSON from hidden textbox, yields results HTML only (form stays static)."""
     try:
@@ -1262,6 +1415,39 @@ def generate(data_json):
     if text_model  not in TEXT_MODELS:  text_model  = list(TEXT_MODELS.keys())[0]
     if image_model not in IMAGE_MODELS: image_model = list(IMAGE_MODELS.keys())[0]
     if audio_model not in AUDIO_MODELS: audio_model = list(AUDIO_MODELS.keys())[0]
+
+    # ---- audio-only retry: reuse the cached paragraph and picture ----------
+    if data.get("retry") == "audio":
+        cached = _LAST_RUNS.get(data.get("token") or "")
+        if not cached:
+            yield _wrap_results(
+                '<p style="font-size:12.5px;color:var(--ink-45)">That result has '
+                'expired &#8212; generate again to retry its audio.</p>')
+            return
+
+        prompt = cached["prompt"]
+        yield _wrap_results(_result_cards_html(
+            cached["text_out"], None, cached["text_t"],
+            cached["img_b64"], None, cached["img_t"],
+            None, None, 0.0,          # audio lane shows as pending
+            None, prompt, cached["models"]))
+
+        t0 = time.time()
+        audio_bytes, audio_err, _ = gen_audio(cached["text_out"], AUDIO_MODELS[audio_model])
+        audio_t = time.time() - t0
+        audio_b64 = base64.b64encode(audio_bytes).decode() if audio_bytes else None
+
+        models = dict(cached["models"]); models["audio"] = audio_model
+        done = 2 + (1 if audio_b64 else 0)
+        meta = ('<span id="trio-gen-meta" style="display:none"'
+                f' data-done="{done}" data-total="3" data-time="{audio_t:.1f}"'
+                f' data-token="{data.get("token")}"></span>')
+        yield _wrap_results(_result_cards_html(
+            cached["text_out"], None, cached["text_t"],
+            cached["img_b64"], None, cached["img_t"],
+            audio_b64, audio_err, audio_t,
+            None, prompt, models) + meta)
+        return
 
     if not prompt:
         yield ""
@@ -1288,9 +1474,17 @@ def generate(data_json):
     # Compute state metadata for JS state machine
     done_count = sum(1 for x in [text_out, img_b64, audio_b64] if x is not None)
     total_t    = max(text_t or 0, img_t or 0, audio_t or 0)
+    # keep the finished text and image so the audio lane alone can be retried
+    _token = _tok.token_urlsafe(8)
+    _remember_run(_token, {
+        "prompt": prompt, "text_out": text_out, "text_t": text_t or 0.0,
+        "img_b64": img_b64, "img_t": img_t or 0.0,
+        "models": {"text": text_model, "image": image_model, "audio": audio_model},
+    })
     gen_meta   = (
         '<span id="trio-gen-meta" style="display:none"'
-        f' data-done="{done_count}" data-total="3" data-time="{total_t:.1f}"></span>'
+        f' data-done="{done_count}" data-total="3" data-time="{total_t:.1f}"'
+        f' data-token="{_token}"></span>'
     )
 
     footer = (
