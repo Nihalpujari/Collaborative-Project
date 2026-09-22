@@ -248,21 +248,21 @@ def _pcm_to_wav(pcm_bytes, sample_rate=24000, channels=1, bits=16):
 #
 # Constants below ARE the fitted model. They come from the 500-prompt run
 # (results/all_500_v2_summary.csv and the Gaussians fitted in
-# pipeline/run_v2.py). Nothing is trained at runtime — only the features
+# pipeline/run_v2.py). Nothing is trained at runtime - only the features
 # are computed. Do not hand-edit these without re-running the pipeline.
 # =========================================================================
-# W1, W2, W3 = 7.8666, 2.2790, 0.7796  — learned modality weights from the
+# W1, W2, W3 = 7.8666, 2.2790, 0.7796  - learned modality weights from the
 # 500-prompt run. Used only to weight the ImageBind coherence features, which
 # the app no longer computes. Kept here as a record of the fitted values.
 JUDGE_SPLIT = 3.5                              # Good if judge rating > 3.5
 LAMBDA      = 0.5
 
 # Fitted likelihood-ratio parameters (V1), validated on the 500 prompts with
-# leave-one-out CV. Features = [Q_text, Q_image, Q_audio] — no extra models.
+# leave-one-out CV. Features = [Q_text, Q_image, Q_audio] - no extra models.
 #
 # The study also fitted a V2 variant on quality-weighted ImageBind coherence
 # features [s1_w, s2_w, s3_w]: r = 0.2046 vs. 0.1604 here. That looks better
-# until you check ranking accuracy — 57.5% vs. 57.4%, a 0.1pp gain for a 4.5 GB
+# until you check ranking accuracy - 57.5% vs. 57.4%, a 0.1pp gain for a 4.5 GB
 # download. The app therefore ships V1 only; V2 stays in the benchmark table
 # below as a published result. See the report for the full comparison.
 LR_PARAMS = {
@@ -297,7 +297,7 @@ def likelihood_ratio(f):
     return float(s)
 
 
-@st.cache_resource(show_spinner="Loading quality models (first run only)…")
+@st.cache_resource(show_spinner="Loading quality models (first run only)...")
 def _load_quality_models():
     from transformers import CLIPModel, CLIPProcessor, pipeline as hf_pipeline
     import whisper
@@ -343,7 +343,7 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
         # transformers 5.x changed get_text_features/get_image_features to return
         # a BaseModelOutputWithPooling whose pooler_output is NOT projected into
         # CLIP's shared space. Take text_embeds/image_embeds off the full forward
-        # instead — those are the projected embeddings the 500-prompt run used.
+        # instead - those are the projected embeddings the 500-prompt run used.
         with torch.no_grad():
             clip_out = M["clip"](input_ids=ti["input_ids"],
                                  attention_mask=ti["attention_mask"],
@@ -355,16 +355,6 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
         q_image = quality_pair(clip_s, float(aes))
 
         # ---- Q_audio : quality_pair(semantic, 1 - WER)
-        # semantic : does the audio's content match the prompt?  (vs. prompt)
-        # WER      : did TTS say what it was asked to say?      (vs. spoken text)
-        # The 500-prompt study's TTS read the prompt itself, so both compared
-        # against the prompt. Here TTS narrates the description, so WER must
-        # use that — see the note in pipeline/process_raw.py for what happens
-        # to Q_audio's baseline when this reference is wrong.
-        # Decode in-memory with soundfile rather than handing whisper a path.
-        # Whisper shells out to ffmpeg for file paths, which isn't installed —
-        # but it accepts a float32 array at 16 kHz directly, so we skip ffmpeg
-        # (and skip writing a temp file to a nearly-full disk).
         import soundfile as sf
         from scipy import signal as scipy_signal
         wav, sr = sf.read(io.BytesIO(audio_bytes), dtype="float32")
@@ -381,7 +371,7 @@ def compute_scores(prompt, text_out, image_bytes, audio_bytes, spoken_text):
         out = {"q_text": q_text, "q_image": q_image, "q_audio": q_audio,
                "clip": clip_s, "aesthetic": float(aes), "transcript": transcript}
 
-        # Likelihood ratio on the quality features — free once the Q scores exist.
+        # Likelihood ratio on the quality features - free once the Q scores exist.
         out["lr_score"] = likelihood_ratio([q_text, q_image, q_audio])
         return out
     except Exception as e:
@@ -438,7 +428,7 @@ def llm_judge(prompt, text_out, image_bytes, audio_bytes, transcript):
                     break                       # 404/400 -> next model, no retry
                 if attempt < 2:
                     _time.sleep(2 ** attempt)   # 1s, 2s
-    return None, f"all judge models unavailable — last error: {last_err}"
+    return None, f"all judge models unavailable - last error: {last_err}"
 
 
 # ---------------------------
@@ -476,7 +466,7 @@ def _asset_uri(filename: str) -> str:
 
 
 # Artwork used around the dashboard. Drop another file into assets/ and
-# change the filename here to restyle — nothing else needs touching.
+# change the filename here to restyle - nothing else needs touching.
 HERO_IMAGE    = "dashboard_bg.webp"   # alternative: "hero_alt.webp"
 SIDEBAR_IMAGE = "dashboard_bg.webp"
 EMPTY_IMAGE   = "empty_state.webp"
@@ -518,8 +508,6 @@ header[data-testid="stHeader"] { background: transparent !important; }
     color: #E2E8F0 !important;
 }
 [data-testid="stSidebar"] .stSelectbox span { color: #E2E8F0 !important; }
-/* Checkbox labels and help icons — with base=light the theme paints these
-   dark, which disappears on the dark sidebar. */
 [data-testid="stSidebar"] [data-testid="stCheckbox"] p,
 [data-testid="stSidebar"] [data-testid="stCheckbox"] span,
 [data-testid="stSidebar"] .stMarkdown p { color: #E2E8F0 !important; }
@@ -528,9 +516,6 @@ header[data-testid="stHeader"] { background: transparent !important; }
 
 .page-title { font-size: 2rem; font-weight: 800; color: #0F172A; }
 
-/* Streamlit follows the OS theme; on macOS dark mode its widgets render
-   white text, which vanishes on this app's light ground. Pin the colours
-   for the widgets we use so they read regardless of the browser theme. */
 [data-testid="stMetricLabel"],
 [data-testid="stMetricLabel"] * { color: #64748B !important; }
 [data-testid="stMetricValue"],
@@ -541,7 +526,6 @@ header[data-testid="stHeader"] { background: transparent !important; }
 [data-testid="stExpander"] summary * { color: #0F172A !important; }
 .stMarkdown p, .stMarkdown li { color: #1E293B; }
 
-/* Hero banner — falls back to a flat gradient if the artwork is missing */
 .hero {
     position: relative;
     border-radius: 18px;
@@ -665,7 +649,7 @@ if BG_URI:
     background-position: center, center right;
 }
 
-/* Sidebar — same artwork cropped to the bulb, fading to solid at the
+/* Sidebar - same artwork cropped to the bulb, fading to solid at the
    bottom so the dropdowns keep a clean surface to sit on.
    !important is needed to beat the flat colour set further up. */
 [data-testid="stSidebar"] {
@@ -685,7 +669,7 @@ if BG_URI:
 
 
 # ---------------------------
-# Sidebar — Model Selection
+# Sidebar - Model Selection
 # ---------------------------
 with st.sidebar:
     st.markdown(
@@ -726,7 +710,7 @@ with st.sidebar:
                              help="Q_text / Q_image / Q_audio plus the likelihood-ratio "
                                   "score. Loads ~3 GB on first use. r = 0.1604.")
     do_judge = st.checkbox("LLM judge (Gemini)", value=False,
-                           help="Sends the generated triple to Gemini for a 1–5 rating. "
+                           help="Sends the generated triple to Gemini for a 1-5 rating. "
                                 "No local models needed.")
 
 
@@ -744,7 +728,7 @@ st.markdown(
     """
 <div class="hero">
     <div class="hero-title">AI Content Generator</div>
-    <div class="hero-sub">One prompt → text · image · audio</div>
+    <div class="hero-sub">One prompt &rarr; text &middot; image &middot; audio</div>
 </div>
 """,
     unsafe_allow_html=True,
@@ -759,7 +743,7 @@ with st.form("prompt_form", clear_on_submit=True):
     user_input = st.text_area(
         "prompt",
         height=90,
-        placeholder="Describe a scene, topic, or idea — e.g. A mountain lake surrounded by pine trees at sunrise",
+        placeholder="Describe a scene, topic, or idea - e.g. A mountain lake surrounded by pine trees at sunrise",
         label_visibility="collapsed",
     )
     submitted = st.form_submit_button("✦  Generate text · image · audio", type="primary")
@@ -804,9 +788,9 @@ if submitted and user_input.strip():
     have_all = bool(text_out and image_out and audio_out)
 
     if (do_quality or do_judge) and not have_all:
-        st.warning("Scoring skipped — it needs all three outputs to succeed.")
+        st.warning("Scoring skipped - it needs all three outputs to succeed.")
     elif do_quality and have_all:
-        with st.spinner("Scoring outputs…"):
+        with st.spinner("Scoring outputs..."):
             t3 = time.perf_counter()
             scores = compute_scores(user_input, text_out, image_out, audio_out,
                                     spoken_text=tts_text(text_out or user_input))
@@ -814,7 +798,7 @@ if submitted and user_input.strip():
                 scores["score_time"] = time.perf_counter() - t3
 
     if do_judge and have_all:
-        with st.spinner("Asking the judge…"):
+        with st.spinner("Asking the judge..."):
             judge, judge_err = llm_judge(
                 user_input, text_out, image_out, audio_out,
                 (scores or {}).get("transcript", ""),
@@ -894,26 +878,26 @@ for entry in reversed(st.session_state.history):
         st.markdown("<div style='height:0.6rem;'></div>", unsafe_allow_html=True)
 
         if sc and sc.get("error"):
-            st.warning(f"Scoring failed — {sc['error']}")
+            st.warning(f"Scoring failed - {sc['error']}")
         elif sc:
             m1, m2, m3, m4 = st.columns(4)
             m1.metric("Q_text",  f"{sc['q_text']:.4f}", help="BERTScore(generated text, prompt)")
             m2.metric("Q_image", f"{sc['q_image']:.4f}",
                       help=f"quality_pair(CLIP {sc['clip']:.3f}, aesthetic {sc['aesthetic']:.3f})")
             m3.metric("Q_audio", f"{sc['q_audio']:.4f}",
-                      help="quality_pair(semantic, 1 − WER) on the Whisper transcript")
+                      help="quality_pair(semantic, 1 - WER) on the Whisper transcript")
             if "lr_score" in sc:
                 verdict = "likely Good" if sc["lr_score"] > 0 else "likely Not-Good"
                 m4.metric("Likelihood ratio", f"{sc['lr_score']:+.3f}", delta=verdict,
                           delta_color="normal" if sc["lr_score"] > 0 else "inverse",
-                          help=f"S(p) = Σ [log P(fᵢ|Good) − log P(fᵢ|Not-Good)], "
+                          help=f"S(p) = sum [log P(fi|Good) - log P(fi|Not-Good)], "
                                f"computed on {LR_PARAMS['label']}. >0 predicts Good.")
             else:
                 m4.metric("Likelihood ratio", "—", help="Enable 'Quality scores'")
 
         if jd:
             if jd.get("error"):
-                st.warning(f"Judge unavailable — {jd['error']}")
+                st.warning(f"Judge unavailable - {jd['error']}")
             else:
                 j1, j2, j3, j4 = st.columns(4)
                 j1.metric("Judge — overall", f"{jd.get('overall','?')}/5")
@@ -923,11 +907,11 @@ for entry in reversed(st.session_state.history):
                 if jd.get("reasoning"):
                     st.caption(f"Judge: {jd['reasoning']}")
 
-        # Reliability caveat — r is a corpus statistic, not a per-prompt value
+        # Reliability caveat - r is a corpus statistic, not a per-prompt value
         if sc and "lr_score" in sc:
             st.caption(
                 f"Likelihood ratio: r = {LR_PARAMS['r']:.2f} against the judge over 500 prompts "
-                f"({LR_PARAMS['pairwise']:.0f}% pairwise, 50% = chance) — indicative, not authoritative."
+                f"({LR_PARAMS['pairwise']:.0f}% pairwise, 50% = chance) - indicative, not authoritative."
             )
         if sc and sc.get("score_time"):
             st.caption(f"Scored in {sc['score_time']:.1f}s")

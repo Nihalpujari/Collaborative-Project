@@ -1,0 +1,12 @@
+gradio>=4.44.0
+requests
+openai
+google-genai
+torch
+transformers
+bert-score
+openai-whisper
+soundfile
+scipy
+jiwer
+Pillow

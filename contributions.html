@@ -1,0 +1,389 @@
+<title>Team Contributions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg:       #F8FAFC;
+  --surface:  #FFFFFF;
+  --border:   #E2E8F0;
+  --muted:    #64748B;
+  --text:     #0F172A;
+  --sub:      #475569;
+  --indigo:   #4F46E5;
+  --tag-bg:   #EEF2FF;
+  --tag-text: #3730A3;
+  --c-namrata: #2563EB;
+  --c-nihal:   #7C3AED;
+  --c-anuj:    #D97706;
+  --c-gourav:  #059669;
+  --c-pramod:  #DB2777;
+  --metric-bg: #F1F5F9;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #0B0F1A;
+    --surface:  #111827;
+    --border:   #1F2937;
+    --muted:    #6B7280;
+    --text:     #F9FAFB;
+    --sub:      #9CA3AF;
+    --indigo:   #818CF8;
+    --tag-bg:   #1E1B4B;
+    --tag-text: #A5B4FC;
+    --metric-bg:#1F2937;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:       #0B0F1A;
+  --surface:  #111827;
+  --border:   #1F2937;
+  --muted:    #6B7280;
+  --text:     #F9FAFB;
+  --sub:      #9CA3AF;
+  --indigo:   #818CF8;
+  --tag-bg:   #1E1B4B;
+  --tag-text: #A5B4FC;
+  --metric-bg:#1F2937;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  padding-inline: 20px;
+  padding-block: 32px 48px;
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+/* Header */
+.page-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  text-wrap: balance;
+  margin-bottom: 0.5rem;
+}
+.page-sub {
+  color: var(--sub);
+  font-size: 0.93rem;
+  max-width: 52ch;
+  margin-bottom: 2.4rem;
+}
+.rule { height: 1px; background: var(--border); margin-bottom: 2.4rem; }
+
+/* Result strip at top */
+.result-strip {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.8rem;
+}
+.metric-tile {
+  background: var(--metric-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.4rem;
+  min-width: 140px;
+}
+.metric-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.metric-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.metric-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+
+/* Person card */
+.person {
+  display: grid;
+  grid-template-columns: 4px 1fr;
+  gap: 0 1.6rem;
+  margin-bottom: 2rem;
+  align-items: start;
+}
+.person-stripe {
+  grid-row: 1 / 99;
+  border-radius: 99px;
+  width: 4px;
+  min-height: 100%;
+  align-self: stretch;
+}
+.person-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+.person-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.person-role {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.person-summary {
+  color: var(--sub);
+  font-size: 0.88rem;
+  margin-bottom: 0.8rem;
+  max-width: 62ch;
+}
+.contrib-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+.contrib-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.7rem;
+  align-items: start;
+  font-size: 0.855rem;
+  color: var(--sub);
+}
+.contrib-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 0.45em;
+  flex-shrink: 0;
+}
+.commits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.commit-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 28ch;
+}
+.section-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2rem 0;
+}
+.section-head {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.6rem;
+}
+
+/* Footer note */
+.footer-note {
+  margin-top: 3rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 1.2rem;
+}
+</style>
+
+<p class="page-eyebrow">M.Sc. ADAI · SRH Heidelberg · September 2026</p>
+<h1 class="page-title">Who Did What</h1>
+<p class="page-sub">Multimodal AI Content Generator — individual contributions derived from git history, the project cookbook, and the final report.</p>
+<div class="rule"></div>
+
+<!-- Key results strip -->
+<div class="result-strip">
+  <div class="metric-tile">
+    <div class="metric-label">Best method</div>
+    <div class="metric-value">LR</div>
+    <div class="metric-note">Likelihood Ratio scorer</div>
+  </div>
+  <div class="metric-tile">
+    <div class="metric-label">Spearman ρ</div>
+    <div class="metric-value">0.195</div>
+    <div class="metric-note">vs LLM judge, n = 500</div>
+  </div>
+  <div class="metric-tile">
+    <div class="metric-label">Prompts scored</div>
+    <div class="metric-value">500</div>
+    <div class="metric-note">LOO cross-validation</div>
+  </div>
+  <div class="metric-tile">
+    <div class="metric-label">Live app</div>
+    <div class="metric-value">3 mods</div>
+    <div class="metric-note">text · image · audio</div>
+  </div>
+</div>
+
+<p class="section-head">Team contributions</p>
+
+<!-- Namrata -->
+<div class="person">
+  <div class="person-stripe" style="background:var(--c-namrata);"></div>
+  <div>
+    <div class="person-head">
+      <span class="person-name">Namrata Bhoyar</span>
+      <span class="person-role" style="background:var(--c-namrata);">Frontend &amp; UI</span>
+    </div>
+    <p class="person-summary">Built the Streamlit application that ties all three generation models together — the live product the professor sees. Also produced the benchmark output visualisations and integrated the dashboard artwork.</p>
+    <ul class="contrib-list">
+      <li><span class="contrib-dot" style="background:var(--c-namrata);"></span><span>Streamlit multimodal generator app (text + image + audio via Cloudflare Workers AI)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-namrata);"></span><span>Dashboard UI design and artwork integration</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-namrata);"></span><span>Benchmark output visualisations (graphs, outputs/)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-namrata);"></span><span>Updated benchmark outputs after pipeline revisions</span></li>
+    </ul>
+    <div class="commits">
+      <span class="commit-chip">add multimodal frontend</span>
+      <span class="commit-chip">updated benchmark outputs</span>
+      <span class="commit-chip">add dashboard artwork</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Nihal -->
+<div class="person">
+  <div class="person-stripe" style="background:var(--c-nihal);"></div>
+  <div>
+    <div class="person-head">
+      <span class="person-name">Nihal Pujari</span>
+      <span class="person-role" style="background:var(--c-nihal);">Evaluation Pipeline &amp; Scoring</span>
+    </div>
+    <p class="person-summary">Designed and ran the core evaluation pipeline — Naive Bayes, Likelihood Ratio, the 500-prompt benchmark, learned weights, and the real-time LR scorer API that runs in the live app. Also owns the project structure and README.</p>
+    <ul class="contrib-list">
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>500-prompt evaluation pipeline (step1_generate → step2_quality → step3_nb_lr)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>Naive Bayes and Likelihood Ratio scoring (V1 + V2, LOO cross-validation)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>Quality-weighted coherence features f1, f2, f3 — learned weights w1=7.87, w2=2.28, w3=0.78</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>Real-time LR scorer FastAPI server (lr_scorer.py) integrated with the live Streamlit app</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>ImageBind cross-modal coherence research (s1, s2, s3)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-nihal);"></span><span>Project restructuring, README, final results comparison</span></li>
+    </ul>
+    <div class="commits">
+      <span class="commit-chip">Restructure project + README</span>
+      <span class="commit-chip">compare the different approach</span>
+      <span class="commit-chip">graphs and other code</span>
+      <span class="commit-chip">gitignore: blanket ignore .env</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Anuj -->
+<div class="person">
+  <div class="person-stripe" style="background:var(--c-anuj);"></div>
+  <div>
+    <div class="person-head">
+      <span class="person-name">Anuj Kamble</span>
+      <span class="person-role" style="background:var(--c-anuj);">Infrastructure &amp; Benchmarking</span>
+    </div>
+    <p class="person-summary">Set up the Cloudflare Workers AI integration and benchmarked it against GPT-4, Mistral, and Groq. Fixed the MeloTTS audio-retry failure (25% drop rate), wrote the quota and API documentation, and managed requirements.</p>
+    <ul class="contrib-list">
+      <li><span class="contrib-dot" style="background:var(--c-anuj);"></span><span>Cloudflare Workers AI API setup (credentials, endpoints, config)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-anuj);"></span><span>Provider benchmarking — Cloudflare vs GPT-4 / Mistral / Groq / Cerebras</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-anuj);"></span><span>MeloTTS audio-retry fix (3-attempt backoff for ~25% intermittent failures)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-anuj);"></span><span>Quota documentation, requirements.txt, API reference docs</span></li>
+    </ul>
+    <div class="commits">
+      <span class="commit-chip">Cloudflare API setup</span>
+      <span class="commit-chip">quota + requirements docs</span>
+      <span class="commit-chip">audio-retry fix</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Gourav -->
+<div class="person">
+  <div class="person-stripe" style="background:var(--c-gourav);"></div>
+  <div>
+    <div class="person-head">
+      <span class="person-name">Gourav Somanna</span>
+      <span class="person-role" style="background:var(--c-gourav);">Image Quality Scoring</span>
+    </div>
+    <p class="person-summary">Validated the CLIP image scorer end-to-end across 56/56 prompts, built and passed the mismatched-pair baseline test, produced the image_scores.csv with CLIPScore column, and fixed credentials security in test scripts.</p>
+    <ul class="contrib-list">
+      <li><span class="contrib-dot" style="background:var(--c-gourav);"></span><span>CLIP image scorer — validated on 56/56 prompts, all tests passed</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-gourav);"></span><span>Mismatched-pair baseline test (incoherent triples score lower — verified)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-gourav);"></span><span>image_scores.csv with full CLIPScore column</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-gourav);"></span><span>Fixed hardcoded credentials in test scripts; gitignored config.py</span></li>
+    </ul>
+    <div class="commits">
+      <span class="commit-chip">CLIP scoring validated 56/56</span>
+      <span class="commit-chip">mismatched-pair test passed</span>
+      <span class="commit-chip">untrack config.py</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Pramod -->
+<div class="person">
+  <div class="person-stripe" style="background:var(--c-pramod);"></div>
+  <div>
+    <div class="person-head">
+      <span class="person-name">Pramodkumar Shivanna</span>
+      <span class="person-role" style="background:var(--c-pramod);">Audio Quality Scoring</span>
+    </div>
+    <p class="person-summary">Fixed the CLAP audio scorer after a transformers API change broke it — updated the parameter name and handled the wrapped output format, unblocking the audio quality measurement for the entire pipeline.</p>
+    <ul class="contrib-list">
+      <li><span class="contrib-dot" style="background:var(--c-pramod);"></span><span>CLAP audio scorer fix — transformers API update (audios→audio param)</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-pramod);"></span><span>Handled wrapped output format from updated transformers pipeline</span></li>
+      <li><span class="contrib-dot" style="background:var(--c-pramod);"></span><span>Audio quality scoring (q_audio) unblocked for full 500-prompt run</span></li>
+    </ul>
+    <div class="commits">
+      <span class="commit-chip">Fix CLAP scoring: transformers API</span>
+      <span class="commit-chip">audios→audio param fix</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Shared work -->
+<p class="section-head">Shared work</p>
+<ul class="contrib-list" style="margin-bottom:0;">
+  <li><span class="contrib-dot" style="background:var(--indigo);"></span><span>LLM judge design and 500-prompt rating (Gemini 1.5 Flash Lite, temperature 0.1)</span></li>
+  <li><span class="contrib-dot" style="background:var(--indigo);"></span><span>Research paper selection and integration (ImageBind, LR Fusion, TSAS, ACL 2025, ICLR 2026)</span></li>
+  <li><span class="contrib-dot" style="background:var(--indigo);"></span><span>Cookbook writeup — honest record of what worked, what was withdrawn, and why</span></li>
+  <li><span class="contrib-dot" style="background:var(--indigo);"></span><span>Final report — objectives, methodology, results, limitations</span></li>
+</ul>
+
+<div class="footer-note">
+  Sources: git log (all branches), Cookbook_unofficial_final.docx §3–8, project_report_final_unofficial.docx §2–8 &nbsp;·&nbsp; SRH Heidelberg, M.Sc. ADAI Case Studies 1
+</div>

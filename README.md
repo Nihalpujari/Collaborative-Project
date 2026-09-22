@@ -1,25 +1,54 @@
-﻿# Tri-Modal Alignment Score (TSAS / WTSAS)
+# Multimodal AI Content Generator
 
-**SRH University of Applied Sciences, Heidelberg**
-M.Sc. Applied Data Science and Artificial Intelligence — Case Studies 1
+**M.Sc. Applied Data Science & Artificial Intelligence — Case Studies 1**
+**SRH University of Applied Sciences, Heidelberg · September 2026**
 
-**Team:** Namrata · Nihal · Pramod · Anuj · Gourav
+**Team:** Namrata Bhoyar · Nihal Pujari · Pramodkumar Shivanna · Anuj Kamble · Gourav Somanna
 
 ---
 
 ## What This Project Does
 
-We evaluate how well Cloudflare Workers AI generates coherent tri-modal content (text + image + audio) from a single text prompt. Given a prompt like *"A fox exploring a cave in a snowy village"*, the system generates a text description, an image, and audio narration — then scores how well the three outputs match each other and how good the overall quality is.
+Give it one short prompt. Get back three things at once.
 
-We compare three automated scoring approaches against ratings from an LLM judge (Gemini):
+The system takes a text description — *"an owl librarian wearing glasses"* — and returns a written paragraph about it, an AI-generated image of it, and a spoken audio narration of that paragraph. Three separate models do the work independently, each from the same prompt, and their outputs are shown together in a live Streamlit web app.
 
-| Approach | Method | Pearson r with LLM Judge |
-|----------|--------|--------------------------|
-| 1 — WTSAS | Quality-weighted tri-modal coherence (ImageBind) | 0.0763 |
-| 2 — Naive Bayes | P(Good) on weighted coherence features, LOO CV | 0.1931 |
-| 3 — Likelihood Ratio | log P(Good) - log P(Rest), LOO CV | **0.2047** |
+The harder problem — and the main contribution — is **evaluating whether the three outputs actually match each other**. Nothing guarantees they will, because each model never sees what the others produced. We built a five-layer evaluation pipeline that compares three scoring methods (averaging, Naive Bayes, Likelihood Ratio) against ratings from an LLM judge across 500 prompts.
 
-**Key finding:** Tri-modal coherence is only weakly predictive of perceived quality (r ≈ 0.20, pairwise accuracy ≈ 57%). Coherence and quality are distinct dimensions of multimodal generation.
+---
+
+## Live Demo (Streamlit App)
+
+```bash
+# 1. Start the LR scorer server (run from Desktop — avoids a Python path conflict)
+cd %USERPROFILE%\OneDrive\Desktop
+python -m uvicorn lr_scorer:app --port 8000
+
+# 2. Start the frontend
+streamlit run benchmarking/frontend.py
+```
+
+Open **http://localhost:8502** · Enter a prompt · Get text + image + audio + a live LR score badge.
+
+The badge shows:
+- **Good / Not-Good** — whether the three outputs are coherent with each other
+- **LR score** — positive means coherent, negative means not
+- **Quality bars** — per-modality quality (text similarity, image–prompt match, audio)
+- **text↔image** — raw cosine similarity between the text and image embeddings
+
+---
+
+## Scoring Results (500 prompts, LOO cross-validation)
+
+| Method | Spearman ρ | Pearson r | Notes |
+|--------|-----------|----------|-------|
+| Likelihood Ratio | **0.195** | **0.205** | Best composite — recommended |
+| Naive Bayes | 0.190 | 0.193 | Statistically tied with LR |
+| TSAS (plain averaging) | 0.137 | 0.121 | No labels needed |
+| WTSAS (quality-weighted) | 0.082 | 0.076 | Withdrawn — weighting hurts |
+| s1 alone (text↔image cosine) | 0.203 | 0.201 | Beats all composites |
+
+**Key finding:** The likelihood ratio is the best composite scorer, but the raw text–image cosine similarity alone beats every composite method. The main result is that coherence and quality are weakly related (ρ ≈ 0.20): a high-quality output does not guarantee that text, image and audio describe the same thing.
 
 ---
 
@@ -28,59 +57,45 @@ We compare three automated scoring approaches against ratings from an LLM judge 
 ```
 Collaborative-Project/
 │
-├── pipeline/                  ← main 500-prompt pipeline (run these in order)
-│   ├── step1_generate.py      step 1: generate text/image/audio via Cloudflare AI
-│   ├── step2_quality.py       step 2: compute Q_text, Q_image, Q_audio + LLM judge
-│   ├── step3_nb_lr.py         step 3: Naive Bayes + Likelihood Ratio on Q features (V1)
-│   ├── imagebind.py           compute ImageBind coherence scores (s1, s2, s3) + WTSAS
-│   ├── run_v1.py              V1 pipeline: NB + LR on raw quality features
-│   ├── run_v2.py              V2 pipeline: NB + LR on quality-weighted coherence features
-│   ├── compare.py             compare all 3 approaches with Pearson r + pairwise accuracy
-│   ├── process_raw.py         merge and clean raw score CSVs
-│   ├── prompts_500.csv        the 500 input prompts
-│   └── .env                   Cloudflare API keys (gitignored — not committed)
-│
-├── results/                   ← all output score CSVs
-│   ├── final_3approaches.csv      KEY RESULT: WTSAS + NB + LR for all 500 prompts
-│   ├── all_500_v2_results.csv     V2 NB (r=0.1931) and LR (r=0.2047) scores
-│   ├── all_500_v2_summary.csv     V2 Pearson r comparison table
-│   ├── imagebind_500.csv          raw s1/s2/s3/TSAS scores, 500 prompts
-│   ├── wtsas_500.csv              WTSAS final scores, 500 prompts
-│   ├── all_500_results.csv        V1 NB + LR scores
-│   └── all_500_summary.csv        V1 Pearson r comparison table
-│
-├── evaluation/                ← 53-prompt evaluation pipeline (earlier work, reference)
-│   ├── imagebind_score.py     original ImageBind scoring (working reference)
-│   ├── full_pipeline.py       end-to-end 53-prompt pipeline
-│   ├── quality_scores.py      CLIP, aesthetic, BERTScore, WER scoring
-│   ├── learn_weights.py       linear regression to learn w1, w2, w3
-│   ├── wtsas.py               WTSAS formula implementation
-│   ├── naive_bayes_score.py   Naive Bayes V1 (raw Q features)
-│   ├── naive_bayes_score_v2.py Naive Bayes V2 (weighted coherence features)
-│   ├── likelihood_ratio_score.py  LR V1
-│   ├── likelihood_ratio_score_v2.py LR V2
-│   ├── llm_judge.py           Gemini judge scoring
-│   ├── aesthetic_weights.pth  pretrained aesthetic scorer weights (gitignored)
-│   └── .env                   Gemini API key (gitignored)
-│
-├── benchmarking/              ← early exploration: Cloudflare vs GPT-4 / Mistral / Groq
+├── benchmarking/              ← Streamlit app + Cloudflare provider benchmarks
+│   ├── frontend.py            the live web app (text + image + audio generator)
 │   ├── cloudflare_benchmark.py
-│   ├── cf_vs_bigplayers.py
-│   ├── cloudflare_visualizations.ipynb
-│   ├── outputs/               56-prompt test outputs (graphs + scores)
-│   └── other_models/          Groq / Mistral / Cerebras benchmarks
+│   ├── cf_vs_bigplayers.py    Cloudflare vs GPT-4 / Mistral / Groq
+│   └── outputs/               56-prompt benchmark graphs + scores
 │
-├── research_papers/           ← reference PDFs (ImageBind, TSAS, LR fusion, etc.)
+├── pipeline/                  ← 500-prompt evaluation pipeline (run in order)
+│   ├── step1_generate.py      generate text/image/audio via Cloudflare AI
+│   ├── step2_quality.py       compute Q_text, Q_image, Q_audio + LLM judge
+│   ├── step3_nb_lr.py         Naive Bayes + Likelihood Ratio scoring
+│   ├── imagebind.py           ImageBind cross-modal coherence (s1, s2, s3)
+│   ├── run_v2.py              full V2 pipeline (best results)
+│   ├── compare.py             final comparison of all approaches
+│   └── prompts_500.csv        the 500 input prompts
 │
-├── config.py                  Cloudflare model IDs and endpoint config
-├── config.example.py          template (safe to commit, no keys)
-├── requirements.txt           Python dependencies
+├── evaluation/                ← earlier 53-prompt evaluation (reference)
+│   ├── imagebind_score.py
+│   ├── quality_scores.py      CLIP, aesthetic, BERTScore, WER scoring
+│   ├── learn_weights.py       linear regression → learned weights w1, w2, w3
+│   ├── naive_bayes_score_v2.py
+│   ├── likelihood_ratio_score_v2.py
+│   └── llm_judge.py           Gemini judge
+│
+├── results/                   ← output CSVs
+│   ├── final_3approaches.csv  KEY RESULT: all three methods, 500 prompts
+│   ├── all_500_v2_results.csv NB and LR scores
+│   └── imagebind_500.csv      raw s1/s2/s3 coherence scores
+│
+├── research_papers/           ← reference PDFs
+│
+├── lr_scorer.py               real-time LR scorer FastAPI server (for the live app)
+├── config.example.py          API key template (safe to commit)
+├── requirements.txt
 └── parameter.txt              hyperparameter notes
 ```
 
 ---
 
-## How to Run
+## How to Run the Evaluation Pipeline
 
 ### Prerequisites
 
@@ -89,89 +104,88 @@ pip install -r requirements.txt
 ```
 
 You also need:
-- A Cloudflare Workers AI account — add keys to `pipeline/.env`
-- A Gemini API key — add to `evaluation/.env`
-- The [ImageBind model](https://github.com/facebookresearch/ImageBind) installed in the repo root
+- Cloudflare Workers AI account → add keys to `pipeline/.env`
+- Gemini API key → add to `evaluation/.env`
+- ImageBind: `pip install git+https://github.com/facebookresearch/ImageBind`
 
-### Step-by-step
+### Steps
 
 ```bash
-# 1. Generate text, image, audio for all 500 prompts
-python pipeline/step1_generate.py
-
-# 2. Compute quality scores + LLM judge ratings
-python pipeline/step2_quality.py
-
-# 3. Run V2 pipeline (best results: NB r=0.193, LR r=0.205)
-python pipeline/run_v2.py
-
-# 4. Compute ImageBind coherence + WTSAS
-python pipeline/imagebind.py
-
-# 5. See the final comparison
-python pipeline/compare.py
+python pipeline/step1_generate.py   # generate 500 × 3 outputs
+python pipeline/step2_quality.py    # quality scores + LLM judge ratings
+python pipeline/run_v2.py           # NB + LR (best: NB ρ=0.190, LR ρ=0.195)
+python pipeline/imagebind.py        # cross-modal coherence
+python pipeline/compare.py          # final results table
 ```
 
 ---
 
-## Scoring Formulas
+## Evaluation Architecture
 
-### Quality scores (per modality)
 ```
-Q_text  = BERTScore(generated_text, prompt)
-Q_image = quality_pair(CLIP_score, aesthetic_score)
-Q_audio = quality_pair(semantic_score, WER_inv)
-
-quality_pair(a, b) = avg(a, b) - 0.5 * variance(a, b)
-```
-
-### ImageBind coherence scores
-```
-s1 = cosine_sim(text_embedding,  image_embedding)   # text <-> image
-s2 = cosine_sim(text_embedding,  audio_embedding)   # text <-> audio
-s3 = cosine_sim(image_embedding, audio_embedding)   # image <-> audio
-TSAS = (s1 + s2 + s3) / 3
-```
-
-### Weighted coherence scores (V2)
-Weights w1, w2, w3 are learned by regressing Q features on judge_mean:
-```
-s1_w = s1 * (w1*Q_text + w2*Q_image) / (w1 + w2)
-s2_w = s2 * (w1*Q_text + w3*Q_audio) / (w1 + w3)
-s3_w = s3 * (w2*Q_image + w3*Q_audio) / (w2 + w3)
-
-Learned: w1=7.87 (text), w2=2.28 (image), w3=0.78 (audio)
-```
-
-### WTSAS (Approach 1)
-```
-WTSAS = avg(s1_w, s2_w, s3_w) - lambda * variance(s1_w, s2_w, s3_w)
-lambda = 1.8  (optimal from 53-prompt sweep)
+Prompt
+  │
+  ├─[Text: Llama 3.1 8B]──[Image: FLUX.1]──[Audio: MeloTTS]
+  │
+  ▼
+Per-modality quality
+  Q_text (sentence-transformer sim)
+  Q_image (CLIP sim)
+  Q_audio (0.75 default / Whisper optional)
+  │
+  ▼
+Cross-modal coherence (ImageBind embeddings)
+  s1 = text ↔ image cosine similarity
+  s2 = text ↔ audio cosine similarity
+  s3 = image ↔ audio cosine similarity
+  │
+  ▼
+Quality-weighted features
+  f1 = s1 × (w1·Qt + w2·Qi) / (w1+w2)    w1=7.87 w2=2.28 w3=0.78
+  f2 = s2 × (w1·Qt + w3·Qa) / (w1+w3)    (learned by linear regression on 500 prompts)
+  f3 = s3 × (w2·Qi + w3·Qa) / (w2+w3)
+  │
+  ▼
+Likelihood Ratio score (best method)
+  S(p) = Σᵢ [ log P(fᵢ|Good) − log P(fᵢ|Not-Good) ]
+  S > 0 → Good   S < 0 → Not-Good
 ```
 
 ---
 
-## Results Summary
+## Likelihood Ratio — Fitted Parameters
 
-```
-Approach                            Pearson r   Pairwise Accuracy
-───────────────────────────────────────────────────────────────────
-WTSAS (coherence only)                0.0763         52.4%
-Naive Bayes on [s1_w, s2_w, s3_w]    0.1931         56.2%
-Likelihood Ratio on [s1_w,s2_w,s3_w] 0.2047         56.6%  <- BEST
-───────────────────────────────────────────────────────────────────
-Random baseline                       0.0000         50.0%
-```
+Trained on 500 prompts with leave-one-out cross-validation. `Good` = judge mean > 3.5.
 
-LR wins on both Pearson r and Spearman r. LOO cross-validation was used throughout for honest generalization estimates.
+| Feature | μ⁺ (Good) | σ⁺ | μ⁻ (Not-Good) | σ⁻ |
+|---------|-----------|-----|--------------|-----|
+| f1 | 0.3062 | 0.0344 | 0.2902 | 0.0358 |
+| f2 | 0.0545 | 0.0416 | 0.0532 | 0.0421 |
+| f3 | 0.0487 | 0.0274 | 0.0468 | 0.0280 |
+
+---
+
+## Models Used
+
+| Modality | Model | Provider |
+|----------|-------|----------|
+| Text | Llama 3.1 8B Instruct | Cloudflare Workers AI |
+| Image | FLUX.1 [schnell] | Cloudflare Workers AI |
+| Audio | MeloTTS | Cloudflare Workers AI |
+| Judge | Gemini 1.5 Flash Lite | Google AI Studio |
+| Coherence | ImageBind-Huge | Meta AI (local) |
+| Quality | CLIP ViT-B/32 + CLAP | OpenAI / LAION (local) |
 
 ---
 
 ## References
 
-See `research_papers/` for the full PDFs.
-
-- Girdhar et al. — *ImageBind: One Embedding Space to Bind Them All* (Meta AI, 2023)
-- Nandakumar et al. — *Likelihood Ratio Fusion*
-- `cosine_sim_tsas.pdf` — TSAS methodology
-- `multimodal_consistency_coherence.pdf` — coherence evaluation background
+| Paper | What we used from it |
+|-------|---------------------|
+| Girdhar et al. — *ImageBind* (Meta, CVPR 2023) | Cross-modal embeddings s1, s2, s3 |
+| Nandakumar et al. — *LR Biometric Fusion* (IEEE TPAMI 2008) | The LR scoring method |
+| Wang et al. — *Multimodal Diffusion for Text–Image–Audio* | TSAS coherence framing |
+| Lu et al. — *Multimodal Consistency* (ACL Findings 2025) | Judge-and-regression design |
+| Dhimoïla et al. — *Cross-Modal Redundancy* (ICLR 2026) | Why s1 ≫ s2 and s3 |
+| Dosovitskiy et al. — *ViT* (ICLR 2021) | Image → vector encoding |
+| Gong et al. — *AST* (2021) | Audio spectrogram preprocessing |
