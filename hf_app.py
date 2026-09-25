@@ -3,6 +3,14 @@ Trio — multimodal AI generator for Hugging Face Spaces
 Reads credentials from HF Secrets (Settings → Variables and secrets).
 """
 
+# Move this script's directory to end of sys.path so stdlib modules (e.g. secrets)
+# are not shadowed by local files like secrets.py in the project folder.
+import sys as _sys, os as _os
+_here = _os.path.dirname(_os.path.abspath(__file__))
+if _here in _sys.path:
+    _sys.path.remove(_here)
+    _sys.path.append(_here)
+
 import os, base64, time, io, math, tempfile, struct, re, json, requests, secrets as _tok
 from collections import OrderedDict
 from pathlib import Path
@@ -16,8 +24,37 @@ CF_API_TOKEN  = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 GROQ_KEY      = os.environ.get("GROQ_KEY")
 GEMINI_KEY    = os.environ.get("GEMINI_API_KEY")
 
-CF_BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run"
-CF_HEADERS  = {"Authorization": f"Bearer {CF_API_TOKEN}", "Content-Type": "application/json"}
+# Fall back to api_keys.py for local development
+_CF_POOL = []
+try:
+    import api_keys as _ak
+    CF_ACCOUNT_ID = CF_ACCOUNT_ID or getattr(_ak, "CLOUDFLARE_ACCOUNT_ID", "")
+    CF_API_TOKEN  = CF_API_TOKEN  or getattr(_ak, "CLOUDFLARE_API_TOKEN", "")
+    GROQ_KEY      = GROQ_KEY      or getattr(_ak, "GROQ_KEY", None)
+    GEMINI_KEY    = GEMINI_KEY    or getattr(_ak, "GEMINI_API_KEY", None)
+    _CF_POOL      = [e for e in getattr(_ak, "CLOUDFLARE_POOL", [])
+                     if isinstance(e, dict) and e.get("account_id") and e.get("api_token")]
+except ImportError:
+    pass
+
+# If no pool loaded, build a single-entry pool from the flat credentials
+if not _CF_POOL and CF_ACCOUNT_ID and CF_API_TOKEN:
+    _CF_POOL = [{"account_id": CF_ACCOUNT_ID, "api_token": CF_API_TOKEN}]
+
+def _cf_post(model_id, payload, timeout=30):
+    """POST to Cloudflare Workers AI, rotating through the account pool on failure."""
+    last_resp = None
+    for entry in _CF_POOL:
+        url     = f"https://api.cloudflare.com/client/v4/accounts/{entry['account_id']}/ai/run/{model_id}"
+        headers = {"Authorization": f"Bearer {entry['api_token']}", "Content-Type": "application/json"}
+        try:
+            r = requests.post(url, headers=headers, json=payload, timeout=timeout)
+            if r.status_code == 200:
+                return r
+            last_resp = r  # remember last error, try next account
+        except Exception:
+            last_resp = None
+    return last_resp  # all accounts failed — return last response for error display
 
 # ── Model catalogues ──────────────────────────────────────────────────────────
 TEXT_MODELS = {
@@ -91,6 +128,14 @@ LR_PARAMS = {
     "mu_bad":  [0.8372, 0.4585, 0.8706],
     "sd_bad":  [0.0097, 0.0245, 0.0153],
     "r": 0.1604, "pairwise": 57.4,
+}
+
+# Tricoherence v2 (cross-modal) params
+IB_W1, IB_W2, IB_W3 = 7.8666, 2.2790, 0.7796
+IB_LR_PARAMS = {
+    "f1": dict(mu_p=0.3062, sig_p=0.0344, mu_n=0.2902, sig_n=0.0358),
+    "f2": dict(mu_p=0.0545, sig_p=0.0416, mu_n=0.0532, sig_n=0.0421),
+    "f3": dict(mu_p=0.0487, sig_p=0.0274, mu_n=0.0468, sig_n=0.0280),
 }
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
@@ -344,7 +389,8 @@ gradio-app, .gradio-container {
 /* No vertical gap between stacked blocks */
 .gap { gap: 0 !important; }
 /* Off-screen bridge components (kept in DOM with visible=True) */
-#trio-data-hidden, #trio-btn-hidden {
+#trio-data-hidden, #trio-btn-hidden,
+#trio-score2-data-hidden, #trio-score2-btn-hidden {
   position: fixed !important; top: -9999px !important; left: -9999px !important;
   width: 1px !important; height: 1px !important;
   overflow: hidden !important; opacity: 0 !important; pointer-events: none !important;
@@ -432,9 +478,12 @@ footer, .built-with { display: none !important; }
 /* Gradio wraps the off-screen bridge textbox in its own .form div. Only the
    textbox was moved to -9999px, so the wrapper stayed behind as a 2px bar in
    Gradio's dark-theme colour, drawn across the page under the card. */
-#trio-data-hidden, #trio-btn-hidden { border: 0 !important; background: none !important; }
+#trio-data-hidden, #trio-btn-hidden,
+#trio-score2-data-hidden, #trio-score2-btn-hidden { border: 0 !important; background: none !important; }
 .gradio-container .form:has(#trio-data-hidden),
-.gradio-container .form:has(#trio-btn-hidden) {
+.gradio-container .form:has(#trio-btn-hidden),
+.gradio-container .form:has(#trio-score2-data-hidden),
+.gradio-container .form:has(#trio-score2-btn-hidden) {
   position: fixed !important; top: -9999px !important; left: -9999px !important;
   border: 0 !important; background: none !important; box-shadow: none !important;
 }
@@ -670,6 +719,52 @@ if (!window._trioSetup) {
     setter.call(ta, JSON.stringify(data));
     ta.dispatchEvent(new Event('input', {bubbles: true}));
     return true;
+  };
+
+  // ── Tricoherence v2 scoring (CLIP + BERTScore, CPU) ──────────────────────────
+  window.trioCalcScore2 = function(token) {
+    var scoreArea = document.getElementById('trio-score-area');
+    if (scoreArea) {
+      scoreArea.innerHTML =
+        '<div style="display:flex;align-items:center;gap:10px;padding:8px 0">'
+        + '<span style="font-size:13px;color:#2A5298;font-family:IBM Plex Mono,monospace">'
+        + 'Calculating Tricoherence'
+        + '</span>'
+        + '<span class="dot3"><i style="background:#2A5298"></i><i style="background:#2A5298"></i><i style="background:#2A5298"></i></span>'
+        + '<span style="font-size:11px;color:#7C7767">~30s</span></div>';
+    }
+    var resultsArea = document.getElementById('trio-results-area');
+    fetch('/gradio_api/call/score_imagebind', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({data: [JSON.stringify({token: token})]})
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(init) {
+      if (!init || !init.event_id) {
+        if (scoreArea) scoreArea.innerHTML = '<p style="font-size:12.5px;color:#9A6B00;padding:8px 0">Scoring failed — try again.</p>';
+        return;
+      }
+      var src = new EventSource('/gradio_api/call/score_imagebind/' + init.event_id);
+      src.addEventListener('generating', function(e) {
+        try {
+          var payload = JSON.parse(e.data);
+          var html = Array.isArray(payload) ? payload[0] : payload;
+          if (typeof html === 'string' && resultsArea) {
+            resultsArea.innerHTML = html;
+          }
+        } catch(ex) { console.error('[Trio] score2 SSE parse error', ex, e.data); }
+      });
+      src.addEventListener('complete', function() { src.close(); });
+      src.onerror = function() {
+        src.close();
+        if (scoreArea) scoreArea.innerHTML = '<p style="font-size:12.5px;color:#9A6B00;padding:8px 0">Scoring failed — try again.</p>';
+      };
+    })
+    .catch(function(err) {
+      console.error('[Trio] score2 fetch error', err);
+      if (scoreArea) scoreArea.innerHTML = '<p style="font-size:12.5px;color:#9A6B00;padding:8px 0">Scoring failed — try again.</p>';
+    });
   };
 
   // Page 01 — show form, hide results (back-nav from results pages)
@@ -911,116 +1006,6 @@ def _seg_class(val):
 def _seg_pct(val):
     return f"{int(val * 100)}%" if val is not None else "0%"
 
-def _fmt(v, places=4):
-    return "&#8212;" if v is None else f"{v:.{places}f}"
-
-
-def _bar(v):
-    """0-1 bar for a quality score; blank when the lane did not run."""
-    if v is None:
-        return '<span class="tp-rbar"><i style="--w:0%"></i></span>'
-    return f'<span class="tp-rbar"><i style="--w:{max(0.0, min(1.0, v)) * 100:.1f}%"></i></span>'
-
-
-def _method_block(scores=None):
-    """The three per-output quality scores, then the combined Tricoherence score.
-
-    Shows THIS generation's numbers rather than the study's leaderboard: the
-    formulas are the ones that produced them, so the panel explains the score
-    on screen instead of describing three approaches the app does not run.
-    """
-    sc = scores or {}
-    qt, qi, qa = sc.get("q_text"), sc.get("q_image"), sc.get("q_audio")
-    lr = sc.get("lr_score")
-
-    if lr is None:
-        verdict, vclass = "&#8212;", ""
-    elif lr > 0:
-        verdict, vclass = "Good", "is-good"
-    else:
-        verdict, vclass = "Not-Good", "is-bad"
-
-    lr_txt = "&#8212;" if lr is None else f"{lr:+.3f}"
-
-    return f"""
-<details class="tp-method">
-  <summary>How we measure this <em>500 prompts</em></summary>
-  <div class="tp-method-b">
-    <p class="tp-method-intro">Each output is scored against your prompt on its
-    own terms, then the three are combined into one number. &#955; = {LAMBDA}
-    penalises a pair that disagrees with itself, so a picture that is beautiful
-    but off-prompt cannot coast on looks alone.</p>
-
-    <div class="tp-appr">
-      <div class="tp-appr-n">Q_text</div>
-      <div class="tp-f">BERTScore(generated_text, prompt)</div>
-      <div class="tp-r">{_bar(qt)}<b>{_fmt(qt)}</b></div>
-    </div>
-
-    <div class="tp-appr">
-      <div class="tp-appr-n">Q_image</div>
-      <div class="tp-f">avg(CLIP, Aesthetic) &#8722; {LAMBDA}&#183;var(CLIP, Aesthetic)</div>
-      <div class="tp-r">{_bar(qi)}<b>{_fmt(qi)}</b></div>
-    </div>
-
-    <div class="tp-appr">
-      <div class="tp-appr-n">Q_audio</div>
-      <div class="tp-f">avg(semantic, wer_inv) &#8722; {LAMBDA}&#183;var(semantic, wer_inv)</div>
-      <div class="tp-r">{_bar(qa)}<b>{_fmt(qa)}</b></div>
-    </div>
-
-    <div class="tp-appr is-best">
-      <div class="tp-appr-n">Tricoherence score
-        <span class="tp-badge">Likelihood ratio</span></div>
-      <div class="tp-f">S(p) = &#931;&#7522; [ log P(f&#7522;|Good) &#8722; log P(f&#7522;|Not-Good) ]</div>
-      <div class="tp-r"><span class="tp-verdict {vclass}">{verdict}</span><b>{lr_txt}</b></div>
-    </div>
-
-    <p class="tp-mnote">Gaussians for Good and Not-Good were fitted on 500
-    prompts with leave-one-out cross-validation, split at a judge rating of
-    3.5 (273 Good, 227 Not-Good). S(p) above zero means the three quality
-    scores look more like a Good generation than a Not-Good one. A lane that
-    failed is skipped rather than scored zero.</p>
-
-    <div class="tp-honest">
-      <span>Read this honestly</span>
-      <b>r &#8776; 0.16 is weak</b> &#8212; about 57% pairwise accuracy, where 50%
-      is chance. Tricoherence ranks outputs better than a coin flip, not reliably.
-    </div>
-  </div>
-</details>"""
-
-def _tricoherence_block(scores=None):
-    sc = scores or {}
-    qt = sc.get("q_text")
-    qi = sc.get("q_image")
-    qa = sc.get("q_audio")
-    lr = sc.get("lr_score")
-
-    if qt is None and qi is None and qa is None:
-        return ""
-
-    if lr is None:
-        verdict, vclass = "&#8212;", ""
-        read_text = "scoring in progress"
-    elif lr > 0:
-        verdict, vclass = "Good", "is-good"
-        read_text = "all three outputs are tracking the same idea"
-    else:
-        verdict, vclass = "Not-Good", "is-bad"
-        read_text = "outputs diverged &#8212; the models didn&#8217;t agree on direction"
-
-    lr_txt = "&#8212;" if lr is None else f"{lr:+.3f}"
-
-    return f"""
-<div class="tp-coh" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 2px;min-height:42px">
-  <span class="tp-coh-k mono">Tricoherence</span>
-  <span class="tp-verdict {vclass}">{verdict}</span>
-  <span class="tp-coh-n">{lr_txt}</span>
-  <span class="tp-coh-read">{read_text}</span>
-</div>
-{_method_block(scores)}"""
-
 def _transcript_block(scores):
     """Whisper's transcript, under the player.
 
@@ -1134,12 +1119,6 @@ def _result_cards_html(text_out, text_err, text_t,
             '</article>'
         )
 
-    coh_html = ""
-    if scores and not scores.get("error"):
-        coh_html = _tricoherence_block(scores)
-    elif scores and scores.get("error"):
-        coh_html = f'<p style="margin-top:10px;font-size:12px;color:var(--ink-45)">Scoring: {scores["error"]}</p>'
-
     echo = ""
     if prompt:
         safe = (prompt.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
@@ -1147,7 +1126,7 @@ def _result_cards_html(text_out, text_err, text_t,
         # never says what was actually asked for
         echo = f'<div class="tp-echo"><span class="tp-echo-k mono">Prompt</span>{safe}</div>'
 
-    return echo + '<div class="tp-results">' + "".join(cards) + '</div>' + coh_html
+    return echo + '<div class="tp-results">' + "".join(cards) + '</div>'
 
 def _generating_cards_html():
     return (
@@ -1221,12 +1200,11 @@ def gen_text(prompt, info):
     t0 = time.time()
     try:
         if prov == "cloudflare":
-            r = requests.post(f"{CF_BASE_URL}/{mid}", headers=CF_HEADERS,
-                json={"messages":[{"role":"user","content":TEXT_INSTRUCTION.format(p=prompt)}],
-                      "max_tokens":TEXT_MAX_TOKENS}, timeout=25)
-            if r.status_code == 200:
+            r = _cf_post(mid, {"messages":[{"role":"user","content":TEXT_INSTRUCTION.format(p=prompt)}],
+                               "max_tokens":TEXT_MAX_TOKENS}, timeout=25)
+            if r is not None and r.status_code == 200:
                 return _trim(r.json().get("result",{}).get("response","")), None, time.time()-t0
-            return None, f"Error {r.status_code}: {r.text[:120]}", 0
+            return None, f"Error {r.status_code if r else 'no response'}: {r.text[:120] if r else ''}", 0
         if prov == "groq":
             c = _groq()
             if not c: return None, "GROQ_KEY not set in Secrets", 0
@@ -1248,16 +1226,15 @@ def gen_image(prompt, info):
     t0 = time.time()
     try:
         if prov == "cloudflare":
-            r = requests.post(f"{CF_BASE_URL}/{mid}", headers=CF_HEADERS,
-                json={"prompt":prompt}, timeout=50)
-            if r.status_code == 200:
+            r = _cf_post(mid, {"prompt": prompt}, timeout=50)
+            if r is not None and r.status_code == 200:
                 try:
                     b64 = r.json().get("result",{}).get("image","")
                     if b64: return base64.b64decode(b64), None, time.time()-t0
                 except Exception:
                     pass
                 if r.content: return r.content, None, time.time()-t0
-            return None, f"Error {r.status_code}: {r.text[:120]}", 0
+            return None, f"Error {r.status_code if r else 'no response'}: {r.text[:120] if r else ''}", 0
         if prov == "gemini":
             c = _gemini()
             if not c: return None, "GEMINI_API_KEY not set in Secrets", 0
@@ -1277,16 +1254,16 @@ def gen_audio(text, info):
     t0 = time.time()
     try:
         if prov == "cloudflare":
-            payload = {"text":clean} if "deepgram" in mid else {"prompt":clean}
-            r = requests.post(f"{CF_BASE_URL}/{mid}", headers=CF_HEADERS, json=payload, timeout=25)
-            if r.status_code == 200:
+            payload = {"text": clean} if "deepgram" in mid else {"prompt": clean}
+            r = _cf_post(mid, payload, timeout=25)
+            if r is not None and r.status_code == 200:
                 try:
                     b64 = r.json().get("result",{}).get("audio","")
                     if b64: return base64.b64decode(b64), None, time.time()-t0
                 except Exception:
                     pass
                 if r.content: return r.content, None, time.time()-t0
-            return None, f"Error {r.status_code}: {r.text[:120]}", 0
+            return None, f"Error {r.status_code if r else 'no response'}: {r.text[:120] if r else ''}", 0
         if prov == "gemini":
             c = _gemini()
             if not c: return None, "GEMINI_API_KEY not set in Secrets", 0
@@ -1380,9 +1357,315 @@ def compute_scores(prompt, text_out, img_bytes, audio_bytes):
         valid = [q for q in [q_text, q_image, q_audio] if q is not None]
         lr = _lr([q_text, q_image, q_audio]) if len(valid) >= 2 else None
         return {"q_text": q_text, "q_image": q_image, "q_audio": q_audio,
-                "lr_score": lr, "transcript": transcript}
+                "lr_score": lr, "transcript": transcript,
+                "clip_s": clip_s if img_bytes else None}
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
+
+# ── Tricoherence v2 (cross-modal scoring) ────────────────────────────────────
+
+def _compute_ib_features(qt, qi, qa, s1, s2, s3):
+    """Weighted cross-modal features from similarities + quality scores."""
+    f1 = s1*(IB_W1*qt + IB_W2*qi)/(IB_W1+IB_W2) if (s1 is not None and qt is not None and qi is not None) else None
+    f2 = s2*(IB_W1*qt + IB_W3*qa)/(IB_W1+IB_W3) if (s2 is not None and qt is not None and qa is not None) else None
+    f3 = s3*(IB_W2*qi + IB_W3*qa)/(IB_W2+IB_W3) if (s3 is not None and qi is not None and qa is not None) else None
+    return [f1, f2, f3]
+
+def _lr_v2(f):
+    """Gaussian LR score for cross-modal features."""
+    p = IB_LR_PARAMS
+    s = 0.0
+    for i, key in enumerate(["f1", "f2", "f3"]):
+        if f[i] is None:
+            continue
+        pp = p[key]
+        s += (((f[i]-pp["mu_n"])**2/(2*pp["sig_n"]**2))
+              - ((f[i]-pp["mu_p"])**2/(2*pp["sig_p"]**2))
+              + math.log(pp["sig_n"]/pp["sig_p"]))
+    return float(s)
+
+_IB_MODEL = None
+
+def _load_imagebind():
+    global _IB_MODEL
+    if _IB_MODEL is not None:
+        return _IB_MODEL
+    import torch, types, sys as _sys
+    # torchcodec mock — newer ImageBind/pytorchvideo imports it at module level
+    if "torchcodec" not in _sys.modules:
+        try:
+            import torchcodec
+        except ImportError:
+            for _mod in ("torchcodec", "torchcodec.decoders", "torchcodec.decoders._core"):
+                _sys.modules.setdefault(_mod, types.ModuleType(_mod))
+    # pkg_resources mock if missing
+    if "pkg_resources" not in _sys.modules:
+        import importlib.util as _ilu, os as _os
+        _m = types.ModuleType("pkg_resources")
+        def _rf(pkg, res):
+            spec = _ilu.find_spec(pkg)
+            return _os.path.join(_os.path.dirname(spec.origin), res) if spec and spec.origin else res
+        _m.resource_filename = _rf; _m.require = lambda *a: None
+        _sys.modules["pkg_resources"] = _m
+    from imagebind.models import imagebind_model
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = imagebind_model.imagebind_huge(pretrained=True)
+    model.eval().to(device)
+    _IB_MODEL = model
+    return model
+
+def _ib_score(text_out, img_bytes, audio_bytes, q_scores=None):
+    """Full ImageBind cross-modal scoring: s1 text↔image, s2 text↔audio, s3 image↔audio."""
+    try:
+        import torch, numpy as np, types, sys as _sys
+        # torchcodec mock
+        if "torchcodec" not in _sys.modules:
+            try:
+                import torchcodec
+            except ImportError:
+                for _mod in ("torchcodec", "torchcodec.decoders", "torchcodec.decoders._core"):
+                    _sys.modules.setdefault(_mod, types.ModuleType(_mod))
+        from imagebind import data as ib_data
+        from imagebind.models.imagebind_model import ModalityType
+        model = _load_imagebind()
+        device = next(model.parameters()).device
+        inputs = {}
+        if text_out:
+            inputs[ModalityType.TEXT] = ib_data.load_and_transform_text([text_out[:200]], device)
+        if img_bytes:
+            from torchvision import transforms as _tvt
+            _vt = _tvt.Compose([
+                _tvt.Resize(224, interpolation=_tvt.InterpolationMode.BICUBIC),
+                _tvt.CenterCrop(224), _tvt.ToTensor(),
+                _tvt.Normalize(mean=(0.48145466, 0.4578275, 0.40821073),
+                               std=(0.26862954, 0.26130258, 0.27577711)),
+            ])
+            inputs[ModalityType.VISION] = _vt(Image.open(io.BytesIO(img_bytes)).convert("RGB")).unsqueeze(0).to(device)
+        if audio_bytes:
+            import tempfile, os as _os, numpy as _np2
+            _is_mp3 = (audio_bytes[:2] in (b'\xff\xfb', b'\xff\xf3', b'\xff\xf2', b'\xff\xe3')
+                       or audio_bytes[:3] == b'ID3')
+            _suffix = ".mp3" if _is_mp3 else ".wav"
+            with tempfile.NamedTemporaryFile(suffix=_suffix, delete=False) as f:
+                f.write(audio_bytes); apath = f.name
+            _wav = None; _sr = 16000
+            # try 1: miniaudio (pip install miniaudio) — pure Python, handles MP3 + WAV
+            try:
+                import miniaudio as _ma
+                _dec = _ma.decode_file(apath)
+                _pcm = _np2.frombuffer(_dec.samples, dtype=_np2.int16).astype(_np2.float32) / 32768.0
+                _sr = _dec.sample_rate
+                _wav = torch.from_numpy(
+                    _pcm.reshape(-1, _dec.nchannels).T if _dec.nchannels > 1 else _pcm[None]
+                )
+            except Exception:
+                pass
+            # try 2: scipy — WAV only, skip if audio is MP3
+            if _wav is None and not _is_mp3:
+                try:
+                    import scipy.io.wavfile as _wf
+                    _sr, _data = _wf.read(apath)
+                    if _data.dtype == _np2.int16:
+                        _data = _data.astype(_np2.float32) / 32768.0
+                    elif _data.dtype == _np2.int32:
+                        _data = _data.astype(_np2.float32) / 2147483648.0
+                    else:
+                        _data = _data.astype(_np2.float32)
+                    _wav = torch.from_numpy(_data.T if _data.ndim > 1 else _data[None])
+                except Exception:
+                    pass
+            try: _os.unlink(apath)
+            except Exception: pass
+            if _wav is not None:
+                import torchaudio as _ta
+                if _sr != 16000: _wav = _ta.functional.resample(_wav, _sr, 16000)
+                if _wav.shape[0] > 1: _wav = _wav.mean(0, keepdim=True)
+                _clips = []
+                for _i in range(3):
+                    _off = int(_i * max(_wav.shape[1] - 32000, 0) / 2)
+                    _clip = _wav[:, _off:_off + 32000]
+                    if _clip.shape[1] < 32000:
+                        _clip = torch.nn.functional.pad(_clip, (0, 32000 - _clip.shape[1]))
+                    _fb = _ta.compliance.kaldi.fbank(
+                        _clip, htk_compat=True, sample_frequency=16000,
+                        use_energy=False, window_type="hanning",
+                        num_mel_bins=128, dither=0.0, frame_shift=10,
+                    )
+                    n = _fb.shape[0]
+                    _fb = torch.nn.functional.pad(_fb, (0, 0, 0, 204 - n)) if n < 204 else _fb[:204]
+                    _clips.append(((_fb - (-4.268)) / 9.138).T.unsqueeze(0))
+                inputs[ModalityType.AUDIO] = torch.stack(_clips).unsqueeze(0).to(device)
+        if len(inputs) < 2:
+            return {"error": "Need at least 2 modalities"}
+        with torch.no_grad():
+            emb = model(inputs)
+        def cos(a, b):
+            return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-9))
+        e = {k: emb[k][0].cpu().numpy() for k in emb}
+        r = {}
+        if ModalityType.TEXT in e and ModalityType.VISION in e:
+            r["s1"] = round(cos(e[ModalityType.TEXT], e[ModalityType.VISION]), 4)
+        if ModalityType.TEXT in e and ModalityType.AUDIO in e:
+            r["s2"] = round(cos(e[ModalityType.TEXT], e[ModalityType.AUDIO]), 4)
+        if ModalityType.VISION in e and ModalityType.AUDIO in e:
+            r["s3"] = round(cos(e[ModalityType.VISION], e[ModalityType.AUDIO]), 4)
+        return r
+    except Exception as ex:
+        return {"error": f"{type(ex).__name__}: {ex}"}
+
+def _tricoherence2_block(v2_scores=None):
+    """Display block for Tricoherence v2 scoring."""
+    sc = v2_scores or {}
+    if "error" in sc:
+        return f'<p style="margin-top:10px;font-size:12px;color:var(--ink-45)">Tricoherence v2: {sc["error"]}</p>'
+    lr = sc.get("lr_score_v2")
+    s1 = sc.get("s1"); s2 = sc.get("s2"); s3 = sc.get("s3")
+    f1 = sc.get("f1"); f2 = sc.get("f2"); f3 = sc.get("f3")
+    if lr is None:
+        return ""
+    if lr > 0:
+        verdict, vclass = "Good", "is-good"
+        read_text = "cross-modal features align &#8212; coherent across modalities"
+    else:
+        verdict, vclass = "Not-Good", "is-bad"
+        read_text = "cross-modal features diverge &#8212; modalities went separate ways"
+    lr_txt = f"{lr:+.3f}"
+    def fmtf(v): return f"{v:.4f}" if v is not None else "&#8212;"
+    return f"""
+<div class="tp-coh" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 2px;min-height:42px">
+  <span class="tp-coh-k mono">Tricoherence v2</span>
+  <span class="tp-verdict {vclass}">{verdict}</span>
+  <span class="tp-coh-n">{lr_txt}</span>
+  <span class="tp-coh-read">{read_text}</span>
+</div>
+<details class="tp-method">
+  <summary>How Tricoherence v2 is computed <em>ImageBind</em></summary>
+  <div class="tp-method-b">
+    <p class="tp-method-intro">ImageBind embeds text, image and audio into the same
+    vector space. Raw cosine similarities s1/s2/s3 are weighted by the quality
+    scores of the two adjacent modalities, then fed into a Gaussian LR scorer.</p>
+    <div class="tp-appr">
+      <div class="tp-appr-n">s1</div>
+      <div class="tp-f">text &#8596; image cosine similarity</div>
+      <div class="tp-r"><b>{fmtf(s1)}</b></div>
+    </div>
+    <div class="tp-appr">
+      <div class="tp-appr-n">s2</div>
+      <div class="tp-f">text &#8596; audio cosine similarity</div>
+      <div class="tp-r"><b>{fmtf(s2)}</b></div>
+    </div>
+    <div class="tp-appr">
+      <div class="tp-appr-n">s3</div>
+      <div class="tp-f">image &#8596; audio cosine similarity</div>
+      <div class="tp-r"><b>{fmtf(s3)}</b></div>
+    </div>
+    <div class="tp-appr">
+      <div class="tp-appr-n">f1</div>
+      <div class="tp-f">s1 &#215; (w&#8321;&#183;Q_text + w&#8322;&#183;Q_image) / (w&#8321;+w&#8322;)</div>
+      <div class="tp-r"><b>{fmtf(f1)}</b></div>
+    </div>
+    <div class="tp-appr">
+      <div class="tp-appr-n">f2</div>
+      <div class="tp-f">s2 &#215; (w&#8321;&#183;Q_text + w&#8323;&#183;Q_audio) / (w&#8321;+w&#8323;)</div>
+      <div class="tp-r"><b>{fmtf(f2)}</b></div>
+    </div>
+    <div class="tp-appr">
+      <div class="tp-appr-n">f3</div>
+      <div class="tp-f">s3 &#215; (w&#8322;&#183;Q_image + w&#8323;&#183;Q_audio) / (w&#8322;+w&#8323;)</div>
+      <div class="tp-r"><b>{fmtf(f3)}</b></div>
+    </div>
+    <div class="tp-appr is-best">
+      <div class="tp-appr-n">Tricoherence v2
+        <span class="tp-badge">Likelihood ratio</span></div>
+      <div class="tp-f">S(p) = &#931;&#7522; [ log P(f&#7522;|Good) &#8722; log P(f&#7522;|Not-Good) ]</div>
+      <div class="tp-r"><span class="tp-verdict {vclass}">{verdict}</span><b>{lr_txt}</b></div>
+    </div>
+  </div>
+</details>"""
+
+def score_imagebind_only(data_json):
+    """On-demand Tricoherence v2 scoring — CPU-only CLIP + BERTScore."""
+    try:
+        data = json.loads(data_json or "{}")
+    except Exception:
+        data = {}
+    token = data.get("token", "")
+    cached = _LAST_RUNS.get(token)
+    if not cached:
+        yield _wrap_results(
+            '<p style="padding:10px 0;font-size:12.5px;color:#7C7767">'
+            'Result expired &#8212; generate again first.</p>')
+        return
+
+    # Step 1: quality scores (CPU; cached after first run)
+    q_scores = cached.get("q_scores")
+    if q_scores is None:
+        try:
+            q_scores = compute_scores(
+                cached["prompt"],
+                cached.get("text_out"),
+                cached.get("img_bytes"),
+                cached.get("audio_bytes"),
+            )
+        except Exception as e:
+            q_scores = {"error": f"{type(e).__name__}: {e}"}
+        if "error" not in q_scores:
+            cached["q_scores"] = q_scores
+
+    # Step 2: cross-modal similarities (s1, s2)
+    try:
+        ib_raw = _ib_score(
+            cached.get("text_out"),
+            cached.get("img_bytes"),
+            cached.get("audio_bytes"),
+            q_scores=q_scores if "error" not in q_scores else None,
+        )
+    except Exception as e:
+        ib_raw = {"error": f"{type(e).__name__}: {e}"}
+
+    # Step 3: combine into v2 scores
+    v2_scores = {}
+    if "error" in ib_raw:
+        v2_scores["error"] = ib_raw["error"]
+    elif "error" in q_scores:
+        v2_scores["error"] = q_scores["error"]
+    else:
+        s1 = ib_raw.get("s1"); s2 = ib_raw.get("s2"); s3 = ib_raw.get("s3")
+        qt = q_scores.get("q_text"); qi = q_scores.get("q_image"); qa = q_scores.get("q_audio")
+        # IB_LR_PARAMS fitted on ImageBind cosines (s2 ~0.05-0.15).
+        # If s2 looks like BERTScore (~0.85+), skip it from LR to avoid garbage score.
+        s2_lr = s2 if (s2 is not None and s2 < 0.5) else None
+        f = _compute_ib_features(qt, qi, qa, s1, s2_lr, s3)
+        valid = [x for x in f if x is not None]
+        lr_v2 = _lr_v2(f) if len(valid) >= 1 else None
+        v2_scores = {
+            "s1": s1, "s2": s2, "s3": s3,
+            "f1": f[0], "f2": f[1], "f3": f[2],
+            "lr_score_v2": lr_v2,
+        }
+
+    _models = cached["models"]
+    done_count = sum(1 for x in [cached.get("text_out"), cached.get("img_b64"), cached.get("audio_b64")] if x)
+    total_t = max(cached.get("text_t") or 0, cached.get("img_t") or 0, cached.get("audio_t") or 0)
+    gen_meta = (
+        '<span id="trio-gen-meta" style="display:none"'
+        f' data-done="{done_count}" data-total="3" data-time="{total_t:.1f}"'
+        f' data-token="{token}"></span>'
+    )
+    footer = (
+        '<div class="tp-foot mono">'
+        '<span>Running locally</span>'
+        '<span>&#183;</span>'
+        '<span>Nothing stored after you close the tab</span>'
+        '</div>'
+    )
+    base_html = _result_cards_html(
+        cached.get("text_out"), cached.get("text_err"), cached.get("text_t", 0),
+        cached.get("img_b64"),   cached.get("img_err"),  cached.get("img_t", 0),
+        cached.get("audio_b64"), cached.get("audio_err"), cached.get("audio_t", 0),
+        q_scores if "error" not in q_scores else None, cached["prompt"], _models,
+    )
+    yield _wrap_results(base_html + _tricoherence2_block(v2_scores) + gen_meta + footer)
 
 # ── Main generate function ────────────────────────────────────────────────────
 # Holds the text and image of recent generations so "Retry audio only" can
@@ -1479,6 +1762,8 @@ def generate(data_json):
     _remember_run(_token, {
         "prompt": prompt, "text_out": text_out, "text_t": text_t or 0.0,
         "img_b64": img_b64, "img_t": img_t or 0.0,
+        "img_bytes": img_bytes, "audio_bytes": audio_bytes,
+        "audio_b64": audio_b64, "audio_t": audio_t or 0.0,
         "models": {"text": text_model, "image": image_model, "audio": audio_model},
     })
     gen_meta   = (
@@ -1506,21 +1791,40 @@ def generate(data_json):
     yield _wrap_results(results_html + gen_meta + footer)
 
     # Scoring runs when text and image both succeeded (audio optional)
+    score_section = ""
+    if text_out and img_bytes:
+        score_section = (
+            '<div id="trio-score-area" style="margin-top:10px;border-top:1px solid #DCD5C4;'
+            'padding-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
+            '<button class="tp-go" type="button" id="trio-score2-btn"'
+            ' style="background:#2A5298 !important;font-size:13px !important;'
+            'padding:0 18px !important;min-height:40px !important"'
+            f' onclick="trioCalcScore2(\'{_token}\')">'
+            '&#8718; Tricoherence Score'
+            '</button>'
+            '<span style="font-size:11px;color:#7C7767">~30s &#183; optional</span>'
+            '</div>'
+        )
+
     if do_scoring and text_out and img_bytes:
         try:
             scores = compute_scores(prompt, text_out, img_bytes, audio_bytes)
         except Exception as e:
             scores = {"error": f"{type(e).__name__}: {e}"}
+        if "error" not in scores:
+            _LAST_RUNS.get(_token, {}).update({"q_scores": scores})
         results_scored = _result_cards_html(
             text_out, text_err, text_t,
             img_b64,  img_err,  img_t,
             audio_b64, audio_err, audio_t,
             scores, prompt, _models,
         )
-        yield _wrap_results(results_scored + gen_meta + footer)
+        yield _wrap_results(results_scored + gen_meta + footer + score_section)
+    else:
+        yield _wrap_results(results_html + gen_meta + footer + score_section)
 
 # ── Gradio UI ─────────────────────────────────────────────────────────────────
-with gr.Blocks(title="Trio") as demo:
+with gr.Blocks(title="Trio", css=GRADIO_CSS, js=TRIO_JS) as demo:
     # Entire visible UI — the Trio design — rendered as static custom HTML
     gr.HTML(STATIC_MAIN_HTML)
 
@@ -1528,10 +1832,15 @@ with gr.Blocks(title="Trio") as demo:
     data_box = gr.Textbox(elem_id="trio-data-hidden", show_label=False)
     gen_btn  = gr.Button("go", elem_id="trio-btn-hidden")
 
+    # Tricoherence v2 bridge components
+    score2_data_box = gr.Textbox(elem_id="trio-score2-data-hidden", show_label=False)
+    score2_btn_hid  = gr.Button("score2", elem_id="trio-score2-btn-hidden")
+
     # Results area — only this updates during / after generation
     results = gr.HTML(elem_id="trio-results-area")
 
     gen_btn.click(fn=generate, inputs=[data_box], outputs=[results])
+    score2_btn_hid.click(fn=score_imagebind_only, inputs=[score2_data_box], outputs=[results], api_name="score_imagebind")
 
-# css and js go in launch() in Gradio 6
-demo.launch(css=GRADIO_CSS, js=TRIO_JS)
+demo.queue()
+demo.launch(ssr_mode=False)
