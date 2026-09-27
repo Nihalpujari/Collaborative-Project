@@ -1,24 +1,62 @@
-requests>=2.31.0
-numpy>=1.24.0
-matplotlib>=3.7.0
-pandas>=2.0.0
+# Multimodal Trio — Python dependencies
+# Tested on Python 3.11.9, Windows 11, CPU-only PyTorch.
+#
+#   python -m venv .venv
+#   .venv\Scripts\activate            (Windows)   |   source .venv/bin/activate   (macOS/Linux)
+#   pip install -r requirements.txt
+#
+# For a CUDA build of PyTorch, install torch/torchvision/torchaudio first from
+# https://pytorch.org/get-started/locally/ and then run the line above.
 
-# Text scoring
-torch>=2.0.0
-transformers>=4.30.0
-bert-score>=0.3.13
-rouge-score>=0.1.2
-textstat>=0.7.3
+# ── Core data stack ───────────────────────────────────────────────────────────
+# numpy is kept below 2.0: scipy/scikit-learn/whisper wheels in this range are
+# built against numpy 1.x and break with "numpy.core.multiarray failed to import".
+numpy>=1.24,<2.0
+pandas>=2.0
+scipy>=1.11
+scikit-learn>=1.3
+requests>=2.31
+python-dotenv>=1.0
+matplotlib>=3.7
+seaborn>=0.13
+Pillow>=10.0
 
-# Image scoring
-Pillow>=9.5.0
+# ── Deep learning ─────────────────────────────────────────────────────────────
+torch>=2.1
+torchvision>=0.16
+torchaudio>=2.1
+transformers>=4.40
+sentence-transformers>=3.0
 
-# Audio scoring
-librosa>=0.10.0
-jiwer>=3.0.0
+# ── Web app (hf_app.py / run_trio_local.py) ───────────────────────────────────
+gradio>=5.0
+# decodes the MP3 audio returned by Cloudflare TTS without needing FFmpeg
+miniaudio>=1.59
+soundfile>=0.12
 
-# For CLIP model
-opencv-python>=4.8.0
+# ── Model providers ───────────────────────────────────────────────────────────
+google-genai>=1.0          # Gemini judge + optional Gemini text/TTS
+openai>=1.0                # OpenAI-compatible client used for Groq text models
 
-# Optional GPU support (uncomment if using CUDA)
-# torch-cuda==11.8  # or torch-cuda==12.1 depending on your CUDA version
+# ── Quality scoring ───────────────────────────────────────────────────────────
+bert-score>=0.3.13         # Q_text
+openai-whisper>=20231117   # audio transcription for Q_audio
+jiwer>=3.0                 # word error rate
+librosa>=0.10
+rouge-score>=0.1.2         # text benchmark
+textstat>=0.7.3            # readability benchmark
+
+# ── Cross-modal coherence (Tricoherence v2) ───────────────────────────────────
+# Installs from GitHub; the ~4.8 GB imagebind_huge.pth checkpoint downloads
+# automatically into .checkpoints/ on first use.
+imagebind @ git+https://github.com/facebookresearch/ImageBind.git
+
+# ── Benchmarking extras (benchmarking/, evaluation/score_audio_only.py) ──────
+streamlit>=1.37            # benchmarking/frontend.py
+speechmos>=0.0.1           # DNSMOS audio quality
+onnxruntime>=1.16          # required by speechmos
+
+# ── Standalone LR scoring API (scoring/lr_scorer.py) ──────────────────────────
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
